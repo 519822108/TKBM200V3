@@ -600,7 +600,9 @@ release\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\qfiledevice.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qvector2d.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtouchdevice.h \
-		ui_tkbmwidget.h
+		ui_tkbmwidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h
 
 release\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
