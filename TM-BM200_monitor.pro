@@ -26,13 +26,16 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        tkbmwidget.cpp
+        tkbmwidget.cpp \
+    logindialog.cpp
 
 HEADERS += \
-        tkbmwidget.h
+        tkbmwidget.h \
+    logindialog.h
 
 FORMS += \
-        tkbmwidget.ui
+        tkbmwidget.ui \
+    logindialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
