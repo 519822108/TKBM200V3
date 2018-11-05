@@ -28,6 +28,14 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     ui->tb_version->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_run_state->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_run_state->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_chg_info->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_chg_info->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_chg_err->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_chg_err->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_need->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_need->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_ctl_info->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_ctl_info->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 TkbmWidget::~TkbmWidget()
