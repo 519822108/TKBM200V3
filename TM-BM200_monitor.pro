@@ -27,17 +27,35 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         tkbmwidget.cpp \
-    logindialog.cpp
+    logindialog.cpp \
+    monitordialog.cpp
 
 HEADERS += \
         tkbmwidget.h \
-    logindialog.h
+    logindialog.h \
+    monitordialog.h \
+    config.h \
+    data_organize.h
 
 FORMS += \
         tkbmwidget.ui \
-    logindialog.ui
+    logindialog.ui \
+    monitordialog.ui
+
+win32 {
+QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
+QMAKE_LFLAGS_CONSOLE = /SUBSYSTEM:CONSOLE,5.01
+
+DEFINES += _ATL_XP_TARGETING
+QMAKE_CFLAGS += /D_USING_V140_SDK71_
+QMAKE_CXXFLAGS += /D_USING_V140_SDK71_
+LIBS += -L$$quote(C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib)
+INCLUDEPATH += $$quote(C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include)
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+CONFIG += C++11

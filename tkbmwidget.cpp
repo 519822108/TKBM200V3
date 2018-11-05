@@ -10,6 +10,13 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     QDesktopWidget *thisDesk = QApplication::desktop();
     QRect rect = thisDesk->availableGeometry();
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
+    this->ui_init();
+    login_dialog.show();
+    monitor_dialog.show();
+}
+
+void TkbmWidget::ui_init(void)
+{
     ui->tb_breif->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_breif->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_vol_m1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -36,6 +43,20 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     ui->tb_need->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_ctl_info->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_ctl_info->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_each_hi->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_each_hi->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_each_lo->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_each_lo->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_event->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_event->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_brief->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_brief->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_eep_file->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_eep_file->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_state->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_state->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_eep_content->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_eep_content->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 TkbmWidget::~TkbmWidget()
