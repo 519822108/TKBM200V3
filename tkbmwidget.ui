@@ -359,7 +359,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -479,10 +479,10 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -952,10 +952,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1422,10 +1422,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1895,10 +1895,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -5061,7 +5061,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>551</width>
+       <width>481</width>
        <height>401</height>
       </rect>
      </property>
@@ -5071,11 +5071,6 @@
      <attribute name="verticalHeaderMinimumSectionSize">
       <number>20</number>
      </attribute>
-     <row>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </row>
      <column>
       <property name="text">
        <string>数据名</string>
@@ -5091,11 +5086,6 @@
        <string>目标值</string>
       </property>
      </column>
-     <column>
-      <property name="text">
-       <string>存储位置</string>
-      </property>
-     </column>
     </widget>
     <widget class="QLineEdit" name="lineEdit_6">
      <property name="enabled">
@@ -5103,9 +5093,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>560</x>
+       <x>480</x>
        <y>10</y>
-       <width>121</width>
+       <width>201</width>
        <height>20</height>
       </rect>
      </property>
@@ -5408,12 +5398,12 @@
       <string>确认修改</string>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="textBrowser">
+    <widget class="QTextBrowser" name="tbs_note">
      <property name="geometry">
       <rect>
-       <x>560</x>
+       <x>480</x>
        <y>30</y>
-       <width>121</width>
+       <width>201</width>
        <height>370</height>
       </rect>
      </property>

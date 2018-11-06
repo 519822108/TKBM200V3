@@ -9,13 +9,18 @@
  */
 struct excel_param_organize{
     int             s_num;                  //数据的编号
-    QString         s_nane;                 //参数名
+    QString         s_name;                 //参数名
     QString         s_note;                 //参数注释
     int             o_byte_len;             //参数占有的字节长度
     int             o_dis_format;           //参数的显示格式, 16进制或10进制
     int             d_cur_val;             //参数当前值
     int             d_obj_val;             //参数目标值
     int             d_store_pos;            //参数存储位置
+};
+
+struct excel_param_organize_ext{
+    int len;
+    struct excel_param_organize param[FILE_CONFIG_LIST_MAX_LEN];
 };
 
 struct tb_breif_organize{
