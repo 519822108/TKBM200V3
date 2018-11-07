@@ -28,7 +28,8 @@ SOURCES += \
         main.cpp \
         tkbmwidget.cpp \
     logindialog.cpp \
-    monitordialog.cpp
+    monitordialog.cpp \
+    ctlcan.cpp
 
 HEADERS += \
         tkbmwidget.h \
@@ -59,3 +60,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 CONFIG += C++11
+
+win32: LIBS += -L$$PWD/build/ -lControlCAN
+
+INCLUDEPATH += $$PWD/build
+DEPENDPATH += $$PWD/build

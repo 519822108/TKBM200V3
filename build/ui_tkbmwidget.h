@@ -17,6 +17,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextBrowser>
@@ -46,7 +47,7 @@ public:
     QTableWidget *tb_disconnect;
     QTableWidget *tb_version;
     QTableWidget *tb_run_state;
-    QLineEdit *lineEdit;
+    QRadioButton *rb_exp_dis;
     QWidget *tab_2;
     QTableWidget *tb_chg_info;
     QTableWidget *tb_chg_err;
@@ -223,10 +224,10 @@ public:
         pb_before->setGeometry(QRect(120, 0, 121, 23));
         pb_after = new QPushButton(tab);
         pb_after->setObjectName(QStringLiteral("pb_after"));
-        pb_after->setGeometry(QRect(250, 0, 121, 23));
+        pb_after->setGeometry(QRect(470, 0, 121, 23));
         frame = new QFrame(tab);
         frame->setObjectName(QStringLiteral("frame"));
-        frame->setGeometry(QRect(380, 0, 121, 21));
+        frame->setGeometry(QRect(290, 1, 121, 21));
         frame->setFrameShape(QFrame::StyledPanel);
         frame->setFrameShadow(QFrame::Raised);
         le_id_in = new QLineEdit(frame);
@@ -397,8 +398,8 @@ public:
         tb_vol_m1->setObjectName(QStringLiteral("tb_vol_m1"));
         tb_vol_m1->setGeometry(QRect(10, 30, 150, 321));
         tb_vol_m1->setLayoutDirection(Qt::LeftToRight);
-        tb_vol_m1->horizontalHeader()->setVisible(false);
-        tb_vol_m1->verticalHeader()->setVisible(false);
+        tb_vol_m1->horizontalHeader()->setVisible(true);
+        tb_vol_m1->verticalHeader()->setVisible(true);
         tb_vol_m2 = new QTableWidget(tab);
         if (tb_vol_m2->columnCount() < 2)
             tb_vol_m2->setColumnCount(2);
@@ -550,8 +551,8 @@ public:
         tb_vol_m2->setItem(11, 1, __qtablewidgetitem118);
         tb_vol_m2->setObjectName(QStringLiteral("tb_vol_m2"));
         tb_vol_m2->setGeometry(QRect(180, 30, 150, 321));
-        tb_vol_m2->horizontalHeader()->setVisible(false);
-        tb_vol_m2->verticalHeader()->setVisible(false);
+        tb_vol_m2->horizontalHeader()->setVisible(true);
+        tb_vol_m2->verticalHeader()->setVisible(true);
         tb_vol_m3 = new QTableWidget(tab);
         if (tb_vol_m3->columnCount() < 2)
             tb_vol_m3->setColumnCount(2);
@@ -703,8 +704,8 @@ public:
         tb_vol_m3->setItem(11, 1, __qtablewidgetitem156);
         tb_vol_m3->setObjectName(QStringLiteral("tb_vol_m3"));
         tb_vol_m3->setGeometry(QRect(350, 30, 150, 321));
-        tb_vol_m3->horizontalHeader()->setVisible(false);
-        tb_vol_m3->verticalHeader()->setVisible(false);
+        tb_vol_m3->horizontalHeader()->setVisible(true);
+        tb_vol_m3->verticalHeader()->setVisible(true);
         tb_vol_m4 = new QTableWidget(tab);
         if (tb_vol_m4->columnCount() < 2)
             tb_vol_m4->setColumnCount(2);
@@ -856,8 +857,8 @@ public:
         tb_vol_m4->setItem(11, 1, __qtablewidgetitem194);
         tb_vol_m4->setObjectName(QStringLiteral("tb_vol_m4"));
         tb_vol_m4->setGeometry(QRect(520, 30, 150, 321));
-        tb_vol_m4->horizontalHeader()->setVisible(false);
-        tb_vol_m4->verticalHeader()->setVisible(false);
+        tb_vol_m4->horizontalHeader()->setVisible(true);
+        tb_vol_m4->verticalHeader()->setVisible(true);
         tb_temp = new QTableWidget(tab);
         if (tb_temp->columnCount() < 8)
             tb_temp->setColumnCount(8);
@@ -1148,10 +1149,9 @@ public:
         tb_run_state->setGeometry(QRect(290, 540, 381, 111));
         tb_run_state->horizontalHeader()->setVisible(false);
         tb_run_state->verticalHeader()->setVisible(false);
-        lineEdit = new QLineEdit(tab);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setEnabled(false);
-        lineEdit->setGeometry(QRect(520, 0, 151, 20));
+        rb_exp_dis = new QRadioButton(tab);
+        rb_exp_dis->setObjectName(QStringLiteral("rb_exp_dis"));
+        rb_exp_dis->setGeometry(QRect(420, 4, 21, 16));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -2035,7 +2035,7 @@ public:
 
         retranslateUi(TkbmWidget);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(TkbmWidget);
@@ -2340,6 +2340,7 @@ public:
         ___qtablewidgetitem120->setText(QApplication::translate("TkbmWidget", "\345\277\203\350\267\263", Q_NULLPTR));
         tb_run_state->setSortingEnabled(__sortingEnabled8);
 
+        rb_exp_dis->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("TkbmWidget", "\345\215\225\344\275\223\346\225\260\346\215\256", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem121 = tb_chg_info->horizontalHeaderItem(0);
         ___qtablewidgetitem121->setText(QApplication::translate("TkbmWidget", "1", Q_NULLPTR));

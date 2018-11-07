@@ -14,10 +14,10 @@ CXX           = cl
 DEFINES       = -DUNICODE -DWIN32 -DQT_DEPRECATED_WARNINGS -D_ATL_XP_TARGETING -DQT_QML_DEBUG -DQT_AXCONTAINER_LIB -DQT_AXBASE_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -nologo -Zc:wchar_t -FS /D_USING_V140_SDK71_ -Zi -MDd -W3 /Fddebug\TM-BM200_monitor.vc.pdb $(DEFINES)
 CXXFLAGS      = -nologo -Zc:wchar_t -FS /D_USING_V140_SDK71_ -Zi -MDd -GR -W3 -w34100 -w34189 -w44996 -EHsc /Fddebug\TM-BM200_monitor.vc.pdb $(DEFINES)
-INCPATH       = -I..\..\TM-BM200_monitor -I. -I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include" -ID:\Qt\5.7\msvc2013\include -ID:\Qt\5.7\msvc2013\include\ActiveQt -ID:\Qt\5.7\msvc2013\include\QtWidgets -ID:\Qt\5.7\msvc2013\include\QtGui -ID:\Qt\5.7\msvc2013\include\QtANGLE -ID:\Qt\5.7\msvc2013\include\QtCore -Idebug -I. -ID:\Qt\5.7\msvc2013\mkspecs\win32-msvc2013 
+INCPATH       = -I..\..\TM-BM200_monitor -I. -I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include" -I. -ID:\Qt\5.7\msvc2013\include -ID:\Qt\5.7\msvc2013\include\ActiveQt -ID:\Qt\5.7\msvc2013\include\QtWidgets -ID:\Qt\5.7\msvc2013\include\QtGui -ID:\Qt\5.7\msvc2013\include\QtANGLE -ID:\Qt\5.7\msvc2013\include\QtCore -Idebug -I. -ID:\Qt\5.7\msvc2013\mkspecs\win32-msvc2013 
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /DEBUG /SUBSYSTEM:WINDOWS,5.01 "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = /LIBPATH:D:\Qt\5.7\msvc2013\lib D:\Qt\5.7\msvc2013\lib\qtmaind.lib shell32.lib /LIBPATH:C:\utils\my_sql\my_sql\lib /LIBPATH:C:\utils\postgresql\pgsql\lib /LIBPATH:"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib" D:\Qt\5.7\msvc2013\lib\Qt5AxContainerd.lib /LIBPATH:D:\Qt\5.7\msvc2013\lib D:\Qt\5.7\msvc2013\lib\Qt5AxBased.lib D:\Qt\5.7\msvc2013\lib\Qt5Widgetsd.lib D:\Qt\5.7\msvc2013\lib\Qt5Guid.lib D:\Qt\5.7\msvc2013\lib\Qt5Cored.lib ole32.lib oleaut32.lib user32.lib gdi32.lib advapi32.lib D:\Qt\5.7\msvc2013\lib\Qt5Widgetsd.lib D:\Qt\5.7\msvc2013\lib\Qt5Guid.lib D:\Qt\5.7\msvc2013\lib\Qt5Cored.lib 
+LIBS          = /LIBPATH:D:\Qt\5.7\msvc2013\lib D:\Qt\5.7\msvc2013\lib\qtmaind.lib shell32.lib /LIBPATH:C:\utils\my_sql\my_sql\lib /LIBPATH:C:\utils\postgresql\pgsql\lib /LIBPATH:"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib" /LIBPATH:E:\TESTFILE_VS\QT_PROJECT\TM-BM200_monitor\build E:\TESTFILE_VS\QT_PROJECT\TM-BM200_monitor\build\ControlCAN.lib D:\Qt\5.7\msvc2013\lib\Qt5AxContainerd.lib /LIBPATH:D:\Qt\5.7\msvc2013\lib D:\Qt\5.7\msvc2013\lib\Qt5AxBased.lib D:\Qt\5.7\msvc2013\lib\Qt5Widgetsd.lib D:\Qt\5.7\msvc2013\lib\Qt5Guid.lib D:\Qt\5.7\msvc2013\lib\Qt5Cored.lib ole32.lib oleaut32.lib user32.lib gdi32.lib advapi32.lib D:\Qt\5.7\msvc2013\lib\Qt5Widgetsd.lib D:\Qt\5.7\msvc2013\lib\Qt5Guid.lib D:\Qt\5.7\msvc2013\lib\Qt5Cored.lib 
 QMAKE         = D:\Qt\5.7\msvc2013\bin\qmake.exe
 IDC           = idc
 IDL           = midl
@@ -46,13 +46,15 @@ OBJECTS_DIR   = debug
 SOURCES       = ..\main.cpp \
 		..\tkbmwidget.cpp \
 		..\logindialog.cpp \
-		..\monitordialog.cpp debug\moc_tkbmwidget.cpp \
+		..\monitordialog.cpp \
+		..\ctlcan.cpp debug\moc_tkbmwidget.cpp \
 		debug\moc_logindialog.cpp \
 		debug\moc_monitordialog.cpp
 OBJECTS       = debug\main.obj \
 		debug\tkbmwidget.obj \
 		debug\logindialog.obj \
 		debug\monitordialog.obj \
+		debug\ctlcan.obj \
 		debug\moc_tkbmwidget.obj \
 		debug\moc_logindialog.obj \
 		debug\moc_monitordialog.obj
@@ -64,7 +66,8 @@ DIST          =  ..\tkbmwidget.h \
 		..\data_organize.h ..\main.cpp \
 		..\tkbmwidget.cpp \
 		..\logindialog.cpp \
-		..\monitordialog.cpp
+		..\monitordialog.cpp \
+		..\ctlcan.cpp
 QMAKE_TARGET  = TM-BM200_monitor
 DESTDIR        = debug\ #avoid trailing-slash linebreak
 TARGET         = TM-BM200_monitor.exe
@@ -153,7 +156,7 @@ dist:
 	$(ZIP) TM-BM200_monitor.zip $(SOURCES) $(DIST) ..\TM-BM200_monitor.pro D:\Qt\5.7\msvc2013\mkspecs\features\spec_pre.prf D:\Qt\5.7\msvc2013\mkspecs\common\angle.conf D:\Qt\5.7\msvc2013\mkspecs\common\msvc-base.conf D:\Qt\5.7\msvc2013\mkspecs\common\msvc-desktop.conf D:\Qt\5.7\msvc2013\mkspecs\qconfig.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dcore.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dcore_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dextras.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dextras_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dinput.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dinput_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dlogic.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dlogic_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquick.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquick_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquickextras.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquickextras_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquickinput.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquickinput_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquickrender.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3dquickrender_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3drender.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_3drender_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_axbase.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_axbase_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_axcontainer.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_axcontainer_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_axserver.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_axserver_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_bluetooth.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_bluetooth_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_bootstrap_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_clucene_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_concurrent.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_concurrent_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_core.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_core_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_dbus.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_dbus_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_designer.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_designer_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_designercomponents_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_gui.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_gui_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_help.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_help_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_location.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_location_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_multimedia.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_multimedia_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_multimediawidgets.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_multimediawidgets_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_network.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_network_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_nfc.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_nfc_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_opengl.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_opengl_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_openglextensions.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_openglextensions_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_packetprotocol_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_platformsupport_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_positioning.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_positioning_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_printsupport.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_printsupport_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qml.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qml_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qmldebug_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qmldevtools_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qmltest.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qmltest_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quick.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quick_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quickcontrols2.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quickcontrols2_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quickparticles_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quicktemplates2_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quickwidgets.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_quickwidgets_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_sensors.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_sensors_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_serialbus.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_serialbus_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_serialport.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_serialport_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_sql.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_sql_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_svg.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_svg_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_testlib.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_testlib_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_uiplugin.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_uitools.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_uitools_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_webchannel.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_webchannel_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_websockets.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_websockets_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_webview.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_webview_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_widgets.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_widgets_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_winextras.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_winextras_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_xml.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_xml_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_xmlpatterns.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_xmlpatterns_private.pri D:\Qt\5.7\msvc2013\mkspecs\modules\qt_lib_zlib_private.pri D:\Qt\5.7\msvc2013\mkspecs\features\qt_functions.prf D:\Qt\5.7\msvc2013\mkspecs\features\qt_config.prf D:\Qt\5.7\msvc2013\mkspecs\features\win32\qt_config.prf D:\Qt\5.7\msvc2013\mkspecs\win32-msvc2013\qmake.conf D:\Qt\5.7\msvc2013\mkspecs\features\spec_post.prf D:\Qt\5.7\msvc2013\mkspecs\features\exclusive_builds.prf D:\Qt\5.7\msvc2013\mkspecs\features\toolchain.prf D:\Qt\5.7\msvc2013\mkspecs\features\default_pre.prf D:\Qt\5.7\msvc2013\mkspecs\features\win32\default_pre.prf D:\Qt\5.7\msvc2013\mkspecs\features\resolve_config.prf D:\Qt\5.7\msvc2013\mkspecs\features\exclusive_builds_post.prf D:\Qt\5.7\msvc2013\mkspecs\features\default_post.prf D:\Qt\5.7\msvc2013\mkspecs\features\build_pass.prf D:\Qt\5.7\msvc2013\mkspecs\features\qml_debug.prf D:\Qt\5.7\msvc2013\mkspecs\features\win32\rtti.prf D:\Qt\5.7\msvc2013\mkspecs\features\precompile_header.prf D:\Qt\5.7\msvc2013\mkspecs\features\warn_on.prf D:\Qt\5.7\msvc2013\mkspecs\features\qt.prf D:\Qt\5.7\msvc2013\mkspecs\features\resources.prf D:\Qt\5.7\msvc2013\mkspecs\features\moc.prf D:\Qt\5.7\msvc2013\mkspecs\features\win32\opengl.prf D:\Qt\5.7\msvc2013\mkspecs\features\uic.prf D:\Qt\5.7\msvc2013\mkspecs\features\win32\dumpcpp.prf D:\Qt\5.7\msvc2013\mkspecs\features\file_copies.prf D:\Qt\5.7\msvc2013\mkspecs\features\win32\windows.prf D:\Qt\5.7\msvc2013\mkspecs\features\testcase_targets.prf D:\Qt\5.7\msvc2013\mkspecs\features\exceptions.prf D:\Qt\5.7\msvc2013\mkspecs\features\yacc.prf D:\Qt\5.7\msvc2013\mkspecs\features\lex.prf ..\TM-BM200_monitor.pro D:\Qt\5.7\msvc2013\lib\qtmaind.prl D:\Qt\5.7\msvc2013\lib\Qt5AxContainerd.prl D:\Qt\5.7\msvc2013\lib\Qt5AxBased.prl D:\Qt\5.7\msvc2013\lib\Qt5Widgetsd.prl D:\Qt\5.7\msvc2013\lib\Qt5Guid.prl D:\Qt\5.7\msvc2013\lib\Qt5Cored.prl  NO_PCH_SOURCES RESOURCES TYPELIBS HEADERS TYPELIBS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) debug\main.obj debug\tkbmwidget.obj debug\logindialog.obj debug\monitordialog.obj debug\moc_tkbmwidget.obj debug\moc_logindialog.obj debug\moc_monitordialog.obj
+	-$(DEL_FILE) debug\main.obj debug\tkbmwidget.obj debug\logindialog.obj debug\monitordialog.obj debug\ctlcan.obj debug\moc_tkbmwidget.obj debug\moc_logindialog.obj debug\moc_monitordialog.obj
 	-$(DEL_FILE) debug\TM-BM200_monitor.exp debug\TM-BM200_monitor.vc.pdb debug\TM-BM200_monitor.ilk debug\TM-BM200_monitor.idb
 
 distclean: clean 
@@ -291,9 +294,15 @@ debug\moc_tkbmwidget.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QWidget \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qdialog.h \
 		..\monitordialog.h \
+		..\data_organize.h \
+		..\config.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\QString \
+		..\ctlcan.h \
+		..\ControlCAN.h \
+		..\data_type.h \
 		..\tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\bin\moc.exe
-	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\tkbmwidget.h -o debug\moc_tkbmwidget.cpp
+	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor/build -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\tkbmwidget.h -o debug\moc_tkbmwidget.cpp
 
 debug\moc_logindialog.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qdialog.h \
@@ -405,7 +414,7 @@ debug\moc_logindialog.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtouchdevice.h \
 		..\logindialog.h \
 		D:\Qt\5.7\msvc2013\bin\moc.exe
-	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\logindialog.h -o debug\moc_logindialog.cpp
+	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor/build -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\logindialog.h -o debug\moc_logindialog.cpp
 
 debug\moc_monitordialog.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qdialog.h \
@@ -517,7 +526,7 @@ debug\moc_monitordialog.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtouchdevice.h \
 		..\monitordialog.h \
 		D:\Qt\5.7\msvc2013\bin\moc.exe
-	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\monitordialog.h -o debug\moc_monitordialog.cpp
+	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor/build -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\monitordialog.h -o debug\moc_monitordialog.cpp
 
 compiler_dumpcpp_impl_make_all:
 compiler_dumpcpp_impl_clean:
@@ -662,6 +671,12 @@ debug\main.obj: ..\main.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qdialog.h \
 		../monitordialog.h \
+		../data_organize.h \
+		../config.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\QString \
+		..\ctlcan.h \
+		..\ControlCAN.h \
+		..\data_type.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
@@ -782,58 +797,15 @@ debug\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qdialog.h \
 		../monitordialog.h \
+		../data_organize.h \
+		../config.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\QString \
+		..\ctlcan.h \
+		..\ControlCAN.h \
+		..\data_type.h \
 		ui_tkbmwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qaction.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qicon.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qactiongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qeventloop.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qguiapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qinputmethod.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QButtonGroup \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qbuttongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QFrame \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qframe.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHeaderView \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qheaderview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractscrollarea.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qabstractitemmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qitemselectionmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemdelegate.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyleoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractspinbox.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qvalidator.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qregularexpression.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyle.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabbar.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qrubberband.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QLineEdit \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlineedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextcursor.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextformat.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qpen.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QPushButton \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qpushbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTabWidget \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidget \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTextBrowser \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextbrowser.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextdocument.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
 		D:\Qt\5.7\msvc2013\include\ActiveQt\QAxObject \
 		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxobject.h \
 		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxbase.h \
@@ -842,7 +814,27 @@ debug\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qmessagebox.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
-		../config.h
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemview.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractscrollarea.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qframe.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\qabstractitemmodel.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\qitemselectionmodel.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemdelegate.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyleoption.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractspinbox.h \
+		D:\Qt\5.7\msvc2013\include\QtGui\qvalidator.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\qregularexpression.h \
+		D:\Qt\5.7\msvc2013\include\QtGui\qicon.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qslider.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractslider.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyle.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabbar.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabwidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qrubberband.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidgetItem
 
 debug\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
@@ -954,53 +946,8 @@ debug\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qvector2d.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtouchdevice.h \
 		ui_logindialog.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qaction.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qicon.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qactiongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qeventloop.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qguiapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qinputmethod.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QButtonGroup \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qbuttongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QComboBox \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qcombobox.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemdelegate.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyleoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractspinbox.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qvalidator.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qregularexpression.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyle.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabbar.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qrubberband.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qframe.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qabstractitemmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QGridLayout \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qgridlayout.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlayout.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlayoutitem.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qboxlayout.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHBoxLayout \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHeaderView \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qheaderview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractscrollarea.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qitemselectionmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QLabel \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlabel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QPushButton \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qpushbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QSpacerItem \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h
 
 debug\monitordialog.obj: ..\monitordialog.cpp ../monitordialog.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
@@ -1112,52 +1059,12 @@ debug\monitordialog.obj: ..\monitordialog.cpp ../monitordialog.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qvector2d.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtouchdevice.h \
 		ui_monitordialog.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qaction.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qicon.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qactiongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qeventloop.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qguiapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qinputmethod.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QButtonGroup \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qbuttongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHeaderView \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qheaderview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractscrollarea.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qframe.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qabstractitemmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qitemselectionmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemdelegate.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyleoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractspinbox.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qvalidator.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qregularexpression.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyle.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabbar.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qrubberband.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QLineEdit \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlineedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextcursor.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextformat.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qpen.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QListWidget \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlistwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlistview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTextBrowser \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextbrowser.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextdocument.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h
+
+debug\ctlcan.obj: ..\ctlcan.cpp ..\ctlcan.h \
+		..\ControlCAN.h \
+		..\data_type.h
 
 debug\moc_tkbmwidget.obj: debug\moc_tkbmwidget.cpp 
 

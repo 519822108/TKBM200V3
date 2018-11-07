@@ -359,7 +359,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -393,7 +393,7 @@
     <widget class="QPushButton" name="pb_after">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>470</x>
        <y>0</y>
        <width>121</width>
        <height>23</height>
@@ -406,8 +406,8 @@
     <widget class="QFrame" name="frame">
      <property name="geometry">
       <rect>
-       <x>380</x>
-       <y>0</y>
+       <x>290</x>
+       <y>1</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -479,10 +479,10 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -952,10 +952,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1422,10 +1422,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1895,10 +1895,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -3192,17 +3192,17 @@
       </property>
      </item>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+    <widget class="QRadioButton" name="rb_exp_dis">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>0</y>
-       <width>151</width>
-       <height>20</height>
+       <x>420</x>
+       <y>4</y>
+       <width>21</width>
+       <height>16</height>
       </rect>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>

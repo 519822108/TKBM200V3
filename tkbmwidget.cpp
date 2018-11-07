@@ -5,11 +5,12 @@
 #include <QAxObject>
 #include <QFile>
 #include <QMessageBox>
-#include <QThread>
 #include <QTableWidget>
 #include <QTableWidgetItem>
-#include "string.h"
+#include <string.h>
+#include <QRadioButton>
 
+struct recv_data can_data;
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
     QWidget(parent),
@@ -18,10 +19,42 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     ui->setupUi(this);
     QDesktopWidget *thisDesk = QApplication::desktop();
     QRect rect = thisDesk->availableGeometry();
+    can_bsp = NULL;
+    can_data.len = 0;
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
     this->ui_init();
     this->set_eep_config();
+    login_dialog.show();
 
+    connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
+    connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
+    connect(this,&TkbmWidget::sig_process_exit,&login_dialog,&QDialog::close);
+    connect(this,&TkbmWidget::sig_process_exit,&monitor_dialog,&QDialog::close);
+}
+
+void TkbmWidget::comm_timeout()
+{
+
+}
+
+void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
+{
+    can_bsp = new CtlCan(dev,num,port);
+    if(can_bsp->open((CtlCan::baudRate)rate)){
+        can_bsp->state = CtlCan::off;
+        QMessageBox::information(this,"ERROR",QString("Error to open device,please check link"));
+        this->close();
+    }else{
+        can_bsp->state = CtlCan::on;
+        RecvCan *tRecv = new RecvCan;
+        tRecv->start();
+        connect(this,&TkbmWidget::sig_set_cthread_state,tRecv,&RecvCan::slot_get_state);
+        emit sig_set_cthread_state(can_bsp);
+
+        timer10 = new QTimer(this);
+        connect(timer10,&QTimer::timeout,this,&TkbmWidget::comm_timeout);
+        timer10->start(10);
+    }
 }
 
 void TkbmWidget::ui_init(void)
@@ -60,7 +93,9 @@ void TkbmWidget::ui_init(void)
     ui->tb_event->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_brief->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_brief->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tb_eep_file->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tb_eep_file->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
+    ui->tb_eep_file->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+    ui->tb_eep_file->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     ui->tb_eep_file->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_state->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_state->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -143,10 +178,71 @@ void TkbmWidget::set_eeprom_table()
 
 TkbmWidget::~TkbmWidget()
 {
+    if(can_bsp != NULL)
+        delete can_bsp;
     delete ui;
 }
 
 void TkbmWidget::on_tb_eep_file_cellClicked(int row, int column)
 {
     ui->tbs_note->setText(eep_config.param[row].s_note);
+}
+
+void TkbmWidget::closeEvent(QCloseEvent *event)
+{
+    emit sig_set_cthread_state(NULL);
+    emit sig_process_exit();
+    monitor_dialog.hide();
+    if(can_bsp != NULL)
+        can_bsp->close();
+    QWidget::closeEvent(event);
+}
+
+RecvCan::RecvCan(QObject *parent)
+{
+    this->state = true;
+    can_bps = NULL;
+}
+
+RecvCan::~RecvCan()
+{
+
+}
+
+void RecvCan::slot_get_state(CtlCan *pCan)
+{
+    if(pCan == NULL){
+        this->state = false;
+    }else{
+        can_bps = pCan;
+    }
+}
+
+void RecvCan::run()
+{
+    int i=0;
+    int read_len;
+    while(this->state){
+       if(can_bps){
+            if(can_data.len > CAN_RECV_BUFF_LEN_MAX)
+                can_data.len = 0;
+            read_len = can_bps->get_recive_num();
+            if(can_data.len + read_len > CAN_RECV_BUFF_LEN_MAX){
+                can_bps->clear_buff();
+                read_len = 0;
+                can_data.len = 0;
+            }
+            can_data.len += can_bps->can_rec_read(&can_data.data[can_data.len],read_len);
+        }
+    }
+}
+
+void TkbmWidget::on_rb_exp_dis_clicked()
+{
+    if(ui->rb_exp_dis->isChecked())
+    {
+        monitor_dialog.show();
+    }else{
+        monitor_dialog.hide();
+    }
 }

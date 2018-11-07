@@ -2,6 +2,9 @@
 #define MONITORDIALOG_H
 
 #include <QDialog>
+#include <QTimer>
+#include <ControlCAN.h>
+#include <QListWidgetItem>
 
 namespace Ui {
 class MonitorDialog;
@@ -15,8 +18,22 @@ public:
     explicit MonitorDialog(QWidget *parent = nullptr);
     ~MonitorDialog();
 
+public slots:
+    void timer100_timeout(void);
+
+private slots:
+    void on_lw_fid_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::MonitorDialog *ui;
+
+    VCI_CAN_OBJ last_msg;
+    struct {
+        unsigned int id[128];
+        int len;
+    }msg_id_list;
+    int filter_id;
+    char board_id_list[128];
 };
 
 #endif // MONITORDIALOG_H

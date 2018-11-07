@@ -15,6 +15,16 @@ public:
     explicit LoginDialog(QWidget *parent = nullptr);
     ~LoginDialog();
 
+private slots:
+    void on_pb_ok_clicked();
+
+signals:
+    void sig_send_can_param(int type,int num,int rate,int port);
+    bool sig_send_window_close();
+
+protected:
+    void closeEvent(QCloseEvent *obj);
+
 private:
     Ui::LoginDialog *ui;
 };

@@ -13,6 +13,8 @@
 #define CONFIG_COL_PARAM_FORMAT 5               //参数显示格式的列号
 #define CONFIG_COL_PARAM_NOTE   8               //参数注释的列号
 
-#define FILE_CONFIG_LIST_MAX_LEN    512
+#define FILE_CONFIG_LIST_MAX_LEN    512         //配置参数最大数目
+
+#define CAN_RECV_BUFF_LEN_MAX       512         //CAN buff 长度
 
 #endif // CONFIG_H

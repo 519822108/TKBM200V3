@@ -2,8 +2,10 @@
 #define DATA_ORGANIZE_H
 #include <config.h>
 #include <QString>
+#include "ControlCAN.h"
 
-/*  s_ :源文件和显示区共有的成员
+/*  breif: Excel配置数据到县市区的对应关系
+ *  s_ :源文件和显示区共有的成员
  *  o_ :源文件独有的成员
  *  d_ :显示区独有的成员
  */
@@ -18,9 +20,14 @@ struct excel_param_organize{
     int             d_store_pos;            //参数存储位置
 };
 
-struct excel_param_organize_ext{
+struct excel_param_organize_ext{               //Excel 参数的表
     int len;
     struct excel_param_organize param[FILE_CONFIG_LIST_MAX_LEN];
+};
+
+struct recv_data{                   //CAN数据Buff
+    int len;
+    VCI_CAN_OBJ data[CAN_RECV_BUFF_LEN_MAX];
 };
 
 struct tb_breif_organize{
