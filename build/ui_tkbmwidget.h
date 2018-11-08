@@ -2015,6 +2015,7 @@ public:
         teb_msg->setGeometry(QRect(59, 1, 151, 91));
         teb_msg->setMaximumSize(QSize(155, 100));
         teb_msg->setSizeIncrement(QSize(1, 1));
+        teb_msg->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         teb_alert = new QTextBrowser(widget);
         teb_alert->setObjectName(QStringLiteral("teb_alert"));
         teb_alert->setEnabled(true);

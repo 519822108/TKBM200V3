@@ -22,10 +22,11 @@ public:
     ~TkbmWidget();
 
     void ui_init(void);
+    void data_struct_init(void);
     void set_eep_config(void);
     void read_excel_data(void);
     void set_eeprom_table(void);
-    void comm_timeout(void);
+    QString anasy_alart_msg(unsigned char data[5]);
 
 signals:
     void sig_set_cthread_state(CtlCan *pCan);
@@ -34,8 +35,9 @@ signals:
 private slots:
     void on_tb_eep_file_cellClicked(int row, int column);
     void sig_get_can_param(int dev,int num,int rate,int port);
-
+    void comm_timeout(void);                //定时器超时处理通信
     void on_rb_exp_dis_clicked();
+    void update_msg_timeout(void);          //定时器超时更新UI
 
 private:
     Ui::TkbmWidget *ui;
@@ -44,6 +46,10 @@ private:
     struct excel_param_organize_ext eep_config;
     CtlCan *can_bsp;
     QTimer *timer10;
+    QTimer *timer_100;
+
+    struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构
+    struct msg_discripte msg_alarm;                                     //报警信息结构
 
 protected:
     void closeEvent(QCloseEvent *event);

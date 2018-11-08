@@ -11,6 +11,13 @@
 #include <QRadioButton>
 
 struct recv_data can_data;
+QString msg_alart_level[4] = {QString("无报警\0"),QString("一级报警\0"),QString("二级报警\0"),QString("三级报警\0")};
+QString msg_alart_list[5][4] = { {QString("绝缘过低\t"),QString("内CAN故障\t"),QString("从板故障\t"),QString("EEP故障\t")},
+                                 {QString("单体过压\t"),QString("单体欠压\t"),QString("总压过高\t"),QString("总压过低\t")},
+                                 {QString("电池过温\t"),QString("电池低温\t"),QString("温差过大\t"),QString("压差过大\t")},
+                                 {QString("SOC过低\t"),QString("HALL离线\t"),QString("SOC跳变\t"),QString("时钟离线\t")},
+                                 {QString("充电过流\t"),QString("放电过流\t"),QString("采集线断裂\t"),QString("SOH过低\t")}
+                            };
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
     QWidget(parent),
@@ -23,8 +30,13 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     can_data.len = 0;
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
     this->ui_init();
+    this->data_struct_init();
     this->set_eep_config();
     login_dialog.show();
+
+    timer_100 = new QTimer(this);
+    connect(timer_100,&QTimer::timeout,this,&TkbmWidget::update_msg_timeout);
+    timer_100->start(100);
 
     connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
@@ -34,7 +46,61 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
 
 void TkbmWidget::comm_timeout()
 {
+    int i;
+    QString msg;
 
+    for(i=0;i<can_data.len;i++){
+        if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){
+            switch (can_data.data[i].Data[0]) {
+            case 0:break;
+            case 1:break;
+            case 2:break;
+            case 3:break;
+            case 4:
+                msg = anasy_alart_msg(can_data.data[i].Data+1);
+                if(msg.isNull() || msg.isEmpty()){
+                    msg_alarm.f_color = Qt::black;
+                    msg_alarm.s_val = ' ';
+                }else{
+                    msg_alarm.s_val = msg;
+                    msg_alarm.f_color = Qt::red;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+QString TkbmWidget::anasy_alart_msg(unsigned char data[5])
+{
+    QString temp;
+    int i,j;
+    int val;
+    for(i=0;i<5;i++){
+        for(j=0;j<4;j++){
+            val = data[i]>>(2*j) & 0x03;
+            if(val){
+                temp += msg_alart_list[i][j] + msg_alart_level[val] + '\n';
+            }
+        }
+    }
+    return temp;
+}
+
+void TkbmWidget::update_msg_timeout()
+{
+    int item_count;
+    item_count = ui->tb_breif->columnCount();
+    for(int i=0;i<item_count;i++){                          //更新概述表
+        QTableWidgetItem *item = ui->tb_breif->item(i,0);
+        item->setText(msg_summary[i].s_val);
+        item->setForeground(QBrush(msg_summary->f_color));
+        item->setBackground(QBrush(msg_summary->b_color));
+    }
+    ui->teb_msg->setText(msg_alarm.s_val);
+    ui->teb_msg->setTextColor(msg_alarm.f_color);
 }
 
 void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
@@ -55,6 +121,21 @@ void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
         connect(timer10,&QTimer::timeout,this,&TkbmWidget::comm_timeout);
         timer10->start(10);
     }
+}
+
+void TkbmWidget::data_struct_init()
+{
+    for(int i=0;i<MSG_SUMMARY_LIST_LENGTH;i++){
+        msg_summary[i].f_color = Qt::black;
+        msg_summary[i].b_color = Qt::white;
+        msg_summary[i].i_val = 0;
+        msg_summary[i].s_val = ' ';
+    }
+    msg_summary[0].s_val = QString(THIS_SOFT_VERSION);
+    msg_alarm.s_val.append(QString("没有报警"));
+    msg_alarm.b_color = Qt::white;
+    msg_alarm.f_color = Qt::black;
+    msg_alarm.i_val = 0;
 }
 
 void TkbmWidget::ui_init(void)
@@ -141,7 +222,7 @@ void TkbmWidget::read_excel_data()
         cell_val = pCell->property("Value");
         val = cell_val.toString();
         eep_config.param[eep_config.len].s_name = val;
-   #if 0
+
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_LEN);     //获取数据长度
         cell_val = pCell->property("Value");
         val = cell_val.toString();
@@ -151,7 +232,16 @@ void TkbmWidget::read_excel_data()
         cell_val = pCell->property("Value");
         val = cell_val.toString();
         eep_config.param[eep_config.len].o_dis_format = val.toInt();
-   #endif
+
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_RATE);     //获取比例
+        cell_val = pCell->property("Value");
+        val = cell_val.toString();
+        eep_config.param[eep_config.len].o_rate = val.toInt();
+
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_OFF);     //获取偏移
+        cell_val = pCell->property("Value");
+        val = cell_val.toString();
+        eep_config.param[eep_config.len].o_off = val.toInt();
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NOTE);     //获取参数注释
         cell_val = pCell->property("Value");
@@ -198,6 +288,16 @@ void TkbmWidget::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
+void TkbmWidget::on_rb_exp_dis_clicked()
+{
+    if(ui->rb_exp_dis->isChecked())
+    {
+        monitor_dialog.show();
+    }else{
+        monitor_dialog.hide();
+    }
+}
+
 RecvCan::RecvCan(QObject *parent)
 {
     this->state = true;
@@ -237,12 +337,4 @@ void RecvCan::run()
     }
 }
 
-void TkbmWidget::on_rb_exp_dis_clicked()
-{
-    if(ui->rb_exp_dis->isChecked())
-    {
-        monitor_dialog.show();
-    }else{
-        monitor_dialog.hide();
-    }
-}
+

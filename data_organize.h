@@ -3,6 +3,7 @@
 #include <config.h>
 #include <QString>
 #include "ControlCAN.h"
+#include <Qt>
 
 /*  breif: Excel配置数据到县市区的对应关系
  *  s_ :源文件和显示区共有的成员
@@ -15,9 +16,10 @@ struct excel_param_organize{
     QString         s_note;                 //参数注释
     int             o_byte_len;             //参数占有的字节长度
     int             o_dis_format;           //参数的显示格式, 16进制或10进制
+    int             o_rate;                 //参数转换系数
+    int             o_off;                  //参数转换偏移
     int             d_cur_val;             //参数当前值
     int             d_obj_val;             //参数目标值
-    int             d_store_pos;            //参数存储位置
 };
 
 struct excel_param_organize_ext{               //Excel 参数的表
@@ -30,8 +32,11 @@ struct recv_data{                   //CAN数据Buff
     VCI_CAN_OBJ data[CAN_RECV_BUFF_LEN_MAX];
 };
 
-struct tb_breif_organize{
-    QString         version;
+struct msg_discripte{           //信息描述结构
+    QString                 s_val;          //信息值的字符串表示
+    int                     i_val;          //信息的值
+    enum Qt::GlobalColor    b_color;          //信息背景色
+    enum Qt::GlobalColor    f_color;          //信息前景色
 };
 
 #endif // DATA_ORGANIZE_H

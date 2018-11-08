@@ -23,7 +23,7 @@ MonitorDialog::MonitorDialog(QWidget *parent) :
 
     QTimer *timer100 = new QTimer(this);
     connect(timer100,&QTimer::timeout,this,&MonitorDialog::timer100_timeout);
-    timer100->start();
+    timer100->start(11);
 }
 
 void MonitorDialog::timer100_timeout()
@@ -40,6 +40,7 @@ void MonitorDialog::timer100_timeout()
             msg_id_list.id[j] = last_msg.ID;
             msg_id_list.len++;
             temp_str = QString("%1").arg(last_msg.ID,8,16,QChar('0'));
+            temp_str = temp_str.toUpper();
             ui->lw_fid->addItem(temp_str);
         }
         if(last_msg.ID == filter_id || filter_id==0){
@@ -47,11 +48,11 @@ void MonitorDialog::timer100_timeout()
             for(int k=0;k<last_msg.DataLen;k++){
                 temp_str += QString("%1 ").arg(last_msg.Data[k],2,16,QChar('0'));
             }
+            temp_str = temp_str.toUpper();
             ui->lw_msg->addItem(temp_str);
         }
-        if(ui->lw_msg->count() > 400){
-            ui->lw_msg->clear();
-            ui->lw_msg->clearSelection();
+        if(ui->lw_msg->count() > LIST_WIDGET_MSG_LEN_MAX){
+            ui->lw_msg->takeItem(0);
         }
         ui->lw_msg->scrollToBottom();
     }

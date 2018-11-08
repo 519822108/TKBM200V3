@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TkbmWidget_t {
-    QByteArrayData data[15];
-    char stringdata0[160];
+    QByteArrayData data[17];
+    char stringdata0[192];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -43,14 +43,17 @@ QT_MOC_LITERAL(10, 120, 3), // "dev"
 QT_MOC_LITERAL(11, 124, 3), // "num"
 QT_MOC_LITERAL(12, 128, 4), // "rate"
 QT_MOC_LITERAL(13, 133, 4), // "port"
-QT_MOC_LITERAL(14, 138, 21) // "on_rb_exp_dis_clicked"
+QT_MOC_LITERAL(14, 138, 12), // "comm_timeout"
+QT_MOC_LITERAL(15, 151, 21), // "on_rb_exp_dis_clicked"
+QT_MOC_LITERAL(16, 173, 18) // "update_msg_timeout"
 
     },
     "TkbmWidget\0sig_set_cthread_state\0\0"
     "CtlCan*\0pCan\0sig_process_exit\0"
     "on_tb_eep_file_cellClicked\0row\0column\0"
     "sig_get_can_param\0dev\0num\0rate\0port\0"
-    "on_rb_exp_dis_clicked"
+    "comm_timeout\0on_rb_exp_dis_clicked\0"
+    "update_msg_timeout"
 };
 #undef QT_MOC_LITERAL
 
@@ -60,7 +63,7 @@ static const uint qt_meta_data_TkbmWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -68,13 +71,15 @@ static const uint qt_meta_data_TkbmWidget[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   39,    2, 0x06 /* Public */,
-       5,    0,   42,    2, 0x06 /* Public */,
+       1,    1,   49,    2, 0x06 /* Public */,
+       5,    0,   52,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    2,   43,    2, 0x08 /* Private */,
-       9,    4,   48,    2, 0x08 /* Private */,
-      14,    0,   57,    2, 0x08 /* Private */,
+       6,    2,   53,    2, 0x08 /* Private */,
+       9,    4,   58,    2, 0x08 /* Private */,
+      14,    0,   67,    2, 0x08 /* Private */,
+      15,    0,   68,    2, 0x08 /* Private */,
+      16,    0,   69,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -83,6 +88,8 @@ static const uint qt_meta_data_TkbmWidget[] = {
  // slots: parameters
     QMetaType::Void, QMetaType::Int, QMetaType::Int,    7,    8,
     QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   10,   11,   12,   13,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -98,7 +105,9 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->sig_process_exit(); break;
         case 2: _t->on_tb_eep_file_cellClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 3: _t->sig_get_can_param((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
-        case 4: _t->on_rb_exp_dis_clicked(); break;
+        case 4: _t->comm_timeout(); break;
+        case 5: _t->on_rb_exp_dis_clicked(); break;
+        case 6: _t->update_msg_timeout(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -146,13 +155,13 @@ int TkbmWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
+        if (_id < 7)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }
