@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>330</width>
+    <width>340</width>
     <height>159</height>
    </rect>
   </property>
@@ -16,11 +16,17 @@
   <widget class="QListWidget" name="lw_fid">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>230</x>
      <y>0</y>
      <width>70</width>
      <height>160</height>
     </rect>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
    </property>
    <item>
     <property name="text">
@@ -34,7 +40,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>300</x>
      <y>0</y>
      <width>40</width>
      <height>20</height>
@@ -50,7 +56,7 @@
   <widget class="QTextBrowser" name="tbr_id">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>300</x>
      <y>20</y>
      <width>40</width>
      <height>140</height>
@@ -62,11 +68,14 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>220</width>
+     <width>230</width>
      <height>160</height>
     </rect>
    </property>
    <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAlwaysOff</enum>
    </property>
   </widget>

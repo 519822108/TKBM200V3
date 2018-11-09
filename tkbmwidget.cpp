@@ -9,15 +9,10 @@
 #include <QTableWidgetItem>
 #include <string.h>
 #include <QRadioButton>
+#include <static_string.h>
 
 struct recv_data can_data;
-QString msg_alart_level[4] = {QString("无报警\0"),QString("一级报警\0"),QString("二级报警\0"),QString("三级报警\0")};
-QString msg_alart_list[5][4] = { {QString("绝缘过低\t"),QString("内CAN故障\t"),QString("从板故障\t"),QString("EEP故障\t")},
-                                 {QString("单体过压\t"),QString("单体欠压\t"),QString("总压过高\t"),QString("总压过低\t")},
-                                 {QString("电池过温\t"),QString("电池低温\t"),QString("温差过大\t"),QString("压差过大\t")},
-                                 {QString("SOC过低\t"),QString("HALL离线\t"),QString("SOC跳变\t"),QString("时钟离线\t")},
-                                 {QString("充电过流\t"),QString("放电过流\t"),QString("采集线断裂\t"),QString("SOH过低\t")}
-                            };
+
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
     QWidget(parent),
@@ -35,13 +30,17 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     login_dialog.show();
 
     timer_100 = new QTimer(this);
+    monitor_dialog = new MonitorDialog(this);
     connect(timer_100,&QTimer::timeout,this,&TkbmWidget::update_msg_timeout);
     timer_100->start(100);
+    timer_5s = new QTimer(this);
+    connect(timer_5s,&QTimer::timeout,this,&TkbmWidget::update_data_timeout);
+    timer_5s->start(5000);
 
     connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
     connect(this,&TkbmWidget::sig_process_exit,&login_dialog,&QDialog::close);
-    connect(this,&TkbmWidget::sig_process_exit,&monitor_dialog,&QDialog::close);
+    connect(this,&TkbmWidget::sig_process_exit,monitor_dialog,&QDialog::close);
 }
 
 void TkbmWidget::comm_timeout()
@@ -52,10 +51,33 @@ void TkbmWidget::comm_timeout()
     for(i=0;i<can_data.len;i++){
         if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){
             switch (can_data.data[i].Data[0]) {
-            case 0:break;
-            case 1:break;
-            case 2:break;
-            case 3:break;
+            case 0:
+                msg = main_info_msg(can_data.data[i].Data[1],1);
+                msg_summary[MSG_SUMMARY_LIST_CNST].s_val = msg;
+                (can_data.data[i].Data[1] > 1) ? (msg_summary[MSG_SUMMARY_LIST_CNST].f_color = Qt::red) : (msg_summary[MSG_SUMMARY_LIST_CNST].f_color = Qt::black);
+                msg = main_info_msg(can_data.data[i].Data[2],2);
+                msg_summary[MSG_SUMMARY_LIST_CHGST].s_val = msg;
+                msg_summary[MSG_SUMMARY_LIST_CHGST].f_color = Qt::black;
+                msg_summary[MSG_SUMMARY_LIST_CCON].s_val = QString("%1").arg(can_data.data[i].Data[3]);
+                msg_summary[MSG_SUMMARY_LIST_TVOL].s_val = QString("%1").arg(can_data.data[i].Data[4]+can_data.data[i].Data[5]*256);
+                msg_summary[MSG_SUMMARY_LIST_TCUR].s_val = QString("%1").arg((can_data.data[i].Data[6]+can_data.data[i].Data[7]*256)*0.1-400);
+                break;
+            case 1:
+                msg_summary[MSG_SUMMARY_LIST_SOC].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.1);
+                msg_summary[MSG_SUMMARY_LIST_ACCAI].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*0.1);
+                msg_summary[MSG_SUMMARY_LIST_OFCAT].s_val = QString("%1").arg((can_data.data[i].Data[5]+can_data.data[i].Data[6]*256)*0.1);
+                msg_summary[MSG_SUMMARY_LIST_HERTICK].s_val = QString("%1").arg(can_data.data[i].Data[7]);
+                break;
+            case 2:
+                msg_summary[MSG_SUMMARY_LIST_MTPV].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.001);
+                msg_summary[MSG_SUMMARY_LIST_MVPS].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*1);
+                msg_summary[MSG_SUMMARY_LIST_MTTP].s_val = QString("%1").arg(can_data.data[i].Data[5]-40);
+                break;
+            case 3:
+                msg_summary[MSG_SUMMARY_LIST_MLPV].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.001);
+                msg_summary[MSG_SUMMARY_LIST_MLPS].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*1);
+                msg_summary[MSG_SUMMARY_LIST_MLTP].s_val = QString("%1").arg(can_data.data[i].Data[5]-40);
+                break;
             case 4:
                 msg = anasy_alart_msg(can_data.data[i].Data+1);
                 if(msg.isNull() || msg.isEmpty()){
@@ -70,7 +92,19 @@ void TkbmWidget::comm_timeout()
                 break;
             }
         }
+        if(can_data.data[i].ID == JURYUAN_MSG_ID){
+            msg_summary[MSG_SUMMARY_LIST_RESIS].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*1);
+            msg_summary[MSG_SUMMARY_LIST_NORSV].s_val = QString("%1").arg((can_data.data[i].Data[5]+can_data.data[i].Data[6]*256)*1);
+            msg_summary[MSG_SUMMARY_LIST_RSVTIC].s_val = QString("%1").arg(can_data.data[i].Data[7]);
+        }
     }
+
+    can_data.len = 0;
+}
+
+void TkbmWidget::update_data_timeout()
+{
+    data_struct_init();
 }
 
 QString TkbmWidget::anasy_alart_msg(unsigned char data[5])
@@ -89,15 +123,29 @@ QString TkbmWidget::anasy_alart_msg(unsigned char data[5])
     return temp;
 }
 
+QString TkbmWidget::main_info_msg(unsigned char data,char pos)
+{
+    QString msg;
+    switch (pos) {
+    case 1:
+        msg = msg_connector_state[data];break;
+    case 2:
+        msg = msg_chg_state[data];break;
+    default:
+        msg = QString("无此消息\0");break;
+    }
+    return msg;
+}
+
 void TkbmWidget::update_msg_timeout()
 {
     int item_count;
-    item_count = ui->tb_breif->columnCount();
+    item_count = ui->tb_breif->rowCount();
     for(int i=0;i<item_count;i++){                          //更新概述表
         QTableWidgetItem *item = ui->tb_breif->item(i,0);
         item->setText(msg_summary[i].s_val);
-        item->setForeground(QBrush(msg_summary->f_color));
-        item->setBackground(QBrush(msg_summary->b_color));
+        item->setForeground(QBrush(msg_summary[i].f_color));
+        item->setBackground(QBrush(msg_summary[i].b_color));
     }
     ui->teb_msg->setText(msg_alarm.s_val);
     ui->teb_msg->setTextColor(msg_alarm.f_color);
@@ -108,7 +156,7 @@ void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
     can_bsp = new CtlCan(dev,num,port);
     if(can_bsp->open((CtlCan::baudRate)rate)){
         can_bsp->state = CtlCan::off;
-        QMessageBox::information(this,"ERROR",QString("Error to open device,please check link"));
+        QMessageBox::information(this,"ERROR",QString("打开设备失败,请检查连接\0"));
         this->close();
     }else{
         can_bsp->state = CtlCan::on;
@@ -119,7 +167,7 @@ void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
 
         timer10 = new QTimer(this);
         connect(timer10,&QTimer::timeout,this,&TkbmWidget::comm_timeout);
-        timer10->start(10);
+        timer10->start(50);
     }
 }
 
@@ -132,7 +180,7 @@ void TkbmWidget::data_struct_init()
         msg_summary[i].s_val = ' ';
     }
     msg_summary[0].s_val = QString(THIS_SOFT_VERSION);
-    msg_alarm.s_val.append(QString("没有报警"));
+    msg_alarm.s_val = QString("没有报警 ");
     msg_alarm.b_color = Qt::white;
     msg_alarm.f_color = Qt::black;
     msg_alarm.i_val = 0;
@@ -282,7 +330,7 @@ void TkbmWidget::closeEvent(QCloseEvent *event)
 {
     emit sig_set_cthread_state(NULL);
     emit sig_process_exit();
-    monitor_dialog.hide();
+    monitor_dialog->hide();
     if(can_bsp != NULL)
         can_bsp->close();
     QWidget::closeEvent(event);
@@ -292,9 +340,9 @@ void TkbmWidget::on_rb_exp_dis_clicked()
 {
     if(ui->rb_exp_dis->isChecked())
     {
-        monitor_dialog.show();
+        monitor_dialog->show();
     }else{
-        monitor_dialog.hide();
+        monitor_dialog->hide();
     }
 }
 

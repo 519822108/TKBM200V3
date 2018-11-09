@@ -66,6 +66,7 @@ public:
     QLineEdit *lineEdit_5;
     QTableWidget *tb_event;
     QTableWidget *tb_brief;
+    QPushButton *pb_mian_into_t;
     QWidget *tab_4;
     QTableWidget *tb_eep_file;
     QLineEdit *lineEdit_6;
@@ -1769,7 +1770,7 @@ public:
         lineEdit_5 = new QLineEdit(tab_3);
         lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
         lineEdit_5->setEnabled(false);
-        lineEdit_5->setGeometry(QRect(350, 0, 331, 20));
+        lineEdit_5->setGeometry(QRect(350, 250, 331, 20));
         lineEdit_5->setLayoutDirection(Qt::LeftToRight);
         lineEdit_5->setAlignment(Qt::AlignCenter);
         tb_event = new QTableWidget(tab_3);
@@ -1822,7 +1823,7 @@ public:
         __qtablewidgetitem458->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_event->setItem(4, 1, __qtablewidgetitem458);
         tb_event->setObjectName(QStringLiteral("tb_event"));
-        tb_event->setGeometry(QRect(350, 20, 331, 192));
+        tb_event->setGeometry(QRect(350, 270, 331, 192));
         tb_brief = new QTableWidget(tab_3);
         if (tb_brief->columnCount() < 1)
             tb_brief->setColumnCount(1);
@@ -1866,8 +1867,11 @@ public:
         __qtablewidgetitem473->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_brief->setItem(6, 0, __qtablewidgetitem473);
         tb_brief->setObjectName(QStringLiteral("tb_brief"));
-        tb_brief->setGeometry(QRect(350, 240, 331, 192));
+        tb_brief->setGeometry(QRect(350, 50, 331, 192));
         tb_brief->horizontalHeader()->setVisible(false);
+        pb_mian_into_t = new QPushButton(tab_3);
+        pb_mian_into_t->setObjectName(QStringLiteral("pb_mian_into_t"));
+        pb_mian_into_t->setGeometry(QRect(350, 0, 330, 40));
         tabWidget->addTab(tab_3, QString());
         tab_4 = new QWidget();
         tab_4->setObjectName(QStringLiteral("tab_4"));
@@ -2610,6 +2614,7 @@ public:
         tb_brief->setSortingEnabled(false);
         tb_brief->setSortingEnabled(__sortingEnabled16);
 
+        pb_mian_into_t->setText(QApplication::translate("TkbmWidget", "\344\270\273\346\235\277\350\277\233\345\205\245\346\265\213\350\257\225\346\250\241\345\274\217", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("TkbmWidget", "\346\265\213\350\257\225\346\225\260\346\215\256", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem230 = tb_eep_file->horizontalHeaderItem(0);
         ___qtablewidgetitem230->setText(QApplication::translate("TkbmWidget", "\346\225\260\346\215\256\345\220\215", Q_NULLPTR));

@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::MonitorDialog *ui;
 
-    VCI_CAN_OBJ last_msg;
+    int temp_cp_msg_len;
     struct {
         unsigned int id[128];
         int len;

@@ -26,7 +26,9 @@ public:
     void set_eep_config(void);
     void read_excel_data(void);
     void set_eeprom_table(void);
+
     QString anasy_alart_msg(unsigned char data[5]);
+    QString main_info_msg(unsigned char data,char pos);
 
 signals:
     void sig_set_cthread_state(CtlCan *pCan);
@@ -38,15 +40,17 @@ private slots:
     void comm_timeout(void);                //定时器超时处理通信
     void on_rb_exp_dis_clicked();
     void update_msg_timeout(void);          //定时器超时更新UI
+    void update_data_timeout(void);         //定时器超时刷新数据
 
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
-    MonitorDialog monitor_dialog;
+    MonitorDialog *monitor_dialog;
     struct excel_param_organize_ext eep_config;
     CtlCan *can_bsp;
     QTimer *timer10;
     QTimer *timer_100;
+    QTimer *timer_5s;
 
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构
     struct msg_discripte msg_alarm;                                     //报警信息结构

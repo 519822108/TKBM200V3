@@ -4808,7 +4808,7 @@
      <property name="geometry">
       <rect>
        <x>350</x>
-       <y>0</y>
+       <y>250</y>
        <width>331</width>
        <height>20</height>
       </rect>
@@ -4827,7 +4827,7 @@
      <property name="geometry">
       <rect>
        <x>350</x>
-       <y>20</y>
+       <y>270</y>
        <width>331</width>
        <height>192</height>
       </rect>
@@ -4946,7 +4946,7 @@
      <property name="geometry">
       <rect>
        <x>350</x>
-       <y>240</y>
+       <y>50</y>
        <width>331</width>
        <height>192</height>
       </rect>
@@ -5050,6 +5050,19 @@
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
      </item>
+    </widget>
+    <widget class="QPushButton" name="pb_mian_into_t">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>0</y>
+       <width>330</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>主板进入测试模式</string>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_4">

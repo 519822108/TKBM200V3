@@ -36,7 +36,8 @@ HEADERS += \
     logindialog.h \
     monitordialog.h \
     config.h \
-    data_organize.h
+    data_organize.h \
+    static_string.h
 
 FORMS += \
         tkbmwidget.ui \

@@ -4,10 +4,11 @@
 #include <data_organize.h>
 #include "string.h"
 #include <iostream>
+#include <QList>
 
 extern struct recv_data can_data;
 VCI_CAN_OBJ last_msg;
-
+VCI_CAN_OBJ temp_cp_msg[512];
 MonitorDialog::MonitorDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MonitorDialog)
@@ -25,16 +26,21 @@ MonitorDialog::MonitorDialog(QWidget *parent) :
     connect(timer100,&QTimer::timeout,this,&MonitorDialog::timer100_timeout);
     timer100->start(11);
 }
-
+static int tempstamp;
 void MonitorDialog::timer100_timeout()
 {
-    int i,j;
+    int i,j,arry_len=0;
     QString temp_str;
-    for(i=0;i<can_data.len;i++){
-        if(last_msg.TimeStamp >= can_data.data[i].TimeStamp)    continue;       //如果不是最新的报文则跳过
-        memcpy(&last_msg,&can_data.data[i],sizeof(VCI_CAN_OBJ));
+    QList<QString> temp_array;
+
+    memcpy(temp_cp_msg,&can_data.data[temp_cp_msg_len],(can_data.len)*sizeof(VCI_CAN_OBJ));
+    temp_cp_msg_len = can_data.len;
+    for(i=0;i<temp_cp_msg_len;i++){
+        if(last_msg.TimeStamp >= temp_cp_msg[i].TimeStamp)    continue;       //如果不是最新的报文则跳过
+        memcpy(&last_msg,&temp_cp_msg[i],sizeof(VCI_CAN_OBJ));
+
         for(j=0;j<msg_id_list.len;j++){
-            if(last_msg.ID == can_data.data->ID) break;
+            if(last_msg.ID == msg_id_list.id[j]) break;
         }
         if(j==msg_id_list.len){
             msg_id_list.id[j] = last_msg.ID;
@@ -49,13 +55,20 @@ void MonitorDialog::timer100_timeout()
                 temp_str += QString("%1 ").arg(last_msg.Data[k],2,16,QChar('0'));
             }
             temp_str = temp_str.toUpper();
-            ui->lw_msg->addItem(temp_str);
+            temp_array.push_back(temp_str);
+            arry_len++;
         }
         if(ui->lw_msg->count() > LIST_WIDGET_MSG_LEN_MAX){
-            ui->lw_msg->takeItem(0);
+//            for(j=0;j<ui->lw_msg->count() - LIST_WIDGET_MSG_LEN_MAX;j++)
+                ui->lw_msg->takeItem(0);
         }
-        ui->lw_msg->scrollToBottom();
+
     }
+
+    ui->lw_msg->addItems(temp_array);
+    temp_array.clear();
+    if(tempstamp < can_data.len)
+        ui->lw_msg->scrollToBottom();
 }
 
 MonitorDialog::~MonitorDialog()

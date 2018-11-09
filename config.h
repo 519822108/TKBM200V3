@@ -24,6 +24,7 @@
 
 #define SUB_MAIN_MSG1_ID            0x0841F7F4     //主板数据1
 #define SUB_MAIN_MSG2_ID            0x0842F7F4     //主板数据2
+#define JURYUAN_MSG_ID              0x0851F4A5     //绝缘板数据
 
 #define MSG_SUMMARY_LIST_LENGTH     32      //概述数组总长度
 #define MSG_SUMMARY_LIST_HERTICK    1       //概述 心跳
