@@ -8,6 +8,7 @@
 #include "ctlcan.h"
 #include <QThread>
 #include <QTimer>
+#include <QList>
 
 namespace Ui {
 class TkbmWidget;

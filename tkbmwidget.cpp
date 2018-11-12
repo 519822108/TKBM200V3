@@ -10,9 +10,12 @@
 #include <string.h>
 #include <QRadioButton>
 #include <static_string.h>
+#include <QMutex>
 
 struct recv_data can_data;
-
+static VCI_CAN_OBJ recv_buff[128];
+extern QMutex ext_mutex;
+QList<VCI_CAN_OBJ> vec_buff;
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
     QWidget(parent),
@@ -372,15 +375,25 @@ void RecvCan::run()
     int read_len;
     while(this->state){
        if(can_bps){
-            if(can_data.len > CAN_RECV_BUFF_LEN_MAX)
+            if(can_data.len > CAN_RECV_BUFF_LEN_MAX){
                 can_data.len = 0;
+            }
             read_len = can_bps->get_recive_num();
+            if(read_len == 0)   continue;
             if(can_data.len + read_len > CAN_RECV_BUFF_LEN_MAX){
                 can_bps->clear_buff();
                 read_len = 0;
                 can_data.len = 0;
             }
-            can_data.len += can_bps->can_rec_read(&can_data.data[can_data.len],read_len);
+
+            read_len = can_bps->can_rec_read(recv_buff,read_len);
+            memcpy(&can_data.data[can_data.len],recv_buff,sizeof (VCI_CAN_OBJ)*read_len);
+            can_data.len += read_len;
+
+            ext_mutex.lock();
+            for(i=0;i<read_len;i++)
+                vec_buff.push_back(recv_buff[i]);
+            ext_mutex.unlock();
         }
     }
 }

@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <ControlCAN.h>
 #include <QListWidgetItem>
+#include <list>
 
 namespace Ui {
 class MonitorDialog;
@@ -19,16 +20,18 @@ public:
     ~MonitorDialog();
 
 public slots:
-    void timer100_timeout(void);
+    void timer100_timeout();
 
 private slots:
     void on_lw_fid_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::MonitorDialog *ui;
+    QVector<QString> temp_array;
+    QTimer *timer_100;
 
     int temp_cp_msg_len;
-    struct {
+    struct id_list{
         unsigned int id[128];
         int len;
     }msg_id_list;
