@@ -479,10 +479,10 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -952,10 +952,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1422,10 +1422,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1895,10 +1895,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -5153,7 +5153,7 @@
      </column>
      <column>
       <property name="text">
-       <string>EEPROM确认密码</string>
+       <string>EEPROM确认码</string>
       </property>
      </column>
      <item row="0" column="0">

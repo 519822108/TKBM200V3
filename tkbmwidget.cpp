@@ -30,6 +30,7 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     this->ui_init();
     this->data_struct_init();
     this->set_eep_config();
+    this->chg_stage_data_init();
     login_dialog.show();
 
     timer_100 = new QTimer(this);
@@ -38,7 +39,7 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     timer_100->start(100);
     timer_5s = new QTimer(this);
     connect(timer_5s,&QTimer::timeout,this,&TkbmWidget::update_data_timeout);
-    timer_5s->start(5000);
+    timer_5s->start(10000);
 
     connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
@@ -46,9 +47,23 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     connect(this,&TkbmWidget::sig_process_exit,monitor_dialog,&QDialog::close);
 }
 
+void TkbmWidget::chg_stage_data_init()
+{
+    for(int i=0;i<CHG_STAGE_ARRAY_SIZE;i++){
+        msg_chg_stage[i] = ' ';
+    }
+    msg_chg_stage[0] = QString("握手识别阶段1");
+    msg_chg_stage[1] = QString("握手识别阶段2");
+    msg_chg_stage[0x10] = QString("参数准备阶段1");
+    msg_chg_stage[0x11] = QString("参数准备阶段2");
+    msg_chg_stage[0x20] = QString("充电阶段1");
+    msg_chg_stage[0x21] = QString("充电阶段2");
+    msg_chg_state[0x30] = QString("充电结束");
+}
+
 void TkbmWidget::comm_timeout()
 {
-    int i;
+    int i,j;
     QString msg;
 
     for(i=0;i<can_data.len;i++){
@@ -91,6 +106,91 @@ void TkbmWidget::comm_timeout()
                     msg_alarm.f_color = Qt::red;
                 }
                 break;
+            case 5:
+                msg_chg_summary[MSG_CHG_SUMMARY_CONNTEMP1].s_val = QString("%1").arg(can_data.data[i].Data[1]-40);
+                msg_chg_summary[MSG_CHG_SUMMARY_CONNTEMP2].s_val = QString("%1").arg(can_data.data[i].Data[2]-40);
+                msg_chg_summary[MSG_CHG_SUMMARY_CC2_STATE].s_val = msg_cc2_state[can_data.data[i].Data[3]&0x01];
+                msg_chg_summary[MSG_CHG_SUMMARY_CC2_FRQ].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256));
+                msg_chg_summary[MSG_CHG_SUMMARY_CHG_VER].s_val = msg_global_ver[can_data.data[i].Data[6]&0x01];
+                break;
+            case 6:
+                msg_chg_summary[MSG_CHG_SUMMARY_VOL_NEED].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.1);
+                msg_chg_summary[MSG_CHG_SUMMARY_CUR_NEED].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*0.1-400);
+                msg_chg_summary[MSG_CHG_SUMMARY_MODE_NEED].s_val = msg_need_mode[can_data.data[i].Data[5]&0x03];
+                break;
+            case 7:
+                msg_chg_summary[MSG_CHG_SUMMARY_CHG_STAGE].s_val = msg_chg_stage[can_data.data[i].Data[1]];
+                msg_chg_summary[MSG_CHG_SUMMARY_IIME_NEED].s_val = QString("%1").arg(can_data.data[i].Data[2]+can_data.data[i].Data[3]*256);
+                msg_chg_summary[MSG_CHG_SUMMARY_OUT_POW].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256)*0.1);
+                msg_chg_summary[MSG_CHG_SUMMARY_CHG_TIM].s_val = QString("%1").arg(can_data.data[i].Data[6]+can_data.data->Data[7]);
+                break;
+            case 8:
+                msg_chg_summary[MSG_CHG_SUMMARY_VOL_MAX].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.1);
+                msg_chg_summary[MSG_CHG_SUMMARY_VOL_MIN].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*0.1);
+                msg_chg_summary[MSG_CHG_SUMMARY_OUT_VOL].s_val = QString("%1").arg((can_data.data[i].Data[5]+can_data.data[i].Data[6]*256)*0.1);
+                break;
+            case 9:
+                msg_chg_summary[MSG_CHG_SUMMARY_CUR_MAX].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.1-400);
+                msg_chg_summary[MSG_CHG_SUMMARY_CUR_MIN].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*0.1-400);
+                msg_chg_summary[MSG_CHG_SUMMARY_OUT_CUR].s_val = QString("%1").arg((can_data.data[i].Data[5]+can_data.data[i].Data[6]*256)*0.1-400);
+                break;
+            case 10:
+                msg = QString("");
+                for(j=0;j<8;j++){
+                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                        msg += QString("%1:").arg(j) + msg_bms_stop_chg[j] + "  ";
+                }
+                if(j==8)    msg = ' ';
+                msg_chg_err_disc[MSG_CHG_ERROR_BMS_STOP].s_val = msg;
+
+                msg = QString("");
+                for(j=0;j<4;j++){
+                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                        msg += QString("%1:").arg(j) + msg_chg_stop_err[j] + "  ";
+                }
+                if(j==4)    msg = ' ';
+                msg_chg_err_disc[MSG_CHG_ERROR_CHG_STOP].s_val = msg;
+
+                msg = QString("");
+                for(j=0;j<8;j++){
+                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                        msg += QString("%1:").arg(j) + msg_chg_stop_fat[j] + "  ";
+                }
+                if(j==8)    msg = ' ';
+                msg_chg_err_disc[MSG_CHG_ERROR_CHG_ERR].s_val = msg;
+
+                msg = QString("");
+                for(j=0;j<7;j++){
+                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                        msg += QString("%1:").arg(j) + msg_bms_rcv_err[j] + "  ";
+                }
+                if(j==7)    msg = ' ';
+                msg_chg_err_disc[MSG_CHG_ERROR_BMS_COM].s_val = msg;
+
+                msg = QString("");
+                for(j=0;j<8;j++){
+                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                        msg += QString("%1:").arg(j) + msg_chg_rcv_err[j] + "  ";
+                }
+                if(j==8)    msg = ' ';
+                msg_chg_err_disc[MSG_CHG_ERROR_CHG_RCV].s_val = msg;
+                break;
+            case 11:
+                msg_ac_chg_state[MSG_AC_CHG_CP_PWM].s_val = QString("%1").arg(can_data.data[i].Data[1]);
+                msg_ac_chg_state[MSG_AC_CHG_CC_STATE].s_val = msg_cc2_state[can_data.data[i].Data[2]&0x01];
+                msg_ac_chg_state[MSG_AC_CHG_CC_FRQ].s_val = QString("%1").arg(can_data.data[i].Data[3]+can_data.data[i].Data[4]*256);
+                break;
+            case 12:
+                msg_ac_chg_state[MSG_AC_CHG_ENABLE].s_val = msg_state_enable[can_data.data[i].Data[1]&0x01];
+                msg_ac_chg_state[MSG_AC_CHG_VOL_NEED].s_val = QString("%1").arg((can_data.data[i].Data[2]+can_data.data[i].Data[3]*256)*0.1);
+                msg_ac_chg_state[MSG_AC_CHG_CUR_NEED].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256)*0.1);
+                msg_ac_chg_state[MSG_AC_CHG_STATE].s_val = msg_ac_chg_state_a[can_data.data[i].Data[6]&0x0f];
+                break;
+            case 13:
+                msg_ac_chg_state[MSG_AC_CHG_OUT_STE].s_val = msg_ac_chger_out_state[can_data.data[i].Data[1]&0x07];
+                msg_ac_chg_state[MSG_AC_CHG_OUT_VOL].s_val = QString("%1").arg((can_data.data[i].Data[2]+can_data.data[i].Data[3]*256)*0.1);
+                msg_ac_chg_state[MSG_AC_CHG_OUT_CUR].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256)*0.1);
+                break;
             default:
                 break;
             }
@@ -103,6 +203,7 @@ void TkbmWidget::comm_timeout()
     }
 
     can_data.len = 0;
+
 }
 
 void TkbmWidget::update_data_timeout()
@@ -131,9 +232,9 @@ QString TkbmWidget::main_info_msg(unsigned char data,char pos)
     QString msg;
     switch (pos) {
     case 1:
-        msg = msg_connector_state[data];break;
+        msg = msg_connector_state[data&0x0f];break;
     case 2:
-        msg = msg_chg_state[data];break;
+        msg = msg_chg_state[data&0x03];break;
     default:
         msg = QString("无此消息\0");break;
     }
@@ -143,6 +244,7 @@ QString TkbmWidget::main_info_msg(unsigned char data,char pos)
 void TkbmWidget::update_msg_timeout()
 {
     int item_count;
+    int col_count;
     item_count = ui->tb_breif->rowCount();
     for(int i=0;i<item_count;i++){                          //更新概述表
         QTableWidgetItem *item = ui->tb_breif->item(i,0);
@@ -152,6 +254,34 @@ void TkbmWidget::update_msg_timeout()
     }
     ui->teb_msg->setText(msg_alarm.s_val);
     ui->teb_msg->setTextColor(msg_alarm.f_color);
+
+    item_count = ui->tb_chg_info->rowCount();
+    col_count = ui->tb_chg_info->columnCount();
+    for(int i=0;i<col_count/2;i++){
+        for(int j=0;j<item_count;j++){
+            QTableWidgetItem *item = ui->tb_chg_info->item(j,i*2+1);
+            item->setText(msg_chg_summary[j+i*item_count].s_val);
+            item->setForeground(QBrush(msg_chg_summary[j+i*item_count].f_color));
+            item->setBackground(QBrush(msg_chg_summary[j+i*item_count].b_color));
+        }
+    }
+    item_count = ui->tb_chg_err->rowCount();
+    for(int i=0;i<item_count;i++){
+        QTableWidgetItem *item = ui->tb_chg_err->item(i,0);
+        item->setText(msg_chg_err_disc[i].s_val);
+        item->setForeground(QBrush(msg_chg_err_disc[i].f_color));
+        item->setBackground(QBrush(msg_chg_err_disc[i].b_color));
+    }
+    item_count = ui->tb_need->rowCount();
+    col_count = ui->tb_need->columnCount();
+    for(int i=0;i<col_count/2;i++){
+        for(int j=0;j<item_count;j++){
+            QTableWidgetItem *item = ui->tb_need->item(j,i*2+1);
+            item->setText(msg_ac_chg_state[j+i*item_count].s_val);
+            item->setForeground(QBrush(msg_ac_chg_state[j+i*item_count].f_color));
+            item->setBackground(QBrush(msg_ac_chg_state[j+i*item_count].b_color));
+        }
+    }
 }
 
 void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
@@ -183,10 +313,28 @@ void TkbmWidget::data_struct_init()
         msg_summary[i].s_val = ' ';
     }
     msg_summary[0].s_val = QString(THIS_SOFT_VERSION);
-    msg_alarm.s_val = QString("没有报警 ");
+    msg_alarm.s_val = QString(" ");
     msg_alarm.b_color = Qt::white;
     msg_alarm.f_color = Qt::black;
     msg_alarm.i_val = 0;
+    for(int i=0;i<MSG_CHG_SUMMARY_LENGTH;i++){
+        msg_chg_summary[i].f_color = Qt::black;
+        msg_chg_summary[i].b_color = Qt::white;
+        msg_chg_summary[i].i_val = 0;
+        msg_chg_summary[i].s_val = ' ';
+    }
+    for(int i=0;i<MSG_CHG_ERROR_CURSOR_LEN;i++){
+        msg_chg_err_disc[i].f_color = Qt::black;
+        msg_chg_err_disc[i].b_color = Qt::white;
+        msg_chg_err_disc[i].i_val = 0;
+        msg_chg_err_disc[i].s_val = ' ';
+    }
+    for(int i=0;i<MSG_AC_CHG_STATE_LEN;i++){
+        msg_ac_chg_state[i].f_color = Qt::black;
+        msg_ac_chg_state[i].b_color = Qt::white;
+        msg_ac_chg_state[i].i_val = 0;
+        msg_ac_chg_state[i].s_val = ' ';
+    }
 }
 
 void TkbmWidget::ui_init(void)

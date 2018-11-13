@@ -16,19 +16,23 @@ MonitorDialog::MonitorDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("CAN 监视");
+
     QDesktopWidget *thisDesk = QApplication::desktop();
     QRect rect = thisDesk->availableGeometry();
     this->move(rect.width()-this->width()-14,rect.height()-this->height()-40);
+
     memset(&msg_id_list,0,sizeof(struct id_list));
     msg_id_list.len = 0;
     filter_id = 0;
     temp_array.clear();
 
+    std::cout << QString("%1").arg((int)windowFlags(),0,16).toStdString() << std::endl;
+
     timer_100 = new QTimer(this);
     connect(timer_100,&QTimer::timeout,this,&MonitorDialog::timer100_timeout);
     timer_100->start(100);
 }
-static int timer =0;
+
 void MonitorDialog::timer100_timeout()
 {
     int i,j;
@@ -59,15 +63,13 @@ void MonitorDialog::timer100_timeout()
         }
     }
 
-    ui->lw_msg->clear();
-    ui->lw_msg->addItems(QStringList(temp_array.toList()));
     if(vec_buff.isEmpty() == false){
-        ui->lw_msg->scrollToBottom();
+        ui->lw_msg->clear();
+        ui->lw_msg->addItems(QStringList(temp_array.toList()));
         vec_buff.clear();
     }
 
     ext_mutex.unlock();
-    std::cout << "timer" << timer++ <<std::endl;
 }
 
 MonitorDialog::~MonitorDialog()

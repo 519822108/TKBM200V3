@@ -399,8 +399,8 @@ public:
         tb_vol_m1->setObjectName(QStringLiteral("tb_vol_m1"));
         tb_vol_m1->setGeometry(QRect(10, 30, 150, 321));
         tb_vol_m1->setLayoutDirection(Qt::LeftToRight);
-        tb_vol_m1->horizontalHeader()->setVisible(true);
-        tb_vol_m1->verticalHeader()->setVisible(true);
+        tb_vol_m1->horizontalHeader()->setVisible(false);
+        tb_vol_m1->verticalHeader()->setVisible(false);
         tb_vol_m2 = new QTableWidget(tab);
         if (tb_vol_m2->columnCount() < 2)
             tb_vol_m2->setColumnCount(2);
@@ -552,8 +552,8 @@ public:
         tb_vol_m2->setItem(11, 1, __qtablewidgetitem118);
         tb_vol_m2->setObjectName(QStringLiteral("tb_vol_m2"));
         tb_vol_m2->setGeometry(QRect(180, 30, 150, 321));
-        tb_vol_m2->horizontalHeader()->setVisible(true);
-        tb_vol_m2->verticalHeader()->setVisible(true);
+        tb_vol_m2->horizontalHeader()->setVisible(false);
+        tb_vol_m2->verticalHeader()->setVisible(false);
         tb_vol_m3 = new QTableWidget(tab);
         if (tb_vol_m3->columnCount() < 2)
             tb_vol_m3->setColumnCount(2);
@@ -705,8 +705,8 @@ public:
         tb_vol_m3->setItem(11, 1, __qtablewidgetitem156);
         tb_vol_m3->setObjectName(QStringLiteral("tb_vol_m3"));
         tb_vol_m3->setGeometry(QRect(350, 30, 150, 321));
-        tb_vol_m3->horizontalHeader()->setVisible(true);
-        tb_vol_m3->verticalHeader()->setVisible(true);
+        tb_vol_m3->horizontalHeader()->setVisible(false);
+        tb_vol_m3->verticalHeader()->setVisible(false);
         tb_vol_m4 = new QTableWidget(tab);
         if (tb_vol_m4->columnCount() < 2)
             tb_vol_m4->setColumnCount(2);
@@ -858,8 +858,8 @@ public:
         tb_vol_m4->setItem(11, 1, __qtablewidgetitem194);
         tb_vol_m4->setObjectName(QStringLiteral("tb_vol_m4"));
         tb_vol_m4->setGeometry(QRect(520, 30, 150, 321));
-        tb_vol_m4->horizontalHeader()->setVisible(true);
-        tb_vol_m4->verticalHeader()->setVisible(true);
+        tb_vol_m4->horizontalHeader()->setVisible(false);
+        tb_vol_m4->verticalHeader()->setVisible(false);
         tb_temp = new QTableWidget(tab);
         if (tb_temp->columnCount() < 8)
             tb_temp->setColumnCount(8);
@@ -2630,7 +2630,7 @@ public:
         QTableWidgetItem *___qtablewidgetitem235 = tb_state->horizontalHeaderItem(2);
         ___qtablewidgetitem235->setText(QApplication::translate("TkbmWidget", "BMS\345\206\231\345\205\245\347\212\266\346\200\201", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem236 = tb_state->horizontalHeaderItem(3);
-        ___qtablewidgetitem236->setText(QApplication::translate("TkbmWidget", "EEPROM\347\241\256\350\256\244\345\257\206\347\240\201", Q_NULLPTR));
+        ___qtablewidgetitem236->setText(QApplication::translate("TkbmWidget", "EEPROM\347\241\256\350\256\244\347\240\201", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem237 = tb_state->verticalHeaderItem(0);
         ___qtablewidgetitem237->setText(QApplication::translate("TkbmWidget", "0", Q_NULLPTR));
 

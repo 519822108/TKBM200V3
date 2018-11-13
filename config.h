@@ -22,6 +22,8 @@
 
 #define THIS_SOFT_VERSION           "TB-BM200 V3.0"
 
+#define CHG_STAGE_ARRAY_SIZE        50
+
 #define SUB_MAIN_MSG1_ID            0x0841F7F4     //主板数据1
 #define SUB_MAIN_MSG2_ID            0x0842F7F4     //主板数据2
 #define JURYUAN_MSG_ID              0x0851F4A5     //绝缘板数据
@@ -48,5 +50,43 @@
 #define MSG_SUMMARY_LIST_RSV1       19      //保留
 #define MSG_SUMMARY_LIST_CNST       20      //接触器状态
 
+#define MSG_CHG_SUMMARY_LENGTH      32      //充电信息概述表最大长度
+#define MSG_CHG_SUMMARY_CHG_STAGE   0       //充电阶段
+#define MSG_CHG_SUMMARY_VOL_NEED    1       //电压需求
+#define MSG_CHG_SUMMARY_CUR_NEED    2       //电流需求
+#define MSG_CHG_SUMMARY_MODE_NEED   3       //模式需求
+#define MSG_CHG_SUMMARY_IIME_NEED   4       //剩余充电时间
+#define MSG_CHG_SUMMARY_CONNTEMP1   5       //插座温度1
+#define MSG_CHG_SUMMARY_CONNTEMP2   6       //插座温度2
+#define MSG_CHG_SUMMARY_CC2_STATE   7       //CC2状态
+#define MSG_CHG_SUMMARY_CC2_FRQ     8       //CC2频率
+#define MSG_CHG_SUMMARY_CHG_VER     9      //充电国际版本
+#define MSG_CHG_SUMMARY_OUT_VOL     10      //输出电压
+#define MSG_CHG_SUMMARY_OUT_CUR     11      //输出电流
+#define MSG_CHG_SUMMARY_OUT_POW     12      //输出能量
+#define MSG_CHG_SUMMARY_CHG_TIM     13      //充电时间
+#define MSG_CHG_SUMMARY_VOL_MAX     14      //CHG最高输出电压
+#define MSG_CHG_SUMMARY_VOL_MIN     15      //CHG最低输出电压
+#define MSG_CHG_SUMMARY_CUR_MAX     16      //CHG最高输出电压
+#define MSG_CHG_SUMMARY_CUR_MIN     17      //CHG最低输出电流
+
+#define MSG_CHG_ERROR_CURSOR_LEN    8       //充电过程故障原因描述表最大长度
+#define MSG_CHG_ERROR_BMS_STOP      0       //BMS停止充电原因
+#define MSG_CHG_ERROR_CHG_STOP      1       //充电机停止充电原因
+#define MSG_CHG_ERROR_CHG_ERR       2       //充电机停止充电故障
+#define MSG_CHG_ERROR_BMS_COM       3       //通信过程MBS错误
+#define MSG_CHG_ERROR_CHG_RCV       4       //通信过程CHG接受错误
+
+#define MSG_AC_CHG_STATE_LEN        14      //交流充电状态描述表最大长度
+#define MSG_AC_CHG_STATE            0       //充电状态
+#define MSG_AC_CHG_ENABLE           1       //充电使能
+#define MSG_AC_CHG_VOL_NEED         2       //电压需求
+#define MSG_AC_CHG_CUR_NEED         3       //电流需求
+#define MSG_AC_CHG_CP_PWM           4       //CP占空比
+#define MSG_AC_CHG_CC_STATE         5       //CC状态
+#define MSG_AC_CHG_CC_FRQ           6       //CC频率
+#define MSG_AC_CHG_OUT_STE          7       //输出状态
+#define MSG_AC_CHG_OUT_VOL          8       //输出电压
+#define MSG_AC_CHG_OUT_CUR          9       //输出电流
 
 #endif // CONFIG_H
