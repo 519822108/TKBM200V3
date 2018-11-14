@@ -34,5 +34,8 @@ static QString msg_state_enable[2] = {QString("使能\0"),QString("禁止\0")};
 static QString msg_ac_chg_state_a[8] = {QString("未开始\0"),QString("充电中\0"),QString("接触器断开,充电停止\0"),QString("报警,充电停止\0"),
                                      QString("单体达到充电停止条件,充电停止\0"),QString("总压达到充电停止条件,充电停止\0"),QString("接口未可靠连接,充电停止·0"),QString(" ")};
 static QString msg_ac_chger_out_state[7] = {QString("未开始\0"),QString("充电中\0"),QString("充电停止\0"),QString("充电停止\0"),QString("充电停止\0"),QString("充电停止\0"),QString(" ")};
+static QString msg_over_chg_acc_flag[2] = {QString("未完成\0"),QString("完成\0")};
 
+static QString msg_cnt_force_ctrol[3] = {QString("00H:不控制\0"),QString("A0H:强制闭合\0"),QString("A1H:强制断开\0")};
+static QString msg_vcu_can_alarm[2] = {QString("00H:不控制\0"),QString("A0H:屏蔽报警\0")};
 #endif // STATIC_STRING_H

@@ -479,10 +479,10 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -952,10 +952,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1422,10 +1422,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1895,10 +1895,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <row>
       <property name="text">
@@ -3166,7 +3166,7 @@
      </item>
      <item row="0" column="1">
       <property name="text">
-       <string/>
+       <string>123\\n456</string>
       </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -4180,10 +4180,16 @@
       <property name="text">
        <string/>
       </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+      </property>
      </item>
      <item row="5" column="0">
       <property name="text">
        <string/>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
      </item>
      <item row="6" column="0">

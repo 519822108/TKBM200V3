@@ -11,6 +11,7 @@
 #include <QRadioButton>
 #include <static_string.h>
 #include <QMutex>
+#include <QDateTime>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -45,10 +46,12 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
     connect(this,&TkbmWidget::sig_process_exit,&login_dialog,&QDialog::close);
     connect(this,&TkbmWidget::sig_process_exit,monitor_dialog,&QDialog::close);
+    connect(monitor_dialog,&MonitorDialog::sig_send_board_id,this,&TkbmWidget::slot_get_board_id);
 }
 
 void TkbmWidget::chg_stage_data_init()
 {
+    QTableWidgetItem *item;
     for(int i=0;i<CHG_STAGE_ARRAY_SIZE;i++){
         msg_chg_stage[i] = ' ';
     }
@@ -59,6 +62,13 @@ void TkbmWidget::chg_stage_data_init()
     msg_chg_stage[0x20] = QString("充电阶段1");
     msg_chg_stage[0x21] = QString("充电阶段2");
     msg_chg_state[0x30] = QString("充电结束");
+    item = ui->tb_ctl_info->item(MSG_CNT_FORCE_CTL,0);
+    item->setText(msg_cnt_force_ctrol[0]);
+    item = ui->tb_ctl_info->item(MSG_VCUCAN_ALM_CTL,0);
+    item->setText(msg_vcu_can_alarm[0]);
+    cnt_ctrl_clk = 0;
+    vcu_alarm = 0;
+    memset(&bms_sub_info,0,sizeof(struct per_battery_info_discription));
 }
 
 void TkbmWidget::comm_timeout()
@@ -191,6 +201,40 @@ void TkbmWidget::comm_timeout()
                 msg_ac_chg_state[MSG_AC_CHG_OUT_VOL].s_val = QString("%1").arg((can_data.data[i].Data[2]+can_data.data[i].Data[3]*256)*0.1);
                 msg_ac_chg_state[MSG_AC_CHG_OUT_CUR].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256)*0.1);
                 break;
+            case 14:
+                msg_main_ctl_info[MSG_OVER_CHG_ACH_FLAG].s_val = msg_over_chg_acc_flag[can_data.data[i].Data[1]&0x01];
+                msg_main_ctl_info[MSG_INTO_OFF_TIME].s_val = QString("%1").arg(can_data.data[i].Data[2]);
+                msg_main_ctl_info[MSG_INTO_30_AC_TIME].s_val = QString("%1").arg(can_data.data[i].Data[3]);
+                msg_main_ctl_info[MSG_INTO_20_AC_TIME].s_val = QString("%1").arg(can_data.data[i].Data[4]);
+                msg_main_ctl_info[MSG_INTO_10_AC_TIME].s_val = QString("%1").arg(can_data.data[i].Data[5]);
+                msg_main_ctl_info[MSG_INTO_1_AC_TIME].s_val = QString("%1").arg(can_data.data[i].Data[6]);
+                msg_main_ctl_info[MSG_STORE_TIME].s_val = QString("%1").arg(can_data.data[i].Data[7]);
+                break;
+            case 15:
+                msg_main_ctl_info[MSG_SOC_EXC_BEF].s_val = QString("%1").arg(can_data.data[i].Data[1]);
+                msg_main_ctl_info[MSG_SOC_EXC_AFT].s_val = QString("%1").arg(can_data.data[i].Data[2]);
+                break;
+            case 16:break;
+            case 17:break;
+            case 18:
+                msg = QString("%1.").arg(can_data.data[i].Data[1],2,16,QLatin1Char('0'))            //年
+                        + QString("%1.").arg(can_data.data[i].Data[2],2,16,QLatin1Char('0'))        //月
+                        + QString("%1 ").arg(can_data.data[i].Data[3],2,16,QLatin1Char('0'))       //日
+                        + QString("%1:").arg(can_data.data[i].Data[4],2,16,QLatin1Char('0'))        //时
+                        + QString("%1:").arg(can_data.data[i].Data[5],2,16,QLatin1Char('0'))        //分
+                        + QString("%1").arg(can_data.data[i].Data[6],2,16,QLatin1Char('0'));        //秒
+                msg_main_ctl_info[MSG_BMS_TIME].s_val = msg;
+                msg_main_ctl_info[MSG_LOCAL_TIME].s_val = QDateTime::currentDateTime().toString("yy.MM.dd hh:mm:ss");
+                break;
+            case 19:
+                msg_main_ctl_info[MSG_SOFT_VER].s_val = QString("%1H").arg(can_data.data[i].Data[1],2,16,QLatin1Char('0'));
+                msg_main_ctl_info[MSG_HARD_VER].s_val = QString("%1H").arg(can_data.data[i].Data[2],2,16,QLatin1Char('0'));
+                msg = QString("%1.").arg(can_data.data[i].Data[3],2,16,QLatin1Char('0'))            //年
+                        + QString("%1.").arg(can_data.data[i].Data[4],2,16,QLatin1Char('0'))        //月
+                        + QString("%1").arg(can_data.data[i].Data[5],2,16,QLatin1Char('0'));       //日
+                msg_main_ctl_info[MSG_SOFT_MOD_TIME].s_val = msg;
+                msg_main_ctl_info[MSG_SOFT_MOD_NUM].s_val = QString("%1H").arg(can_data.data[i].Data[6],2,16,QLatin1Char('0'));
+                break;
             default:
                 break;
             }
@@ -245,8 +289,9 @@ void TkbmWidget::update_msg_timeout()
 {
     int item_count;
     int col_count;
+    int i,j;
     item_count = ui->tb_breif->rowCount();
-    for(int i=0;i<item_count;i++){                          //更新概述表
+    for(i=0;i<item_count;i++){                          //更新概述表
         QTableWidgetItem *item = ui->tb_breif->item(i,0);
         item->setText(msg_summary[i].s_val);
         item->setForeground(QBrush(msg_summary[i].f_color));
@@ -257,8 +302,8 @@ void TkbmWidget::update_msg_timeout()
 
     item_count = ui->tb_chg_info->rowCount();
     col_count = ui->tb_chg_info->columnCount();
-    for(int i=0;i<col_count/2;i++){
-        for(int j=0;j<item_count;j++){
+    for(i=0;i<col_count/2;i++){                     //更新充电信息概述表
+        for(j=0;j<item_count;j++){
             QTableWidgetItem *item = ui->tb_chg_info->item(j,i*2+1);
             item->setText(msg_chg_summary[j+i*item_count].s_val);
             item->setForeground(QBrush(msg_chg_summary[j+i*item_count].f_color));
@@ -266,7 +311,7 @@ void TkbmWidget::update_msg_timeout()
         }
     }
     item_count = ui->tb_chg_err->rowCount();
-    for(int i=0;i<item_count;i++){
+    for(i=0;i<item_count;i++){                   //更新充电故障表
         QTableWidgetItem *item = ui->tb_chg_err->item(i,0);
         item->setText(msg_chg_err_disc[i].s_val);
         item->setForeground(QBrush(msg_chg_err_disc[i].f_color));
@@ -274,14 +319,29 @@ void TkbmWidget::update_msg_timeout()
     }
     item_count = ui->tb_need->rowCount();
     col_count = ui->tb_need->columnCount();
-    for(int i=0;i<col_count/2;i++){
-        for(int j=0;j<item_count;j++){
+    for(i=0;i<col_count/2;i++){                 //更新交流充电状态表
+        for(j=0;j<item_count;j++){
             QTableWidgetItem *item = ui->tb_need->item(j,i*2+1);
             item->setText(msg_ac_chg_state[j+i*item_count].s_val);
             item->setForeground(QBrush(msg_ac_chg_state[j+i*item_count].f_color));
             item->setBackground(QBrush(msg_ac_chg_state[j+i*item_count].b_color));
         }
     }
+    item_count = ui->tb_ctl_info->rowCount();
+    for(i=0;i<item_count;i++){                  //更新控制信息表
+        if(i == MSG_ACT_CONTAIN || i == MSG_VCUCAN_ALM_CTL || i==MSG_OFF_CONTAIN || i==MSG_CNT_FORCE_CTL)     continue;
+        QTableWidgetItem *item = ui->tb_ctl_info->item(i,0);
+        item->setText(msg_main_ctl_info[i].s_val);
+        item->setForeground(msg_main_ctl_info[i].f_color);
+        item->setBackground(msg_main_ctl_info[i].b_color);
+    }
+
+    ui->le_id_in->setText(QString("%1").arg(bms_sub_info.cur_id));
+}
+
+void TkbmWidget::slot_get_board_id(int bid)
+{
+    bms_sub_info.cur_id = bid;
 }
 
 void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
@@ -334,6 +394,13 @@ void TkbmWidget::data_struct_init()
         msg_ac_chg_state[i].b_color = Qt::white;
         msg_ac_chg_state[i].i_val = 0;
         msg_ac_chg_state[i].s_val = ' ';
+    }
+    for(int i=0;i<MSG_MAIN_BD_CTRL;i++){
+        if(i == MSG_ACT_CONTAIN || i == MSG_VCUCAN_ALM_CTL || i==MSG_OFF_CONTAIN || i==MSG_CNT_FORCE_CTL)     continue;
+        msg_main_ctl_info[i].f_color = Qt::black;
+        msg_main_ctl_info[i].b_color = Qt::white;
+        msg_main_ctl_info[i].i_val = 0;
+        msg_main_ctl_info[i].s_val = ' ';
     }
 }
 
@@ -547,3 +614,122 @@ void RecvCan::run()
 }
 
 
+
+void TkbmWidget::on_pb_sync_clicked()
+{
+    unsigned char data[8];
+    bool state;
+    QDateTime time = QDateTime::currentDateTime();
+    QString year = time.toString("yy");
+    QString mon = time.toString("MM");
+    QString day = time.toString("dd");
+    QString hour = time.toString("hh");
+    QString min = time.toString("mm");
+    QString sec = time.toString("ss");
+
+    data[0] = 0xF2;
+    data[1] = (unsigned char)year.toInt(&state,16);
+    data[2] = (unsigned char)mon.toInt(&state,16);
+    data[3] = (unsigned char)day.toInt(&state,16);
+    data[4] = (unsigned char)hour.toInt(&state,16);
+    data[5] = (unsigned char)min.toInt(&state,16);
+    data[6] = (unsigned char)sec.toInt(&state,16);
+    data[7] = 0xFF;
+    can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
+}
+
+void TkbmWidget::on_pb_modify_clicked()
+{
+    QTableWidgetItem *item = ui->tb_ctl_info->item(MSG_ACT_CONTAIN,0);
+    QString text = item->text();
+    bool ok;
+    unsigned char data[8];
+    int ac_contain,off_contain,write_soc;
+    ac_contain = text.toInt(&ok,10);
+    if(ok == false){
+        QMessageBox::information(this,"错误","[无效的参数] 实际容量");
+        return;
+    }
+    item = ui->tb_ctl_info->item(MSG_OFF_CONTAIN,0);
+    text = item->text();
+    off_contain = text.toInt(&ok,10);
+    if(ok == false){
+        QMessageBox::information(this,"错误","[无效的参数] 补偿容量");
+        return;
+    }
+    ac_contain = ac_contain * 10;
+    off_contain = off_contain * 10;
+    write_soc = 0x30;
+    data[0] = 0xF3;
+    data[1] = write_soc & 0xFF;
+    data[2] = (write_soc >> 8) & 0xff;
+    data[3] = ac_contain & 0xFF;
+    data[4] = (ac_contain >> 8) & 0xFF;
+    data[5] = off_contain & 0xff;
+    data[6] = (off_contain >> 8) & 0xFF;
+    data[7] = 0xFF;
+    can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
+}
+
+void TkbmWidget::on_tb_ctl_info_cellDoubleClicked(int row, int column)
+{
+    QTableWidgetItem *item;
+    switch (row) {
+    case MSG_CNT_FORCE_CTL:
+        cnt_ctrl_clk=(cnt_ctrl_clk>=2)?(0):(++cnt_ctrl_clk);
+        item = ui->tb_ctl_info->item(row,0);
+        item->setText(msg_cnt_force_ctrol[cnt_ctrl_clk]);
+        break;
+    case MSG_VCUCAN_ALM_CTL:
+        vcu_alarm = (vcu_alarm>=1)?(0):(++vcu_alarm);
+        item = ui->tb_ctl_info->item(row,0);
+        item->setText(msg_vcu_can_alarm[vcu_alarm]);
+        break;
+    default:
+        break;
+    }
+}
+
+void TkbmWidget::on_pb_ctl_tch_clicked()
+{
+    QTableWidgetItem *item = ui->tb_ctl_info->item(MSG_CNT_FORCE_CTL,0);
+    QString txt = item->text();
+    txt = txt.left(2);
+    bool ok;
+    int ctrl = txt.toInt(&ok,16);
+    if(ok == false)
+        return;
+    unsigned char data[8];
+    data[0] = 0xF4;
+    data[1] = ctrl & 0xFF;
+    data[2]= 0x00;
+    data[3] = 0xFF;
+    data[4] = 0xFF;
+    data[5] = 0xFF;
+    data[6] = 0xFF;
+    data[7] = 0xFF;
+
+    can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
+}
+
+void TkbmWidget::on_pb_ctl_alarm_clicked()
+{
+    QTableWidgetItem *item = ui->tb_ctl_info->item(MSG_VCUCAN_ALM_CTL,0);
+    QString txt = item->text();
+    txt = txt.left(2);
+    bool ok;
+    int ctrl = txt.toInt(&ok,16);
+    if(ok == false)
+        return;
+    unsigned char data[8];
+    data[0] = 0xF4;
+    data[1] = 0x00;
+    data[2]= ctrl & 0xFF;
+    data[3] = 0xFF;
+    data[4] = 0xFF;
+    data[5] = 0xFF;
+    data[6] = 0xFF;
+    data[7] = 0xFF;
+
+    can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
+}

@@ -28,6 +28,12 @@
 #define SUB_MAIN_MSG2_ID            0x0842F7F4     //主板数据2
 #define JURYUAN_MSG_ID              0x0851F4A5     //绝缘板数据
 
+#define CONG_BOARD_STATE_ID         0x0821F4C0      //从板状态信息
+#define CONG_BOARD_TEMP_ID          0x0822F4C0      //从板温度信息
+#define CONG_BOARD_VOL_ID           0x0823F4C0      //从板电压信息
+
+#define UPME_SET_MAIN_PARAM_ID      0x0831F4F7      //上位机设置主板参数ID
+
 #define MSG_SUMMARY_LIST_LENGTH     32      //概述数组总长度
 #define MSG_SUMMARY_LIST_HERTICK    1       //概述 心跳
 #define MSG_SUMMARY_LIST_SOC        2       //概述 SOC
@@ -88,5 +94,26 @@
 #define MSG_AC_CHG_OUT_STE          7       //输出状态
 #define MSG_AC_CHG_OUT_VOL          8       //输出电压
 #define MSG_AC_CHG_OUT_CUR          9       //输出电流
+
+#define MSG_MAIN_BD_CTRL            20      // 主板控制描述结构最大长度
+#define MSG_BMS_TIME                0       //BMS时间
+#define MSG_LOCAL_TIME              1       //本地时间
+#define MSG_ACT_CONTAIN             2       //实际容量
+#define MSG_OFF_CONTAIN             3       //补偿容量
+#define MSG_CNT_FORCE_CTL           4       //接触器强制控制
+#define MSG_VCUCAN_ALM_CTL          5       //整车CAN报警控制
+#define MSG_OVER_CHG_ACH_FLAG       6       //满电校准完成标志
+#define MSG_INTO_OFF_TIME           7       //进入补偿点时间
+#define MSG_INTO_30_AC_TIME         8       //进入30%校准点时间
+#define MSG_INTO_20_AC_TIME         9       //进入20%校准点时间
+#define MSG_INTO_10_AC_TIME         10      //进入10%校准点时间
+#define MSG_INTO_1_AC_TIME           11      //进入1%校准点时间
+#define MSG_STORE_TIME             12      //存储电量次数
+#define MSG_SOC_EXC_BEF             13      //跳变前SOC
+#define MSG_SOC_EXC_AFT             14      //跳变后SOC
+#define MSG_SOFT_VER                15      //软件版本
+#define MSG_HARD_VER                16      //硬件版本
+#define MSG_SOFT_MOD_TIME           17      //软件修改时间
+#define MSG_SOFT_MOD_NUM           18      //软件修改编号
 
 #endif // CONFIG_H

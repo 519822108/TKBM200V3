@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
+    <width>339</width>
     <height>159</height>
    </rect>
   </property>
@@ -53,16 +53,6 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="tbr_id">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>20</y>
-     <width>40</width>
-     <height>140</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QListWidget" name="lw_msg">
    <property name="geometry">
     <rect>
@@ -70,6 +60,22 @@
      <y>0</y>
      <width>230</width>
      <height>160</height>
+    </rect>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="lw_bid">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>20</y>
+     <width>40</width>
+     <height>140</height>
     </rect>
    </property>
    <property name="verticalScrollBarPolicy">

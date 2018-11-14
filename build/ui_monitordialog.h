@@ -17,7 +17,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListWidget>
-#include <QtWidgets/QTextBrowser>
 
 QT_BEGIN_NAMESPACE
 
@@ -26,14 +25,14 @@ class Ui_MonitorDialog
 public:
     QListWidget *lw_fid;
     QLineEdit *lineEdit;
-    QTextBrowser *tbr_id;
     QListWidget *lw_msg;
+    QListWidget *lw_bid;
 
     void setupUi(QDialog *MonitorDialog)
     {
         if (MonitorDialog->objectName().isEmpty())
             MonitorDialog->setObjectName(QStringLiteral("MonitorDialog"));
-        MonitorDialog->resize(340, 159);
+        MonitorDialog->resize(339, 159);
         lw_fid = new QListWidget(MonitorDialog);
         new QListWidgetItem(lw_fid);
         lw_fid->setObjectName(QStringLiteral("lw_fid"));
@@ -45,14 +44,16 @@ public:
         lineEdit->setEnabled(false);
         lineEdit->setGeometry(QRect(300, 0, 40, 20));
         lineEdit->setAlignment(Qt::AlignCenter);
-        tbr_id = new QTextBrowser(MonitorDialog);
-        tbr_id->setObjectName(QStringLiteral("tbr_id"));
-        tbr_id->setGeometry(QRect(300, 20, 40, 140));
         lw_msg = new QListWidget(MonitorDialog);
         lw_msg->setObjectName(QStringLiteral("lw_msg"));
         lw_msg->setGeometry(QRect(0, 0, 230, 160));
         lw_msg->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         lw_msg->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        lw_bid = new QListWidget(MonitorDialog);
+        lw_bid->setObjectName(QStringLiteral("lw_bid"));
+        lw_bid->setGeometry(QRect(300, 20, 40, 140));
+        lw_bid->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        lw_bid->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
         retranslateUi(MonitorDialog);
 

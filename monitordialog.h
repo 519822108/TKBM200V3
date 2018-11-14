@@ -25,6 +25,11 @@ public slots:
 private slots:
     void on_lw_fid_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_lw_bid_itemDoubleClicked(QListWidgetItem *item);
+
+signals:
+    void sig_send_board_id(int id);
+
 private:
     Ui::MonitorDialog *ui;
     QVector<QString> temp_array;
@@ -34,9 +39,9 @@ private:
     struct id_list{
         unsigned int id[128];
         int len;
-    }msg_id_list;
+    }msg_id_list,board_id_list;
+
     int filter_id;
-    char board_id_list[128];
 };
 
 #endif // MONITORDIALOG_H

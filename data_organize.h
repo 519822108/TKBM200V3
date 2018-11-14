@@ -39,4 +39,8 @@ struct msg_discripte{           //信息描述结构
     enum Qt::GlobalColor    f_color;          //信息前景色
 };
 
+struct per_battery_info_discription{
+    int cur_id;
+};
+
 #endif // DATA_ORGANIZE_H

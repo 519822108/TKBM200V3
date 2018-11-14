@@ -6,6 +6,7 @@
 #include <iostream>
 #include <QList>
 #include <QMutex>
+#include "config.h"
 
 QMutex ext_mutex;
 extern QList<VCI_CAN_OBJ> vec_buff;
@@ -23,6 +24,7 @@ MonitorDialog::MonitorDialog(QWidget *parent) :
 
     memset(&msg_id_list,0,sizeof(struct id_list));
     msg_id_list.len = 0;
+    board_id_list.len = 0;
     filter_id = 0;
     temp_array.clear();
 
@@ -50,6 +52,17 @@ void MonitorDialog::timer100_timeout()
             temp_str = temp_str.toUpper();
             ui->lw_fid->addItem(temp_str);
         }
+
+        if(CONG_BOARD_STATE_ID == (obj.ID&0xFFFFFFF0)){
+            for(j=0;j<board_id_list.len;j++)
+                if(obj.Data[0] == board_id_list.id[j]) break;
+            if(j == board_id_list.len){
+                board_id_list.id[j] = obj.Data[0];
+                board_id_list.len++;
+                ui->lw_bid->addItem(QString("%1").arg(obj.Data[0]));
+            }
+        }
+
         if(obj.ID == filter_id || filter_id == 0){
             temp_str = QString("%1: ").arg(obj.ID,8,16,QChar('0'));
             for(int k=0;k<obj.DataLen;k++){
@@ -86,4 +99,16 @@ void MonitorDialog::on_lw_fid_itemDoubleClicked(QListWidgetItem *item)
     }else{
         filter_id = temp.toInt(&ok,16);
     }
+    ui->lw_fid->clear();
+    ui->lw_fid->addItem(QString(""));
+    memset(&msg_id_list,0,sizeof(struct id_list));
+}
+
+void MonitorDialog::on_lw_bid_itemDoubleClicked(QListWidgetItem *item)
+{
+    bool ok;
+    QString sid = item->text();
+    unsigned char id = (unsigned char)sid.toInt(&ok,10);
+    if(ok)
+        emit sig_send_board_id(id);
 }

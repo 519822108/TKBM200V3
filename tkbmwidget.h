@@ -43,6 +43,17 @@ private slots:
     void on_rb_exp_dis_clicked();
     void update_msg_timeout(void);          //定时器超时更新UI
     void update_data_timeout(void);         //定时器超时刷新数据
+    void slot_get_board_id(int bid);
+
+    void on_pb_sync_clicked();
+
+    void on_pb_modify_clicked();
+
+    void on_tb_ctl_info_cellDoubleClicked(int row, int column);
+
+    void on_pb_ctl_tch_clicked();
+
+    void on_pb_ctl_alarm_clicked();
 
 private:
     Ui::TkbmWidget *ui;
@@ -54,11 +65,16 @@ private:
     QTimer *timer_100;
     QTimer *timer_5s;
 
+    int cnt_ctrl_clk;
+    int vcu_alarm;
+
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构
     struct msg_discripte msg_alarm;                                     //报警信息结构
     struct msg_discripte msg_chg_summary[MSG_CHG_SUMMARY_LENGTH];       //充电概述表信息结构
     struct msg_discripte msg_chg_err_disc[MSG_CHG_ERROR_CURSOR_LEN];    //充电过程错误描述表
-    struct msg_discripte msg_ac_chg_state[MSG_AC_CHG_STATE_LEN];
+    struct msg_discripte msg_ac_chg_state[MSG_AC_CHG_STATE_LEN];        //交流充电机状态描述表
+    struct msg_discripte msg_main_ctl_info[MSG_MAIN_BD_CTRL];           //主板控制信息描述表
+    struct per_battery_info_discription bms_sub_info;                       //从板描述
 
 protected:
     void closeEvent(QCloseEvent *event);
