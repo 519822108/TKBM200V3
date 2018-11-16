@@ -234,6 +234,9 @@ public:
         le_id_in = new QLineEdit(frame);
         le_id_in->setObjectName(QStringLiteral("le_id_in"));
         le_id_in->setGeometry(QRect(60, 0, 61, 20));
+        le_id_in->setAcceptDrops(true);
+        le_id_in->setInputMethodHints(Qt::ImhNone);
+        le_id_in->setFrame(true);
         le_id = new QLineEdit(frame);
         le_id->setObjectName(QStringLiteral("le_id"));
         le_id->setEnabled(false);

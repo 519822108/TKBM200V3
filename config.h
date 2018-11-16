@@ -34,6 +34,11 @@
 
 #define UPME_SET_MAIN_PARAM_ID      0x0831F4F7      //上位机设置主板参数ID
 
+
+#define SUB_MODULE_NUM_MAX          4       //从板最大模块数
+#define EACH_MODULE_CHINNEL         12      //每个模块采集数
+#define SUB_TEMPRATURE_NUM_MAX      16      //从板最大温度采集数
+
 #define MSG_SUMMARY_LIST_LENGTH     32      //概述数组总长度
 #define MSG_SUMMARY_LIST_HERTICK    1       //概述 心跳
 #define MSG_SUMMARY_LIST_SOC        2       //概述 SOC

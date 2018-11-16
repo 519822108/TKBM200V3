@@ -12,6 +12,7 @@
 #include <static_string.h>
 #include <QMutex>
 #include <QDateTime>
+#include <QIntValidator>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -29,9 +30,10 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     can_data.len = 0;
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
     this->ui_init();
+
+    this->chg_stage_data_init();
     this->data_struct_init();
     this->set_eep_config();
-    this->chg_stage_data_init();
     login_dialog.show();
 
     timer_100 = new QTimer(this);
@@ -61,7 +63,7 @@ void TkbmWidget::chg_stage_data_init()
     msg_chg_stage[0x11] = QString("参数准备阶段2");
     msg_chg_stage[0x20] = QString("充电阶段1");
     msg_chg_stage[0x21] = QString("充电阶段2");
-    msg_chg_state[0x30] = QString("充电结束");
+    msg_chg_stage[0x30] = QString("充电结束");
     item = ui->tb_ctl_info->item(MSG_CNT_FORCE_CTL,0);
     item->setText(msg_cnt_force_ctrol[0]);
     item = ui->tb_ctl_info->item(MSG_VCUCAN_ALM_CTL,0);
@@ -69,6 +71,12 @@ void TkbmWidget::chg_stage_data_init()
     cnt_ctrl_clk = 0;
     vcu_alarm = 0;
     memset(&bms_sub_info,0,sizeof(struct per_battery_info_discription));
+
+    struct sub_each_board each_bd;
+    bms_sub_info = new struct per_battery_info_discription;
+    bms_sub_info->cur_id = 0;
+    memset(&each_bd,0,sizeof (struct sub_each_board));
+    bms_sub_info->each_board.push_back(each_bd);
 }
 
 void TkbmWidget::comm_timeout()
@@ -77,7 +85,7 @@ void TkbmWidget::comm_timeout()
     QString msg;
 
     for(i=0;i<can_data.len;i++){
-        if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){
+        if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){                //处理主板数据2
             switch (can_data.data[i].Data[0]) {
             case 0:
                 msg = main_info_msg(can_data.data[i].Data[1],1);
@@ -239,15 +247,65 @@ void TkbmWidget::comm_timeout()
                 break;
             }
         }
-        if(can_data.data[i].ID == JURYUAN_MSG_ID){
+        if(can_data.data[i].ID == JURYUAN_MSG_ID){                  //处理绝缘板数据
             msg_summary[MSG_SUMMARY_LIST_RESIS].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*1);
             msg_summary[MSG_SUMMARY_LIST_NORSV].s_val = QString("%1").arg((can_data.data[i].Data[5]+can_data.data[i].Data[6]*256)*1);
             msg_summary[MSG_SUMMARY_LIST_RSVTIC].s_val = QString("%1").arg(can_data.data[i].Data[7]);
         }
+        if(CONG_BOARD_STATE_ID == (can_data.data[i].ID & 0xfffffff0)){  //处理从板状态信息
+            QVector<struct sub_each_board>::iterator iter;
+            for(iter = bms_sub_info->each_board.begin();iter < bms_sub_info->each_board.end();iter++){
+                if(iter->bid == can_data.data[i].Data[0]){          //如果存在该id,则按id修改内容
+                    sub_state_msg_ana(iter,can_data.data[i].Data);
+                    j = -1;
+                }
+            }
+            if(j != -1){                    //如果不存在该id,则创建一个数据,查找合适的位置放入
+                struct sub_each_board ebd;
+                sub_state_msg_ana(&ebd,can_data.data[i].Data);
+                int k=0;
+                for(iter = bms_sub_info->each_board.begin();iter < bms_sub_info->each_board.end();iter++){
+                    if(ebd.bid < iter->bid){
+                        bms_sub_info->each_board.insert(k,ebd);
+                        j = -1;
+                        break;
+                    }
+                    k++;
+                }
+                if(j != -1)
+                    bms_sub_info->each_board.push_back(ebd);
+            }
+        }
     }
-
     can_data.len = 0;
 
+}
+
+void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[8])
+{
+    int j;
+    bd->bid = Data[0];
+    switch (Data[1]) {
+    case 0xD0:
+        bd->sw = Data[2];
+        bd->hw = Data[4];
+        break;
+    case 0xD1:
+        for(j=0;j<6;j++){
+            bd->sn[j] = Data[j+2];
+        }
+        break;
+    case 0xD2:
+        bd->module_num = Data[5];
+        bd->htick = Data[6];
+        bd->state = Data[7];
+        break;
+    case 0xD3: break;
+    case 0xD4:
+        bd->disc[Data[2]] = Data[3] + Data[4]*256;
+        break;
+    default: break;
+    }
 }
 
 void TkbmWidget::update_data_timeout()
@@ -335,13 +393,13 @@ void TkbmWidget::update_msg_timeout()
         item->setForeground(msg_main_ctl_info[i].f_color);
         item->setBackground(msg_main_ctl_info[i].b_color);
     }
-
-    ui->le_id_in->setText(QString("%1").arg(bms_sub_info.cur_id));
 }
 
 void TkbmWidget::slot_get_board_id(int bid)
 {
-    bms_sub_info.cur_id = bid;
+    bms_sub_info->cur_id = bid;
+    ui->le_id_in->setText(QString("%1").arg(bid));
+    emit ui->le_id_in->editingFinished();
 }
 
 void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
@@ -402,6 +460,7 @@ void TkbmWidget::data_struct_init()
         msg_main_ctl_info[i].i_val = 0;
         msg_main_ctl_info[i].s_val = ' ';
     }
+
 }
 
 void TkbmWidget::ui_init(void)
@@ -448,6 +507,8 @@ void TkbmWidget::ui_init(void)
     ui->tb_state->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_eep_content->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tb_eep_content->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->le_id_in->setValidator(new QIntValidator(0,100,this));
+    ui->le_id_in->setText(QString("0"));
 }
 
 void TkbmWidget::set_eep_config(void)
@@ -536,6 +597,7 @@ TkbmWidget::~TkbmWidget()
 {
     if(can_bsp != NULL)
         delete can_bsp;
+    delete bms_sub_info;
     delete ui;
 }
 
@@ -732,4 +794,65 @@ void TkbmWidget::on_pb_ctl_alarm_clicked()
     data[7] = 0xFF;
 
     can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
+}
+
+void TkbmWidget::on_le_id_in_editingFinished()
+{
+    bool ok;
+    int j=0;
+    QVector<struct sub_each_board>::iterator iter;
+    int bid = ui->le_id_in->text().toInt(&ok);
+    if(ok == false){
+        QMessageBox::information(this,"ERROR","无效的从板 ID");
+        return;
+    }
+    for(iter=bms_sub_info->each_board.begin();iter<bms_sub_info->each_board.end();iter++){
+        if(bid == iter->bid){
+            bms_sub_info->cur_id = bid;
+            j = -1;
+        }
+    }
+    if(j != -1){
+        iter = bms_sub_info->each_board.begin();
+        bms_sub_info->cur_id =iter->bid;
+        ui->le_id_in->setText(QString("%1").arg(bms_sub_info->cur_id));
+    }
+}
+
+void TkbmWidget::on_pb_after_clicked()
+{
+    bool ok;
+    QVector<struct sub_each_board>::iterator iter;
+    int bid = ui->le_id_in->text().toInt(&ok);
+    if(ok == false){
+        QMessageBox::information(this,"ERROR","无效的从板 ID");
+        return;
+    }
+    for(iter = bms_sub_info->each_board.begin();iter < bms_sub_info->each_board.end();iter++){
+        if(bid < iter->bid){
+            bid = iter->bid;
+            break;
+        }
+    }
+    ui->le_id_in->setText(QString("%1").arg(bid));
+    emit ui->le_id_in->editingFinished();
+}
+
+void TkbmWidget::on_pb_before_clicked()
+{
+    bool ok;
+    QVector<struct sub_each_board>::iterator iter;
+    int bid = ui->le_id_in->text().toInt(&ok);
+    if(ok == false){
+        QMessageBox::information(this,"ERROR","无效的从板 ID");
+        return;
+    }
+    for(iter = bms_sub_info->each_board.begin();iter < bms_sub_info->each_board.end();iter++){
+        if(bid <= iter->bid){
+            bid = (--iter)->bid;
+            break;
+        }
+    }
+    ui->le_id_in->setText(QString("%1").arg(bid));
+    emit ui->le_id_in->editingFinished();
 }

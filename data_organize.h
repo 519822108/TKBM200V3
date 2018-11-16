@@ -4,6 +4,7 @@
 #include <QString>
 #include "ControlCAN.h"
 #include <Qt>
+#include <QVector>
 
 /*  breif: Excel配置数据到县市区的对应关系
  *  s_ :源文件和显示区共有的成员
@@ -39,8 +40,23 @@ struct msg_discripte{           //信息描述结构
     enum Qt::GlobalColor    f_color;          //信息前景色
 };
 
+struct sub_each_board{
+    int bid;
+    int module_num;
+    int sw;
+    int hw;
+    unsigned char sn[6];
+    unsigned char state;
+    unsigned char htick;
+    unsigned short disc[SUB_MODULE_NUM_MAX];
+    unsigned int temp[SUB_TEMPRATURE_NUM_MAX];
+    unsigned int each_vol[SUB_MODULE_NUM_MAX][EACH_MODULE_CHINNEL];
+
+};
+
 struct per_battery_info_discription{
     int cur_id;
+    QVector<struct sub_each_board> each_board;
 };
 
 #endif // DATA_ORGANIZE_H

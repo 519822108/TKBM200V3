@@ -28,6 +28,7 @@ public:
     void read_excel_data(void);
     void set_eeprom_table(void);
     void chg_stage_data_init(void);
+    void sub_state_msg_ana(struct sub_each_board *bd,unsigned char data[8]);
 
     QString anasy_alart_msg(unsigned char data[5]);
     QString main_info_msg(unsigned char data,char pos);
@@ -55,6 +56,12 @@ private slots:
 
     void on_pb_ctl_alarm_clicked();
 
+    void on_le_id_in_editingFinished();
+
+    void on_pb_after_clicked();
+
+    void on_pb_before_clicked();
+
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
@@ -74,8 +81,7 @@ private:
     struct msg_discripte msg_chg_err_disc[MSG_CHG_ERROR_CURSOR_LEN];    //充电过程错误描述表
     struct msg_discripte msg_ac_chg_state[MSG_AC_CHG_STATE_LEN];        //交流充电机状态描述表
     struct msg_discripte msg_main_ctl_info[MSG_MAIN_BD_CTRL];           //主板控制信息描述表
-    struct per_battery_info_discription bms_sub_info;                       //从板描述
-
+    struct per_battery_info_discription *bms_sub_info;                       //从板描述
 protected:
     void closeEvent(QCloseEvent *event);
 };
