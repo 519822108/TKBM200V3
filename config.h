@@ -30,14 +30,19 @@
 
 #define CONG_BOARD_STATE_ID         0x0821F4C0      //从板状态信息
 #define CONG_BOARD_TEMP_ID          0x0822F4C0      //从板温度信息
+#define CONG_BOARD_EACH_TEMP        6               //每个从板温度保温带有温度数据数
 #define CONG_BOARD_VOL_ID           0x0823F4C0      //从板电压信息
+#define CONG_BOARD_EACH_VOL         3               //每个从板电压报文带有的电压数据数
 
 #define UPME_SET_MAIN_PARAM_ID      0x0831F4F7      //上位机设置主板参数ID
 
 
 #define SUB_MODULE_NUM_MAX          4       //从板最大模块数
 #define EACH_MODULE_CHINNEL         12      //每个模块采集数
+#define TOTAL_MODULE_LENGTH         (SUB_MODULE_NUM_MAX*EACH_MODULE_CHINNEL)        //单板单体电压通道最大数
 #define SUB_TEMPRATURE_NUM_MAX      16      //从板最大温度采集数
+#define SUB_TEMP_DISPLAY_ROW        4       //温度显示行数
+#define SUB_TEMP_DISPLAY_COL        4       //温度显示烈数
 
 #define MSG_SUMMARY_LIST_LENGTH     32      //概述数组总长度
 #define MSG_SUMMARY_LIST_HERTICK    1       //概述 心跳
@@ -120,5 +125,11 @@
 #define MSG_HARD_VER                16      //硬件版本
 #define MSG_SOFT_MOD_TIME           17      //软件修改时间
 #define MSG_SOFT_MOD_NUM           18      //软件修改编号
+
+#define UNIT_INFO_NUM_MAX         4       //单体状态信息数组最大值
+#define MODULE_NUM                  0
+#define SOFT_VERSION                1
+#define HARD_VERSION                2
+#define SERIAL_NUMBER               3
 
 #endif // CONFIG_H

@@ -36,6 +36,9 @@ static const QString msg_ac_chg_state_a[8] = {QString("未开始\0"),QString("�
 static const QString msg_ac_chger_out_state[7] = {QString("未开始\0"),QString("充电中\0"),QString("充电停止\0"),QString("充电停止\0"),QString("充电停止\0"),QString("充电停止\0"),QString(" ")};
 static const QString msg_over_chg_acc_flag[2] = {QString("未完成\0"),QString("完成\0")};
 
-static QString msg_cnt_force_ctrol[3] = {QString("00H:不控制\0"),QString("A0H:强制闭合\0"),QString("A1H:强制断开\0")};
-static QString msg_vcu_can_alarm[2] = {QString("00H:不控制\0"),QString("A0H:屏蔽报警\0")};
+static const QString msg_cnt_force_ctrol[3] = {QString("00H:不控制\0"),QString("A0H:强制闭合\0"),QString("A1H:强制断开\0")};
+static const QString msg_vcu_can_alarm[2] = {QString("00H:不控制\0"),QString("A0H:屏蔽报警\0")};
+static const QString msg_bms_run_state[8] = {QString("模块A错误\0"),QString("模块B错误\0"),QString("模块C错误\0"),QString("模块D错误\0"),
+                                            QString("EEPROM错误\0"),QString("reserved"),QString("reserved"),QString("测试模式\0")};
+
 #endif // STATIC_STRING_H

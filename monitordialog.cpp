@@ -79,9 +79,9 @@ void MonitorDialog::timer100_timeout()
     if(vec_buff.isEmpty() == false){
         ui->lw_msg->clear();
         ui->lw_msg->addItems(QStringList(temp_array.toList()));
+        ui->lw_msg->scrollToBottom();
         vec_buff.clear();
     }
-
     ext_mutex.unlock();
 }
 
@@ -109,6 +109,8 @@ void MonitorDialog::on_lw_bid_itemDoubleClicked(QListWidgetItem *item)
     bool ok;
     QString sid = item->text();
     unsigned char id = (unsigned char)sid.toInt(&ok,10);
+    ui->lw_bid->clear();
+    board_id_list.len = 0;
     if(ok)
         emit sig_send_board_id(id);
 }

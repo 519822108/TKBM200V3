@@ -42,16 +42,16 @@ struct msg_discripte{           //信息描述结构
 
 struct sub_each_board{
     int bid;
-    int module_num;
+    int modu_num;
     int sw;
     int hw;
     unsigned char sn[6];
     unsigned char state;
     unsigned char htick;
-    unsigned short disc[SUB_MODULE_NUM_MAX];
-    unsigned int temp[SUB_TEMPRATURE_NUM_MAX];
-    unsigned int each_vol[SUB_MODULE_NUM_MAX][EACH_MODULE_CHINNEL];
-
+    unsigned short disc[SUB_MODULE_NUM_MAX];            //断线信息
+    char temp[SUB_TEMPRATURE_NUM_MAX];                  //温度信息
+    int each_vol[TOTAL_MODULE_LENGTH];                  //电压信息
+    int per_chinnal[SUB_MODULE_NUM_MAX];                //每个模块通道数
 };
 
 struct per_battery_info_discription{

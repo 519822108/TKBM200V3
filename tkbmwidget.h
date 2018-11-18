@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QList>
+#include <QMutex>
 
 namespace Ui {
 class TkbmWidget;
@@ -81,6 +82,7 @@ private:
     struct msg_discripte msg_chg_err_disc[MSG_CHG_ERROR_CURSOR_LEN];    //充电过程错误描述表
     struct msg_discripte msg_ac_chg_state[MSG_AC_CHG_STATE_LEN];        //交流充电机状态描述表
     struct msg_discripte msg_main_ctl_info[MSG_MAIN_BD_CTRL];           //主板控制信息描述表
+    struct msg_discripte msg_bms_run_state_dsc[UNIT_INFO_NUM_MAX];        //从板状态信息
     struct per_battery_info_discription *bms_sub_info;                       //从板描述
 protected:
     void closeEvent(QCloseEvent *event);

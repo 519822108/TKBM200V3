@@ -17,6 +17,7 @@
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
 extern QMutex ext_mutex;
+static QMutex mutex;
 QList<VCI_CAN_OBJ> vec_buff;
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
@@ -84,6 +85,7 @@ void TkbmWidget::comm_timeout()
     int i,j;
     QString msg;
 
+    mutex.lock();
     for(i=0;i<can_data.len;i++){
         if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){                //处理主板数据2
             switch (can_data.data[i].Data[0]) {
@@ -262,6 +264,7 @@ void TkbmWidget::comm_timeout()
             }
             if(j != -1){                    //如果不存在该id,则创建一个数据,查找合适的位置放入
                 struct sub_each_board ebd;
+                memset(&ebd,0,sizeof(struct sub_each_board));
                 sub_state_msg_ana(&ebd,can_data.data[i].Data);
                 int k=0;
                 for(iter = bms_sub_info->each_board.begin();iter < bms_sub_info->each_board.end();iter++){
@@ -275,10 +278,28 @@ void TkbmWidget::comm_timeout()
                 if(j != -1)
                     bms_sub_info->each_board.push_back(ebd);
             }
+        }    
+        if(CONG_BOARD_TEMP_ID == (can_data.data[i].ID & 0xfffffff0)){   //处理从板温度信息
+            for(auto iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
+                if(iter->bid == can_data.data[i].Data[0]){
+                    for(j=0;j<CONG_BOARD_EACH_TEMP;j++)
+                        iter->temp[can_data.data[i].Data[1]*CONG_BOARD_EACH_TEMP+j] = can_data.data[i].Data[j+2]-40;
+                    break;
+                }
+            }
+        }
+        if(CONG_BOARD_VOL_ID == (can_data.data[i].ID & 0xfffffff0)){    //从板电压信息
+            for(auto iter = bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
+                if(iter->bid == can_data.data[i].Data[0]){
+                    for(j=0;j<CONG_BOARD_EACH_VOL;j++)
+                        iter->each_vol[can_data.data[i].Data[1]*CONG_BOARD_EACH_VOL+j] = can_data.data[i].Data[2+j*2] + can_data.data[i].Data[3+j*2]*256;
+                    break;
+                }
+            }
         }
     }
     can_data.len = 0;
-
+    mutex.unlock();
 }
 
 void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[8])
@@ -296,7 +317,7 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
         }
         break;
     case 0xD2:
-        bd->module_num = Data[5];
+        bd->modu_num = Data[5];
         bd->htick = Data[6];
         bd->state = Data[7];
         break;
@@ -306,6 +327,7 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
         break;
     default: break;
     }
+    bd->per_chinnal[0] = bd->per_chinnal[1] = bd->per_chinnal[2] = bd->per_chinnal[3] = EACH_MODULE_CHINNEL;
 }
 
 void TkbmWidget::update_data_timeout()
@@ -348,6 +370,8 @@ void TkbmWidget::update_msg_timeout()
     int item_count;
     int col_count;
     int i,j;
+    char temp_tmp;
+    QString msg;
     item_count = ui->tb_breif->rowCount();
     for(i=0;i<item_count;i++){                          //更新概述表
         QTableWidgetItem *item = ui->tb_breif->item(i,0);
@@ -392,6 +416,98 @@ void TkbmWidget::update_msg_timeout()
         item->setText(msg_main_ctl_info[i].s_val);
         item->setForeground(msg_main_ctl_info[i].f_color);
         item->setBackground(msg_main_ctl_info[i].b_color);
+    }
+    //--------------------------------------------
+    if(bms_sub_info->each_board.isEmpty() == false){        //更新单体信息
+        QVector<struct sub_each_board>::iterator iter;
+        for(iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
+            if(iter->bid == bms_sub_info->cur_id){
+                msg = "";
+                for(i=0;i<8;i++){
+                    if((iter->state >> i) & 0x01)
+                        msg += msg_bms_run_state[i] + '\n';
+                }
+                QTableWidgetItem *item = ui->tb_run_state->item(0,1);
+                item->setText(msg);
+                item = ui->tb_run_state->item(0,2);
+                item->setText(QString("%1").arg(iter->htick));
+                msg_bms_run_state_dsc[MODULE_NUM].s_val = QString("%1").arg(iter->modu_num);
+                msg_bms_run_state_dsc[SOFT_VERSION].s_val = QString("%1").arg(iter->sw,2,16,QLatin1Char('0'));
+                msg_bms_run_state_dsc[HARD_VERSION].s_val = QString("%1").arg(iter->hw,2,16,QLatin1Char('0'));
+                msg_bms_run_state_dsc[SERIAL_NUMBER].s_val = QString("%1-%2-%3-%4-%5-%6").arg(iter->sn[0]).arg(iter->sn[1])\
+                                                        .arg(iter->sn[2]).arg(iter->sn[3]).arg(iter->sn[4]).arg(iter->sn[5]);
+                for(i=0;i<UNIT_INFO_NUM_MAX;i++){               //更新运行状态
+                    item = ui->tb_version->item(i,0);
+                    item->setText(msg_bms_run_state_dsc[i].s_val);
+                    item->setBackground(QBrush(msg_bms_run_state_dsc[i].b_color));
+                    item->setForeground(QBrush(msg_bms_run_state_dsc[i].f_color));
+                }
+                for(i=0;i<ui->tb_disconnect->columnCount();i++){        //晴空断线检测显示
+                    item = ui->tb_disconnect->item(0,i);
+                    item->setText("");
+                }
+                for(i=0;i<iter->modu_num;i++){                  //更新断线状态
+                    msg = "";
+                    for(j=0;j<iter->per_chinnal[i];j++){
+                        if((iter->disc[i] >> j) & 0x01)
+                            msg += QString("%1").arg(j) + ' ';
+                    }
+                    item = ui->tb_disconnect->item(0,i);
+                    item->setText(msg);
+                }
+                for(i=0;i<SUB_TEMP_DISPLAY_ROW;i++){            //更新温度信息
+                    for(j=0;j<SUB_TEMP_DISPLAY_COL;j++){
+                        item = ui->tb_temp->item(i,2*j+1);
+                        temp_tmp = iter->temp[i*SUB_TEMP_DISPLAY_COL+j];
+                        msg = (temp_tmp != (char)0xFF) ?(QString("%1").arg(temp_tmp,0,10,QLatin1Char('0'))) : (QString("NONE"));
+                        item->setText(msg);
+                    }
+                }
+                for(i=0;i<ui->tb_vol_m1->rowCount();i++){       //清空电压显示
+                    item = ui->tb_vol_m1->item(i,0);
+                    item->setText("");
+                    item = ui->tb_vol_m1->item(i,1);
+                    item->setText("");
+                    item = ui->tb_vol_m2->item(i,0);
+                    item->setText("");
+                    item = ui->tb_vol_m2->item(i,1);
+                    item->setText("");
+                    item = ui->tb_vol_m3->item(i,0);
+                    item->setText("");
+                    item = ui->tb_vol_m3->item(i,1);
+                    item->setText("");
+                    item = ui->tb_vol_m4->item(i,0);
+                    item->setText("");
+                    item = ui->tb_vol_m4->item(i,1);
+                    item->setText("");
+                }
+                if(iter->modu_num > 0){                         //更新模块A电压
+                    for(i=0;i<iter->per_chinnal[0];i++){
+                        item = ui->tb_vol_m1->item(i,1);
+                        item->setText(QString("%1").arg(iter->each_vol[i]));
+                    }
+                }
+                if(iter->modu_num > 1){
+                    for(i=0;i<iter->per_chinnal[1];i++){
+                        item = ui->tb_vol_m2->item(i,1);
+                        item->setText(QString("%1").arg(iter->each_vol[iter->per_chinnal[0]]));
+                    }
+                }
+                if(iter->modu_num > 2){
+                    for(i=0;i<iter->per_chinnal[2];i++){
+                        item = ui->tb_vol_m3->item(i,1);
+                        item->setText(QString("%1").arg(iter->each_vol[iter->per_chinnal[0]+iter->per_chinnal[1]]));
+                    }
+                }
+                if(iter->modu_num > 3){
+                    for(i=0;i<iter->per_chinnal[3];i++){
+                        item = ui->tb_vol_m4->item(i,1);
+                        item->setText(QString("%1").arg(iter->each_vol[iter->per_chinnal[0]+iter->per_chinnal[1]+iter->per_chinnal[2]]));
+                    }
+                }
+                break;
+            }
+        }
     }
 }
 
@@ -460,7 +576,12 @@ void TkbmWidget::data_struct_init()
         msg_main_ctl_info[i].i_val = 0;
         msg_main_ctl_info[i].s_val = ' ';
     }
-
+    for(int i=0;i<UNIT_INFO_NUM_MAX;i++){
+        msg_bms_run_state_dsc[i].f_color = Qt::black;
+        msg_bms_run_state_dsc[i].b_color = Qt::white;
+        msg_bms_run_state_dsc[i].i_val = 0;
+        msg_bms_run_state_dsc[i].s_val = ' ';
+    }
 }
 
 void TkbmWidget::ui_init(void)
@@ -662,10 +783,11 @@ void RecvCan::run()
                 read_len = 0;
                 can_data.len = 0;
             }
-
+            mutex.lock();
             read_len = can_bps->can_rec_read(recv_buff,read_len);
             memcpy(&can_data.data[can_data.len],recv_buff,sizeof (VCI_CAN_OBJ)*read_len);
             can_data.len += read_len;
+            mutex.unlock();
 
             ext_mutex.lock();
             for(i=0;i<read_len;i++)
