@@ -5,6 +5,7 @@
 #include "ControlCAN.h"
 #include <Qt>
 #include <QVector>
+#include <list>
 
 /*  breif: Excel配置数据到县市区的对应关系
  *  s_ :源文件和显示区共有的成员
@@ -50,7 +51,8 @@ struct sub_each_board{
     unsigned char htick;
     unsigned short disc[SUB_MODULE_NUM_MAX];            //断线信息
     char temp[SUB_TEMPRATURE_NUM_MAX];                  //温度信息
-    int each_vol[TOTAL_MODULE_LENGTH];                  //电压信息
+    int reserved;
+    int each_volt[TOTAL_MODULE_LENGTH+2];                  //电压信息
     int per_chinnal[SUB_MODULE_NUM_MAX];                //每个模块通道数
 };
 

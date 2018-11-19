@@ -105,26 +105,27 @@
 #define MSG_AC_CHG_OUT_VOL          8       //输出电压
 #define MSG_AC_CHG_OUT_CUR          9       //输出电流
 
-#define MSG_MAIN_BD_CTRL            20      // 主板控制描述结构最大长度
+#define MSG_MAIN_BD_CTRL            22      // 主板控制描述结构最大长度
 #define MSG_BMS_TIME                0       //BMS时间
 #define MSG_LOCAL_TIME              1       //本地时间
-#define MSG_ACT_CONTAIN             2       //实际容量
-#define MSG_OFF_CONTAIN             3       //补偿容量
-#define MSG_CNT_FORCE_CTL           4       //接触器强制控制
-#define MSG_VCUCAN_ALM_CTL          5       //整车CAN报警控制
-#define MSG_OVER_CHG_ACH_FLAG       6       //满电校准完成标志
-#define MSG_INTO_OFF_TIME           7       //进入补偿点时间
-#define MSG_INTO_30_AC_TIME         8       //进入30%校准点时间
-#define MSG_INTO_20_AC_TIME         9       //进入20%校准点时间
-#define MSG_INTO_10_AC_TIME         10      //进入10%校准点时间
-#define MSG_INTO_1_AC_TIME           11      //进入1%校准点时间
-#define MSG_STORE_TIME             12      //存储电量次数
-#define MSG_SOC_EXC_BEF             13      //跳变前SOC
-#define MSG_SOC_EXC_AFT             14      //跳变后SOC
-#define MSG_SOFT_VER                15      //软件版本
-#define MSG_HARD_VER                16      //硬件版本
-#define MSG_SOFT_MOD_TIME           17      //软件修改时间
-#define MSG_SOFT_MOD_NUM           18      //软件修改编号
+#define MSG_SOC_SET                 2       //SCO设置
+#define MSG_ACT_CONTAIN             3       //实际容量
+#define MSG_OFF_CONTAIN             4       //补偿容量
+#define MSG_CNT_FORCE_CTL           5       //接触器强制控制
+#define MSG_VCUCAN_ALM_CTL          6       //整车CAN报警控制
+#define MSG_OVER_CHG_ACH_FLAG       7       //满电校准完成标志
+#define MSG_INTO_OFF_TIME           8       //进入补偿点时间
+#define MSG_INTO_30_AC_TIME         9       //进入30%校准点时间
+#define MSG_INTO_20_AC_TIME         10       //进入20%校准点时间
+#define MSG_INTO_10_AC_TIME         11      //进入10%校准点时间
+#define MSG_INTO_1_AC_TIME          12      //进入1%校准点时间
+#define MSG_STORE_TIME              13      //存储电量次数
+#define MSG_SOC_EXC_BEF             14      //跳变前SOC
+#define MSG_SOC_EXC_AFT             15      //跳变后SOC
+#define MSG_SOFT_VER                16      //软件版本
+#define MSG_HARD_VER                17      //硬件版本
+#define MSG_SOFT_MOD_TIME           18      //软件修改时间
+#define MSG_SOFT_MOD_NUM            19      //软件修改编号
 
 #define UNIT_INFO_NUM_MAX         4       //单体状态信息数组最大值
 #define MODULE_NUM                  0

@@ -497,11 +497,6 @@
       <property name="text">
        <string>1</string>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-       </font>
-      </property>
      </row>
      <row>
       <property name="text">
@@ -629,17 +624,6 @@
       </property>
      </column>
      <item row="0" column="0">
-      <property name="text">
-       <string/>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="textAlignment">
-       <set>AlignCenter</set>
-      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -647,11 +631,6 @@
      <item row="0" column="1">
       <property name="text">
        <string/>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
       </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -3253,6 +3232,19 @@
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>350</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -4110,6 +4102,11 @@
      </row>
      <row>
       <property name="text">
+       <string>SOC</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
        <string>实际容量(Ah)</string>
       </property>
      </row>
@@ -4214,11 +4211,6 @@
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
      </item>
-     <item row="2" column="0">
-      <property name="text">
-       <string/>
-      </property>
-     </item>
      <item row="3" column="0">
       <property name="text">
        <string/>
@@ -4227,9 +4219,6 @@
      <item row="4" column="0">
       <property name="text">
        <string/>
-      </property>
-      <property name="flags">
-       <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
      </item>
      <item row="5" column="0">
@@ -4344,14 +4333,22 @@
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
      </item>
+     <item row="19" column="0">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+      </property>
+     </item>
     </widget>
     <widget class="QPushButton" name="pb_sync">
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>0</y>
+       <y>4</y>
        <width>60</width>
-       <height>50</height>
+       <height>40</height>
       </rect>
      </property>
      <property name="font">
@@ -4370,7 +4367,7 @@
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>102</y>
+       <y>118</y>
        <width>60</width>
        <height>20</height>
       </rect>
@@ -4391,7 +4388,7 @@
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>125</y>
+       <y>140</y>
        <width>60</width>
        <height>20</height>
       </rect>
@@ -4414,7 +4411,7 @@
        <x>270</x>
        <y>50</y>
        <width>60</width>
-       <height>50</height>
+       <height>60</height>
       </rect>
      </property>
      <property name="font">
