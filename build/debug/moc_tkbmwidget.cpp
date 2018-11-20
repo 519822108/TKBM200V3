@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TkbmWidget_t {
-    QByteArrayData data[28];
-    char stringdata0[422];
+    QByteArrayData data[32];
+    char stringdata0[500];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,42 +35,48 @@ QT_MOC_LITERAL(2, 33, 0), // ""
 QT_MOC_LITERAL(3, 34, 7), // "CtlCan*"
 QT_MOC_LITERAL(4, 42, 4), // "pCan"
 QT_MOC_LITERAL(5, 47, 16), // "sig_process_exit"
-QT_MOC_LITERAL(6, 64, 26), // "on_tb_eep_file_cellClicked"
-QT_MOC_LITERAL(7, 91, 3), // "row"
-QT_MOC_LITERAL(8, 95, 6), // "column"
-QT_MOC_LITERAL(9, 102, 17), // "sig_get_can_param"
-QT_MOC_LITERAL(10, 120, 3), // "dev"
-QT_MOC_LITERAL(11, 124, 3), // "num"
-QT_MOC_LITERAL(12, 128, 4), // "rate"
-QT_MOC_LITERAL(13, 133, 4), // "port"
-QT_MOC_LITERAL(14, 138, 12), // "comm_timeout"
-QT_MOC_LITERAL(15, 151, 21), // "on_rb_exp_dis_clicked"
-QT_MOC_LITERAL(16, 173, 18), // "update_msg_timeout"
-QT_MOC_LITERAL(17, 192, 19), // "update_data_timeout"
-QT_MOC_LITERAL(18, 212, 17), // "slot_get_board_id"
-QT_MOC_LITERAL(19, 230, 3), // "bid"
-QT_MOC_LITERAL(20, 234, 18), // "on_pb_sync_clicked"
-QT_MOC_LITERAL(21, 253, 20), // "on_pb_modify_clicked"
-QT_MOC_LITERAL(22, 274, 32), // "on_tb_ctl_info_cellDoubleClicked"
-QT_MOC_LITERAL(23, 307, 21), // "on_pb_ctl_tch_clicked"
-QT_MOC_LITERAL(24, 329, 23), // "on_pb_ctl_alarm_clicked"
-QT_MOC_LITERAL(25, 353, 27), // "on_le_id_in_editingFinished"
-QT_MOC_LITERAL(26, 381, 19), // "on_pb_after_clicked"
-QT_MOC_LITERAL(27, 401, 20) // "on_pb_before_clicked"
+QT_MOC_LITERAL(6, 64, 20), // "sig_sub_unit_outline"
+QT_MOC_LITERAL(7, 85, 26), // "on_tb_eep_file_cellClicked"
+QT_MOC_LITERAL(8, 112, 3), // "row"
+QT_MOC_LITERAL(9, 116, 6), // "column"
+QT_MOC_LITERAL(10, 123, 17), // "sig_get_can_param"
+QT_MOC_LITERAL(11, 141, 3), // "dev"
+QT_MOC_LITERAL(12, 145, 3), // "num"
+QT_MOC_LITERAL(13, 149, 4), // "rate"
+QT_MOC_LITERAL(14, 154, 4), // "port"
+QT_MOC_LITERAL(15, 159, 12), // "comm_timeout"
+QT_MOC_LITERAL(16, 172, 21), // "on_rb_exp_dis_clicked"
+QT_MOC_LITERAL(17, 194, 18), // "update_msg_timeout"
+QT_MOC_LITERAL(18, 213, 19), // "update_data_timeout"
+QT_MOC_LITERAL(19, 233, 17), // "slot_get_board_id"
+QT_MOC_LITERAL(20, 251, 3), // "bid"
+QT_MOC_LITERAL(21, 255, 18), // "on_pb_sync_clicked"
+QT_MOC_LITERAL(22, 274, 20), // "on_pb_modify_clicked"
+QT_MOC_LITERAL(23, 295, 32), // "on_tb_ctl_info_cellDoubleClicked"
+QT_MOC_LITERAL(24, 328, 21), // "on_pb_ctl_tch_clicked"
+QT_MOC_LITERAL(25, 350, 23), // "on_pb_ctl_alarm_clicked"
+QT_MOC_LITERAL(26, 374, 27), // "on_le_id_in_editingFinished"
+QT_MOC_LITERAL(27, 402, 19), // "on_pb_after_clicked"
+QT_MOC_LITERAL(28, 422, 20), // "on_pb_before_clicked"
+QT_MOC_LITERAL(29, 443, 25), // "on_pb_mian_into_t_clicked"
+QT_MOC_LITERAL(30, 469, 7), // "checked"
+QT_MOC_LITERAL(31, 477, 22) // "on_pb_eep_read_clicked"
 
     },
     "TkbmWidget\0sig_set_cthread_state\0\0"
     "CtlCan*\0pCan\0sig_process_exit\0"
-    "on_tb_eep_file_cellClicked\0row\0column\0"
-    "sig_get_can_param\0dev\0num\0rate\0port\0"
-    "comm_timeout\0on_rb_exp_dis_clicked\0"
+    "sig_sub_unit_outline\0on_tb_eep_file_cellClicked\0"
+    "row\0column\0sig_get_can_param\0dev\0num\0"
+    "rate\0port\0comm_timeout\0on_rb_exp_dis_clicked\0"
     "update_msg_timeout\0update_data_timeout\0"
     "slot_get_board_id\0bid\0on_pb_sync_clicked\0"
     "on_pb_modify_clicked\0"
     "on_tb_ctl_info_cellDoubleClicked\0"
     "on_pb_ctl_tch_clicked\0on_pb_ctl_alarm_clicked\0"
     "on_le_id_in_editingFinished\0"
-    "on_pb_after_clicked\0on_pb_before_clicked"
+    "on_pb_after_clicked\0on_pb_before_clicked\0"
+    "on_pb_mian_into_t_clicked\0checked\0"
+    "on_pb_eep_read_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -80,53 +86,59 @@ static const uint qt_meta_data_TkbmWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      17,   14, // methods
+      20,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       2,       // signalCount
+       3,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   99,    2, 0x06 /* Public */,
-       5,    0,  102,    2, 0x06 /* Public */,
+       1,    1,  114,    2, 0x06 /* Public */,
+       5,    0,  117,    2, 0x06 /* Public */,
+       6,    0,  118,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    2,  103,    2, 0x08 /* Private */,
-       9,    4,  108,    2, 0x08 /* Private */,
-      14,    0,  117,    2, 0x08 /* Private */,
-      15,    0,  118,    2, 0x08 /* Private */,
-      16,    0,  119,    2, 0x08 /* Private */,
-      17,    0,  120,    2, 0x08 /* Private */,
-      18,    1,  121,    2, 0x08 /* Private */,
-      20,    0,  124,    2, 0x08 /* Private */,
-      21,    0,  125,    2, 0x08 /* Private */,
-      22,    2,  126,    2, 0x08 /* Private */,
-      23,    0,  131,    2, 0x08 /* Private */,
-      24,    0,  132,    2, 0x08 /* Private */,
-      25,    0,  133,    2, 0x08 /* Private */,
-      26,    0,  134,    2, 0x08 /* Private */,
-      27,    0,  135,    2, 0x08 /* Private */,
+       7,    2,  119,    2, 0x08 /* Private */,
+      10,    4,  124,    2, 0x08 /* Private */,
+      15,    0,  133,    2, 0x08 /* Private */,
+      16,    0,  134,    2, 0x08 /* Private */,
+      17,    0,  135,    2, 0x08 /* Private */,
+      18,    0,  136,    2, 0x08 /* Private */,
+      19,    1,  137,    2, 0x08 /* Private */,
+      21,    0,  140,    2, 0x08 /* Private */,
+      22,    0,  141,    2, 0x08 /* Private */,
+      23,    2,  142,    2, 0x08 /* Private */,
+      24,    0,  147,    2, 0x08 /* Private */,
+      25,    0,  148,    2, 0x08 /* Private */,
+      26,    0,  149,    2, 0x08 /* Private */,
+      27,    0,  150,    2, 0x08 /* Private */,
+      28,    0,  151,    2, 0x08 /* Private */,
+      29,    1,  152,    2, 0x08 /* Private */,
+      31,    0,  155,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void,
+    QMetaType::Void,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,    7,    8,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   10,   11,   12,   13,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    8,    9,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   11,   12,   13,   14,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   19,
+    QMetaType::Void, QMetaType::Int,   20,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,    7,    8,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    8,    9,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,   30,
     QMetaType::Void,
 
        0        // eod
@@ -140,21 +152,24 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->sig_set_cthread_state((*reinterpret_cast< CtlCan*(*)>(_a[1]))); break;
         case 1: _t->sig_process_exit(); break;
-        case 2: _t->on_tb_eep_file_cellClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 3: _t->sig_get_can_param((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
-        case 4: _t->comm_timeout(); break;
-        case 5: _t->on_rb_exp_dis_clicked(); break;
-        case 6: _t->update_msg_timeout(); break;
-        case 7: _t->update_data_timeout(); break;
-        case 8: _t->slot_get_board_id((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 9: _t->on_pb_sync_clicked(); break;
-        case 10: _t->on_pb_modify_clicked(); break;
-        case 11: _t->on_tb_ctl_info_cellDoubleClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 12: _t->on_pb_ctl_tch_clicked(); break;
-        case 13: _t->on_pb_ctl_alarm_clicked(); break;
-        case 14: _t->on_le_id_in_editingFinished(); break;
-        case 15: _t->on_pb_after_clicked(); break;
-        case 16: _t->on_pb_before_clicked(); break;
+        case 2: _t->sig_sub_unit_outline(); break;
+        case 3: _t->on_tb_eep_file_cellClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 4: _t->sig_get_can_param((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 5: _t->comm_timeout(); break;
+        case 6: _t->on_rb_exp_dis_clicked(); break;
+        case 7: _t->update_msg_timeout(); break;
+        case 8: _t->update_data_timeout(); break;
+        case 9: _t->slot_get_board_id((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 10: _t->on_pb_sync_clicked(); break;
+        case 11: _t->on_pb_modify_clicked(); break;
+        case 12: _t->on_tb_ctl_info_cellDoubleClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 13: _t->on_pb_ctl_tch_clicked(); break;
+        case 14: _t->on_pb_ctl_alarm_clicked(); break;
+        case 15: _t->on_le_id_in_editingFinished(); break;
+        case 16: _t->on_pb_after_clicked(); break;
+        case 17: _t->on_pb_before_clicked(); break;
+        case 18: _t->on_pb_mian_into_t_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 19: _t->on_pb_eep_read_clicked(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -171,6 +186,13 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             typedef void (TkbmWidget::*_t)();
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&TkbmWidget::sig_process_exit)) {
                 *result = 1;
+                return;
+            }
+        }
+        {
+            typedef void (TkbmWidget::*_t)();
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&TkbmWidget::sig_sub_unit_outline)) {
+                *result = 2;
                 return;
             }
         }
@@ -202,13 +224,13 @@ int TkbmWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 17)
+        if (_id < 20)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 17;
+        _id -= 20;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 17)
+        if (_id < 20)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 17;
+        _id -= 20;
     }
     return _id;
 }
@@ -224,6 +246,12 @@ void TkbmWidget::sig_set_cthread_state(CtlCan * _t1)
 void TkbmWidget::sig_process_exit()
 {
     QMetaObject::activate(this, &staticMetaObject, 1, Q_NULLPTR);
+}
+
+// SIGNAL 2
+void TkbmWidget::sig_sub_unit_outline()
+{
+    QMetaObject::activate(this, &staticMetaObject, 2, Q_NULLPTR);
 }
 struct qt_meta_stringdata_RecvCan_t {
     QByteArrayData data[5];

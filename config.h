@@ -16,6 +16,8 @@
 #define CONFIG_COL_PARAM_OFF    6               //参数偏移
 
 #define FILE_CONFIG_LIST_MAX_LEN    512         //配置参数最大数目
+#define EEPROM_ARRAY_LENGTH         512         //EEPROM长度
+#define EEPROM_SEND_DATA_LEN        7           //发送eeprom数据报文数据长度
 
 #define CAN_RECV_BUFF_LEN_MAX       512         //CAN buff 长度
 #define LIST_WIDGET_MSG_LEN_MAX     256         //辅助列表框报文显示最大行数
@@ -36,7 +38,7 @@
 
 #define UPME_SET_MAIN_PARAM_ID      0x0831F4F7      //上位机设置主板参数ID
 
-
+#define BMS_UNIT_OUTLINE_CNT        100     //从板超时离线计数,5s
 #define SUB_MODULE_NUM_MAX          4       //从板最大模块数
 #define EACH_MODULE_CHINNEL         12      //每个模块采集数
 #define TOTAL_MODULE_LENGTH         (SUB_MODULE_NUM_MAX*EACH_MODULE_CHINNEL)        //单板单体电压通道最大数

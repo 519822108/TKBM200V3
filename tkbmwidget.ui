@@ -359,7 +359,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -488,10 +488,10 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -624,6 +624,12 @@
       </property>
      </column>
      <item row="0" column="0">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -891,6 +897,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -943,10 +952,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1367,6 +1376,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -1419,10 +1431,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -1843,6 +1855,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -1895,10 +1910,10 @@
       </rect>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
+      <bool>false</bool>
      </attribute>
      <row>
       <property name="text">
@@ -2318,6 +2333,9 @@
      <item row="10" column="0">
       <property name="text">
        <string/>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
       </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
@@ -3230,19 +3248,6 @@
      </property>
      <property name="text">
       <string/>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>350</y>
-       <width>54</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>TextLabel</string>
      </property>
     </widget>
    </widget>
@@ -5240,6 +5245,68 @@
       </property>
      </item>
     </widget>
+    <widget class="QPushButton" name="pb_eep_read">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>470</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>读EEP数据</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pb_out_data">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>510</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>导出数据</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pb_in_data">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>550</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>导入数据</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pb_ensure">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>590</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>确认修改</string>
+     </property>
+    </widget>
+    <widget class="QTextBrowser" name="tbs_note">
+     <property name="geometry">
+      <rect>
+       <x>480</x>
+       <y>30</y>
+       <width>201</width>
+       <height>370</height>
+      </rect>
+     </property>
+    </widget>
     <widget class="QTableWidget" name="tb_eep_content">
      <property name="geometry">
       <rect>
@@ -5248,6 +5315,11 @@
        <width>620</width>
        <height>190</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
      </property>
      <row>
       <property name="text">
@@ -5327,6 +5399,11 @@
      <row>
       <property name="text">
        <string>F0-FF</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>100...</string>
       </property>
      </row>
      <column>
@@ -5409,68 +5486,6 @@
        <string>F</string>
       </property>
      </column>
-    </widget>
-    <widget class="QPushButton" name="pb_eep_read">
-     <property name="geometry">
-      <rect>
-       <x>620</x>
-       <y>470</y>
-       <width>61</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>读EEP数据</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pb_out_data">
-     <property name="geometry">
-      <rect>
-       <x>620</x>
-       <y>510</y>
-       <width>61</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>导出数据</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pb_in_data">
-     <property name="geometry">
-      <rect>
-       <x>620</x>
-       <y>550</y>
-       <width>61</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>导入数据</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pb_ensure">
-     <property name="geometry">
-      <rect>
-       <x>620</x>
-       <y>590</y>
-       <width>61</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>确认修改</string>
-     </property>
-    </widget>
-    <widget class="QTextBrowser" name="tbs_note">
-     <property name="geometry">
-      <rect>
-       <x>480</x>
-       <y>30</y>
-       <width>201</width>
-       <height>370</height>
-      </rect>
-     </property>
     </widget>
    </widget>
   </widget>

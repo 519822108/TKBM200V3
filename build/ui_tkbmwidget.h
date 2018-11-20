@@ -15,7 +15,6 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
@@ -49,7 +48,6 @@ public:
     QTableWidget *tb_version;
     QTableWidget *tb_run_state;
     QRadioButton *rb_exp_dis;
-    QLabel *label;
     QWidget *tab_2;
     QTableWidget *tb_chg_info;
     QTableWidget *tb_chg_err;
@@ -73,12 +71,12 @@ public:
     QTableWidget *tb_eep_file;
     QLineEdit *lineEdit_6;
     QTableWidget *tb_state;
-    QTableWidget *tb_eep_content;
     QPushButton *pb_eep_read;
     QPushButton *pb_out_data;
     QPushButton *pb_in_data;
     QPushButton *pb_ensure;
     QTextBrowser *tbs_note;
+    QTableWidget *tb_eep_content;
     QWidget *widget;
     QTextBrowser *teb_msg;
     QTextBrowser *teb_alert;
@@ -298,6 +296,7 @@ public:
         __qtablewidgetitem56->setFont(font1);
         tb_vol_m1->setVerticalHeaderItem(11, __qtablewidgetitem56);
         QTableWidgetItem *__qtablewidgetitem57 = new QTableWidgetItem();
+        __qtablewidgetitem57->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem57->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m1->setItem(0, 0, __qtablewidgetitem57);
         QTableWidgetItem *__qtablewidgetitem58 = new QTableWidgetItem();
@@ -385,6 +384,7 @@ public:
         __qtablewidgetitem76->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m1->setItem(9, 1, __qtablewidgetitem76);
         QTableWidgetItem *__qtablewidgetitem77 = new QTableWidgetItem();
+        __qtablewidgetitem77->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem77->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m1->setItem(10, 0, __qtablewidgetitem77);
         QTableWidgetItem *__qtablewidgetitem78 = new QTableWidgetItem();
@@ -402,8 +402,8 @@ public:
         tb_vol_m1->setObjectName(QStringLiteral("tb_vol_m1"));
         tb_vol_m1->setGeometry(QRect(10, 30, 150, 321));
         tb_vol_m1->setLayoutDirection(Qt::LeftToRight);
-        tb_vol_m1->horizontalHeader()->setVisible(true);
-        tb_vol_m1->verticalHeader()->setVisible(true);
+        tb_vol_m1->horizontalHeader()->setVisible(false);
+        tb_vol_m1->verticalHeader()->setVisible(false);
         tb_vol_m2 = new QTableWidget(tab);
         if (tb_vol_m2->columnCount() < 2)
             tb_vol_m2->setColumnCount(2);
@@ -539,6 +539,7 @@ public:
         __qtablewidgetitem114->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m2->setItem(9, 1, __qtablewidgetitem114);
         QTableWidgetItem *__qtablewidgetitem115 = new QTableWidgetItem();
+        __qtablewidgetitem115->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem115->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m2->setItem(10, 0, __qtablewidgetitem115);
         QTableWidgetItem *__qtablewidgetitem116 = new QTableWidgetItem();
@@ -555,8 +556,8 @@ public:
         tb_vol_m2->setItem(11, 1, __qtablewidgetitem118);
         tb_vol_m2->setObjectName(QStringLiteral("tb_vol_m2"));
         tb_vol_m2->setGeometry(QRect(180, 30, 150, 321));
-        tb_vol_m2->horizontalHeader()->setVisible(true);
-        tb_vol_m2->verticalHeader()->setVisible(true);
+        tb_vol_m2->horizontalHeader()->setVisible(false);
+        tb_vol_m2->verticalHeader()->setVisible(false);
         tb_vol_m3 = new QTableWidget(tab);
         if (tb_vol_m3->columnCount() < 2)
             tb_vol_m3->setColumnCount(2);
@@ -692,6 +693,7 @@ public:
         __qtablewidgetitem152->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m3->setItem(9, 1, __qtablewidgetitem152);
         QTableWidgetItem *__qtablewidgetitem153 = new QTableWidgetItem();
+        __qtablewidgetitem153->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem153->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m3->setItem(10, 0, __qtablewidgetitem153);
         QTableWidgetItem *__qtablewidgetitem154 = new QTableWidgetItem();
@@ -708,8 +710,8 @@ public:
         tb_vol_m3->setItem(11, 1, __qtablewidgetitem156);
         tb_vol_m3->setObjectName(QStringLiteral("tb_vol_m3"));
         tb_vol_m3->setGeometry(QRect(350, 30, 150, 321));
-        tb_vol_m3->horizontalHeader()->setVisible(true);
-        tb_vol_m3->verticalHeader()->setVisible(true);
+        tb_vol_m3->horizontalHeader()->setVisible(false);
+        tb_vol_m3->verticalHeader()->setVisible(false);
         tb_vol_m4 = new QTableWidget(tab);
         if (tb_vol_m4->columnCount() < 2)
             tb_vol_m4->setColumnCount(2);
@@ -845,6 +847,7 @@ public:
         __qtablewidgetitem190->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m4->setItem(9, 1, __qtablewidgetitem190);
         QTableWidgetItem *__qtablewidgetitem191 = new QTableWidgetItem();
+        __qtablewidgetitem191->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem191->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_vol_m4->setItem(10, 0, __qtablewidgetitem191);
         QTableWidgetItem *__qtablewidgetitem192 = new QTableWidgetItem();
@@ -861,8 +864,8 @@ public:
         tb_vol_m4->setItem(11, 1, __qtablewidgetitem194);
         tb_vol_m4->setObjectName(QStringLiteral("tb_vol_m4"));
         tb_vol_m4->setGeometry(QRect(520, 30, 150, 321));
-        tb_vol_m4->horizontalHeader()->setVisible(true);
-        tb_vol_m4->verticalHeader()->setVisible(true);
+        tb_vol_m4->horizontalHeader()->setVisible(false);
+        tb_vol_m4->verticalHeader()->setVisible(false);
         tb_temp = new QTableWidget(tab);
         if (tb_temp->columnCount() < 8)
             tb_temp->setColumnCount(8);
@@ -1160,9 +1163,6 @@ public:
         rb_exp_dis = new QRadioButton(tab);
         rb_exp_dis->setObjectName(QStringLiteral("rb_exp_dis"));
         rb_exp_dis->setGeometry(QRect(420, 4, 21, 16));
-        label = new QLabel(tab);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(110, 350, 54, 12));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -1937,6 +1937,21 @@ public:
         tb_state->setObjectName(QStringLiteral("tb_state"));
         tb_state->setGeometry(QRect(0, 400, 681, 60));
         tb_state->verticalHeader()->setVisible(false);
+        pb_eep_read = new QPushButton(tab_4);
+        pb_eep_read->setObjectName(QStringLiteral("pb_eep_read"));
+        pb_eep_read->setGeometry(QRect(620, 470, 61, 30));
+        pb_out_data = new QPushButton(tab_4);
+        pb_out_data->setObjectName(QStringLiteral("pb_out_data"));
+        pb_out_data->setGeometry(QRect(620, 510, 61, 31));
+        pb_in_data = new QPushButton(tab_4);
+        pb_in_data->setObjectName(QStringLiteral("pb_in_data"));
+        pb_in_data->setGeometry(QRect(620, 550, 61, 31));
+        pb_ensure = new QPushButton(tab_4);
+        pb_ensure->setObjectName(QStringLiteral("pb_ensure"));
+        pb_ensure->setGeometry(QRect(620, 590, 61, 31));
+        tbs_note = new QTextBrowser(tab_4);
+        tbs_note->setObjectName(QStringLiteral("tbs_note"));
+        tbs_note->setGeometry(QRect(480, 30, 201, 370));
         tb_eep_content = new QTableWidget(tab_4);
         if (tb_eep_content->columnCount() < 16)
             tb_eep_content->setColumnCount(16);
@@ -1972,8 +1987,8 @@ public:
         tb_eep_content->setHorizontalHeaderItem(14, __qtablewidgetitem501);
         QTableWidgetItem *__qtablewidgetitem502 = new QTableWidgetItem();
         tb_eep_content->setHorizontalHeaderItem(15, __qtablewidgetitem502);
-        if (tb_eep_content->rowCount() < 16)
-            tb_eep_content->setRowCount(16);
+        if (tb_eep_content->rowCount() < 17)
+            tb_eep_content->setRowCount(17);
         QTableWidgetItem *__qtablewidgetitem503 = new QTableWidgetItem();
         tb_eep_content->setVerticalHeaderItem(0, __qtablewidgetitem503);
         QTableWidgetItem *__qtablewidgetitem504 = new QTableWidgetItem();
@@ -2006,23 +2021,11 @@ public:
         tb_eep_content->setVerticalHeaderItem(14, __qtablewidgetitem517);
         QTableWidgetItem *__qtablewidgetitem518 = new QTableWidgetItem();
         tb_eep_content->setVerticalHeaderItem(15, __qtablewidgetitem518);
+        QTableWidgetItem *__qtablewidgetitem519 = new QTableWidgetItem();
+        tb_eep_content->setVerticalHeaderItem(16, __qtablewidgetitem519);
         tb_eep_content->setObjectName(QStringLiteral("tb_eep_content"));
         tb_eep_content->setGeometry(QRect(0, 460, 620, 190));
-        pb_eep_read = new QPushButton(tab_4);
-        pb_eep_read->setObjectName(QStringLiteral("pb_eep_read"));
-        pb_eep_read->setGeometry(QRect(620, 470, 61, 30));
-        pb_out_data = new QPushButton(tab_4);
-        pb_out_data->setObjectName(QStringLiteral("pb_out_data"));
-        pb_out_data->setGeometry(QRect(620, 510, 61, 31));
-        pb_in_data = new QPushButton(tab_4);
-        pb_in_data->setObjectName(QStringLiteral("pb_in_data"));
-        pb_in_data->setGeometry(QRect(620, 550, 61, 31));
-        pb_ensure = new QPushButton(tab_4);
-        pb_ensure->setObjectName(QStringLiteral("pb_ensure"));
-        pb_ensure->setGeometry(QRect(620, 590, 61, 31));
-        tbs_note = new QTextBrowser(tab_4);
-        tbs_note->setObjectName(QStringLiteral("tbs_note"));
-        tbs_note->setGeometry(QRect(480, 30, 201, 370));
+        tb_eep_content->setFont(font2);
         tabWidget->addTab(tab_4, QString());
         widget = new QWidget(TkbmWidget);
         widget->setObjectName(QStringLiteral("widget"));
@@ -2054,7 +2057,7 @@ public:
 
         retranslateUi(TkbmWidget);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(TkbmWidget);
@@ -2362,7 +2365,6 @@ public:
         tb_run_state->setSortingEnabled(__sortingEnabled8);
 
         rb_exp_dis->setText(QString());
-        label->setText(QApplication::translate("TkbmWidget", "TextLabel", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("TkbmWidget", "\345\215\225\344\275\223\346\225\260\346\215\256", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem122 = tb_chg_info->horizontalHeaderItem(0);
         ___qtablewidgetitem122->setText(QApplication::translate("TkbmWidget", "1", Q_NULLPTR));
@@ -2657,6 +2659,10 @@ public:
         tb_state->setSortingEnabled(false);
         tb_state->setSortingEnabled(__sortingEnabled17);
 
+        pb_eep_read->setText(QApplication::translate("TkbmWidget", "\350\257\273EEP\346\225\260\346\215\256", Q_NULLPTR));
+        pb_out_data->setText(QApplication::translate("TkbmWidget", "\345\257\274\345\207\272\346\225\260\346\215\256", Q_NULLPTR));
+        pb_in_data->setText(QApplication::translate("TkbmWidget", "\345\257\274\345\205\245\346\225\260\346\215\256", Q_NULLPTR));
+        pb_ensure->setText(QApplication::translate("TkbmWidget", "\347\241\256\350\256\244\344\277\256\346\224\271", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem240 = tb_eep_content->horizontalHeaderItem(0);
         ___qtablewidgetitem240->setText(QApplication::translate("TkbmWidget", "0", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem241 = tb_eep_content->horizontalHeaderItem(1);
@@ -2721,10 +2727,8 @@ public:
         ___qtablewidgetitem270->setText(QApplication::translate("TkbmWidget", "E0-EF", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem271 = tb_eep_content->verticalHeaderItem(15);
         ___qtablewidgetitem271->setText(QApplication::translate("TkbmWidget", "F0-FF", Q_NULLPTR));
-        pb_eep_read->setText(QApplication::translate("TkbmWidget", "\350\257\273EEP\346\225\260\346\215\256", Q_NULLPTR));
-        pb_out_data->setText(QApplication::translate("TkbmWidget", "\345\257\274\345\207\272\346\225\260\346\215\256", Q_NULLPTR));
-        pb_in_data->setText(QApplication::translate("TkbmWidget", "\345\257\274\345\205\245\346\225\260\346\215\256", Q_NULLPTR));
-        pb_ensure->setText(QApplication::translate("TkbmWidget", "\347\241\256\350\256\244\344\277\256\346\224\271", Q_NULLPTR));
+        QTableWidgetItem *___qtablewidgetitem272 = tb_eep_content->verticalHeaderItem(16);
+        ___qtablewidgetitem272->setText(QApplication::translate("TkbmWidget", "100...", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("TkbmWidget", "EEPROM\346\225\260\346\215\256", Q_NULLPTR));
         teb_msg->setHtml(QApplication::translate("TkbmWidget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

@@ -114,3 +114,9 @@ void MonitorDialog::on_lw_bid_itemDoubleClicked(QListWidgetItem *item)
     if(ok)
         emit sig_send_board_id(id);
 }
+
+void MonitorDialog::slots_unit_outline()
+{
+    ui->lw_bid->clear();
+    board_id_list.len = 0;
+}

@@ -41,14 +41,16 @@ struct msg_discripte{           //信息描述结构
     enum Qt::GlobalColor    f_color;          //信息前景色
 };
 
-struct sub_each_board{
-    int bid;
-    int modu_num;
-    int sw;
-    int hw;
-    unsigned char sn[6];
-    unsigned char state;
-    unsigned char htick;
+struct sub_each_board{                          //从板描述
+    int bid;                                    //板ID
+    int chinnel_start;                          //当前板第一电压通道在系统中的起始位置
+    int online_count;                           //在线计数器
+    int modu_num;                               //板载模块数
+    int sw;                                     //软件版本
+    int hw;                                     //硬件版本
+    unsigned char sn[6];                        //串号
+    unsigned char state;                        //运行状态
+    unsigned char htick;                        //心跳计数
     unsigned short disc[SUB_MODULE_NUM_MAX];            //断线信息
     char temp[SUB_TEMPRATURE_NUM_MAX];                  //温度信息
     int reserved;
@@ -56,9 +58,15 @@ struct sub_each_board{
     int per_chinnal[SUB_MODULE_NUM_MAX];                //每个模块通道数
 };
 
-struct per_battery_info_discription{
-    int cur_id;
+struct per_battery_info_discription{                    //BMS描述
+    int cur_id;                                         //选中的从板ID
+    int unit_num;                                       //BMS从板总数
     QVector<struct sub_each_board> each_board;
+};
+
+struct eeprom_data_info_discription{
+    unsigned char eeprom[EEPROM_ARRAY_LENGTH];
+    unsigned char eepcfg[EEPROM_ARRAY_LENGTH];
 };
 
 #endif // DATA_ORGANIZE_H

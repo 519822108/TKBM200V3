@@ -37,6 +37,7 @@ public:
 signals:
     void sig_set_cthread_state(CtlCan *pCan);
     void sig_process_exit(void);
+    void sig_sub_unit_outline(void);
 
 private slots:
     void on_tb_eep_file_cellClicked(int row, int column);
@@ -63,6 +64,10 @@ private slots:
 
     void on_pb_before_clicked();
 
+    void on_pb_mian_into_t_clicked(bool checked);
+
+    void on_pb_eep_read_clicked();
+
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
@@ -75,6 +80,8 @@ private:
 
     int cnt_ctrl_clk;
     int vcu_alarm;
+    bool main_is_test_mode;
+    bool eeprom_is_send_data;
 
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构
     struct msg_discripte msg_alarm;                                     //报警信息结构
@@ -83,7 +90,8 @@ private:
     struct msg_discripte msg_ac_chg_state[MSG_AC_CHG_STATE_LEN];        //交流充电机状态描述表
     struct msg_discripte msg_main_ctl_info[MSG_MAIN_BD_CTRL];           //主板控制信息描述表
     struct msg_discripte msg_bms_run_state_dsc[UNIT_INFO_NUM_MAX];        //从板状态信息
-    struct per_battery_info_discription *bms_sub_info;                       //从板描述
+    struct per_battery_info_discription *bms_sub_info;                       //BMS描述
+    struct eeprom_data_info_discription eeprom_info;                    //EEPROM 信息描述
 
 protected:
     void closeEvent(QCloseEvent *event);

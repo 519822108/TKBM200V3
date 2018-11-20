@@ -18,9 +18,14 @@ class MonitorDialog : public QDialog
 public:
     explicit MonitorDialog(QWidget *parent = nullptr);
     ~MonitorDialog();
+    struct id_list{
+        unsigned int id[128];
+        int len;
+    }msg_id_list,board_id_list;
 
 public slots:
     void timer100_timeout();
+    void slots_unit_outline();
 
 private slots:
     void on_lw_fid_itemDoubleClicked(QListWidgetItem *item);
@@ -36,10 +41,7 @@ private:
     QTimer *timer_100;
 
     int temp_cp_msg_len;
-    struct id_list{
-        unsigned int id[128];
-        int len;
-    }msg_id_list,board_id_list;
+
 
     int filter_id;
 };

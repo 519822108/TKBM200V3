@@ -329,6 +329,7 @@ release\moc_tkbmwidget.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QWidget \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
+		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
 		..\tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\bin\moc.exe
 	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor/build -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\tkbmwidget.h -o release\moc_tkbmwidget.cpp
@@ -759,6 +760,7 @@ release\main.obj: ..\main.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
+		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
@@ -913,52 +915,24 @@ release\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
+		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
 		ui_tkbmwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qaction.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qactiongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qeventloop.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qguiapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qinputmethod.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QButtonGroup \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qbuttongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QFrame \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHeaderView \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qheaderview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QLineEdit \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlineedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextcursor.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextformat.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qpen.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QPushButton \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qpushbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QRadioButton \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qradiobutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTabWidget \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidget \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTextBrowser \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextbrowser.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextdocument.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
 		D:\Qt\5.7\msvc2013\include\ActiveQt\QAxObject \
 		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxobject.h \
 		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxbase.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QFile \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QMessageBox \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qmessagebox.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidgetItem \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QRadioButton \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qradiobutton.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractbutton.h \
 		../static_string.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
 		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
 		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\QIntValidator
@@ -1073,53 +1047,8 @@ release\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qvector2d.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtouchdevice.h \
 		ui_logindialog.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qaction.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qicon.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qactiongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qeventloop.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qguiapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qinputmethod.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QButtonGroup \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qbuttongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QComboBox \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qcombobox.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemdelegate.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyleoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractspinbox.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qvalidator.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qregularexpression.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractslider.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qstyle.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabbar.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qrubberband.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qframe.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qabstractitemmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QGridLayout \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qgridlayout.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlayout.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlayoutitem.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qboxlayout.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHBoxLayout \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHeaderView \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qheaderview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractitemview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractscrollarea.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qitemselectionmodel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QLabel \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlabel.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QPushButton \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qpushbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qabstractbutton.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QSpacerItem \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
 		..\ControlCAN.h \
 		..\data_type.h \
 		..\ctlcan.h
@@ -1259,29 +1188,8 @@ release\monitordialog.obj: ..\monitordialog.cpp ../monitordialog.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qtabwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qrubberband.h \
 		ui_monitordialog.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qaction.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qactiongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\qeventloop.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qguiapplication.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qinputmethod.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QButtonGroup \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qbuttongroup.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QHeaderView \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qheaderview.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QLineEdit \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qlineedit.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextcursor.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextformat.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qpen.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\qtextoption.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QListWidget \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qdesktopwidget.h \
 		../data_organize.h \
 		../config.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QString \
