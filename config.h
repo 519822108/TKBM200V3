@@ -10,7 +10,7 @@
 #define CONFIG_COL_PARAM_NUM    1               //参数编号的列号
 #define CONFIG_COL_PARAM_NAME   2               //参数数据名的列号
 #define CONFIG_COL_PARAM_LEN    4               //参数所占字节数的列号
-#define CONFIG_COL_PARAM_FORMAT 2               //参数显示格式的列号
+#define CONFIG_COL_PARAM_FORMAT 3               //参数显示格式的列号
 #define CONFIG_COL_PARAM_NOTE   7               //参数注释的列号
 #define CONFIG_COL_PARAM_RATE   5               //参数比例
 #define CONFIG_COL_PARAM_OFF    6               //参数偏移
@@ -18,6 +18,7 @@
 #define FILE_CONFIG_LIST_MAX_LEN    512         //配置参数最大数目
 #define EEPROM_ARRAY_LENGTH         512         //EEPROM长度
 #define EEPROM_SEND_DATA_LEN        7           //发送eeprom数据报文数据长度
+#define EEPROM_DATA_RECV_MARK       46         //eeprom数据报文桢数
 
 #define CAN_RECV_BUFF_LEN_MAX       512         //CAN buff 长度
 #define LIST_WIDGET_MSG_LEN_MAX     256         //辅助列表框报文显示最大行数

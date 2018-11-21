@@ -14,6 +14,8 @@
 #include <QDateTime>
 #include <QIntValidator>
 #include <string.h>
+#include <QFileDialog>
+#include <QDir>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -327,7 +329,16 @@ void TkbmWidget::comm_timeout()
             if(can_data.data[i].Data[0] <= 0x2D){
                 for(j=0;j<EEPROM_SEND_DATA_LEN;j++){
                     eeprom_info.eeprom[can_data.data[i].Data[0]*EEPROM_SEND_DATA_LEN+j] = can_data.data[i].Data[1+j];
+                    eeprom_info.recv_mark[can_data.data[i].Data[0]] = 1;
                 }
+            }
+            for(j=0;j<EEPROM_DATA_RECV_MARK;j++){
+                if(eeprom_info.recv_mark[j] == 0)
+                    break;
+            }
+            if(j == EEPROM_DATA_RECV_MARK){
+                on_pb_eep_read_clicked();
+                eeprom_info.recv_finish_flag = true;
             }
             if(can_data.data[i].Data[0] == 0xD0){
 
@@ -564,11 +575,37 @@ void TkbmWidget::update_msg_timeout()
         for(i=0;i<item_count;i++){
             for(j=0;j<col_count;j++){                
                 QTableWidgetItem *item = ui->tb_eep_content->item(i,j);
-                item->setText(QString("%1").arg(eeprom_info.eeprom[i*col_count + j],2,16,QLatin1Char('0')));
+                item->setText(QString("%1").arg(eeprom_info.eeprom[i*col_count + j],2,16,QLatin1Char('0')).toUpper());
             }
         }
     }
+    if(eeprom_info.recv_finish_flag == true){        //分析EEPROM数据
+        tb_eeprom_file_setting(eeprom_info.eeprom,1);
+    }
+}
 
+void TkbmWidget::tb_eeprom_file_setting(unsigned char *data,int col)
+{
+    int item_count,i,j;
+    int iparam;
+    double dparam;
+    QString msg;
+    item_count = ui->tb_eep_file->rowCount();
+    eep_config.pos = 0;
+    for(i=0;i<item_count;i++){
+        iparam = 0;
+        for(j=0;j<eep_config.param[i].o_byte_len;j++)
+            iparam += data[eep_config.pos + j] << (8*j);
+        eep_config.pos += eep_config.param[i].o_byte_len;
+        dparam = iparam * eep_config.param[i].o_rate + eep_config.param[i].o_off;
+        QTableWidgetItem *item = ui->tb_eep_file->item(i,col);
+        if(eep_config.param[i].o_dis_format == 10){
+            msg = QString("D: %1").arg(dparam,0,'g',16);
+        }else{
+            msg = QString("H: %1").arg((int)dparam,2,eep_config.param[i].o_dis_format,QLatin1Char('0')).toUpper();
+        }
+        item->setText(msg);
+    }
 }
 
 void TkbmWidget::slot_get_board_id(int bid)
@@ -782,6 +819,8 @@ void TkbmWidget::set_eeprom_table()
         ui->tb_eep_file->insertRow(row_num);
         ui->tb_eep_file->setVerticalHeaderItem(i,new QTableWidgetItem(QString("%1").arg(i)));
         ui->tb_eep_file->setItem(i,0,new QTableWidgetItem(eep_config.param[i].s_name));
+        ui->tb_eep_file->setItem(i,1,new QTableWidgetItem);
+        ui->tb_eep_file->setItem(i,2,new QTableWidgetItem);
     }
 }
 
@@ -1085,17 +1124,41 @@ void TkbmWidget::on_pb_mian_into_t_clicked(bool checked)
 void TkbmWidget::on_pb_eep_read_clicked()
 {
     QString style;
+    QTableWidgetItem *item = ui->tb_state->item(0,1);
     unsigned char data[8] = {0,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
     if(eeprom_is_send_data == false){
         eeprom_is_send_data = true;
+        memset(&eeprom_info,0,sizeof(struct eeprom_data_info_discription));
         data[0] = 0xF1;
         can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
         style = ui->pb_eep_read->styleSheet();
         ui->pb_eep_read->setStyleSheet("background-color: rgb(255,255,170)");
+        item->setText("正在接收");
     }else{
         eeprom_is_send_data = false;
         data[0] = 0xF0;
         can_bsp->send_one_msg(UPME_SET_MAIN_PARAM_ID,8,data);
         ui->pb_eep_read->setStyleSheet(style);
+        item->setText("接收完成");
     }
+}
+
+void TkbmWidget::on_pb_out_data_clicked()
+{
+    QString fn = QFileDialog::getSaveFileName(this,"Save","./","(*.xls*)");
+    if(fn.isEmpty() || fn.isNull()){
+        QMessageBox::information(this,"ERROR","无效的文件名");
+        return;
+    }
+    QAxObject excel("Excel.Application");
+    excel.setProperty("Visible",false);
+    QAxObject *pWorkbooks = excel.querySubObject("WorkBooks");
+    pWorkbooks->dynamicCall("Add");
+    QAxObject *workbook = excel.querySubObject("ActiveWorkBook");
+    QAxObject *Sheets = workbook->querySubObject("Sheets");
+    QAxObject *sheet = Sheets->querySubObject("Item (int)",1);
+
+    workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(fn));
+    workbook->dynamicCall("Close()");
+    excel.dynamicCall("Quit(void)");
 }

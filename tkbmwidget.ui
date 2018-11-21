@@ -5216,6 +5216,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -5224,6 +5227,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
       </property>
@@ -5231,6 +5237,9 @@
      <item row="0" column="2">
       <property name="text">
        <string/>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
       </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>

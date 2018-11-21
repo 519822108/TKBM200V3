@@ -26,6 +26,7 @@ struct excel_param_organize{
 
 struct excel_param_organize_ext{               //Excel 参数的表
     int len;
+    int pos;
     struct excel_param_organize param[FILE_CONFIG_LIST_MAX_LEN];
 };
 
@@ -67,6 +68,8 @@ struct per_battery_info_discription{                    //BMS描述
 struct eeprom_data_info_discription{
     unsigned char eeprom[EEPROM_ARRAY_LENGTH];
     unsigned char eepcfg[EEPROM_ARRAY_LENGTH];
+    unsigned char recv_mark[EEPROM_DATA_RECV_MARK];
+    bool recv_finish_flag;
 };
 
 #endif // DATA_ORGANIZE_H

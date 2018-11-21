@@ -30,6 +30,7 @@ public:
     void set_eeprom_table(void);
     void chg_stage_data_init(void);
     void sub_state_msg_ana(struct sub_each_board *bd,unsigned char data[8]);
+    void tb_eeprom_file_setting(unsigned char *data,int col);
 
     QString anasy_alart_msg(unsigned char data[5]);
     QString main_info_msg(unsigned char data,char pos);
@@ -68,21 +69,22 @@ private slots:
 
     void on_pb_eep_read_clicked();
 
+    void on_pb_out_data_clicked();
+
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
-    MonitorDialog *monitor_dialog;
-    struct excel_param_organize_ext eep_config;
+    MonitorDialog *monitor_dialog;    
     CtlCan *can_bsp;
     QTimer *timer10;
     QTimer *timer_100;
     QTimer *timer_5s;
-
     int cnt_ctrl_clk;
     int vcu_alarm;
     bool main_is_test_mode;
     bool eeprom_is_send_data;
 
+    struct excel_param_organize_ext eep_config;
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构
     struct msg_discripte msg_alarm;                                     //报警信息结构
     struct msg_discripte msg_chg_summary[MSG_CHG_SUMMARY_LENGTH];       //充电概述表信息结构

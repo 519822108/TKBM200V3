@@ -1923,12 +1923,15 @@ public:
         QTableWidgetItem *__qtablewidgetitem482 = new QTableWidgetItem();
         tb_state->setVerticalHeaderItem(0, __qtablewidgetitem482);
         QTableWidgetItem *__qtablewidgetitem483 = new QTableWidgetItem();
+        __qtablewidgetitem483->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem483->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_state->setItem(0, 0, __qtablewidgetitem483);
         QTableWidgetItem *__qtablewidgetitem484 = new QTableWidgetItem();
+        __qtablewidgetitem484->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem484->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_state->setItem(0, 1, __qtablewidgetitem484);
         QTableWidgetItem *__qtablewidgetitem485 = new QTableWidgetItem();
+        __qtablewidgetitem485->setTextAlignment(Qt::AlignCenter);
         __qtablewidgetitem485->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_state->setItem(0, 2, __qtablewidgetitem485);
         QTableWidgetItem *__qtablewidgetitem486 = new QTableWidgetItem();
