@@ -41,4 +41,5 @@ static const QString msg_vcu_can_alarm[2] = {QString("00H:不控制\0"),QString(
 static const QString msg_bms_run_state[8] = {QString("模块A错误\0"),QString("模块B错误\0"),QString("模块C错误\0"),QString("模块D错误\0"),
                                             QString("EEPROM错误\0"),QString("reserved"),QString("reserved"),QString("测试模式\0")};
 
+
 #endif // STATIC_STRING_H

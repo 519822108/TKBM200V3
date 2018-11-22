@@ -1,6 +1,7 @@
 #include "tkbmwidget.h"
 #include "ui_tkbmwidget.h"
 #include "iostream"
+#include <string.h>
 #include <QDesktopWidget>
 #include <QAxObject>
 #include <QFile>
@@ -16,6 +17,8 @@
 #include <string.h>
 #include <QFileDialog>
 #include <QDir>
+#include <QColor>
+#include <QFileInfo>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -77,6 +80,7 @@ void TkbmWidget::chg_stage_data_init()
     vcu_alarm = 0;
     main_is_test_mode = false;
     eeprom_is_send_data = false;
+    eeprom_recv_data_flag = false;
     memset(&eeprom_info,0,sizeof(struct eeprom_data_info_discription));
 
     bms_sub_info = new struct per_battery_info_discription;
@@ -95,7 +99,7 @@ void TkbmWidget::comm_timeout()
     QString msg;
 
     mutex.lock();
-    for(i=0;i<can_data.len;i++){
+    for(i=0;i<can_data.len;i++){                        //报文分析
         if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){                //处理主板数据2
             switch (can_data.data[i].Data[0]) {
             case 0:
@@ -341,7 +345,7 @@ void TkbmWidget::comm_timeout()
                 eeprom_info.recv_finish_flag = true;
             }
             if(can_data.data[i].Data[0] == 0xD0){
-
+                eeprom_info.recv_mark[can_data.data[i].Data[1]] = can_data.data[i].Data[2];
             }
         }
     }
@@ -351,6 +355,21 @@ void TkbmWidget::comm_timeout()
         if(iter->bid == bms_sub_info->cur_id){         //标记超时的从板
             if(iter->online_count != 0)
                 iter->online_count--;
+        }
+    }
+    if(eeprom_recv_data_flag == true){
+        for(i=0;i<EEPROM_DATA_SEND_MARK;i++){
+            if(eeprom_info.recv_mark[i] != 1){
+                can_bsp->send_msg(1,&eeprom_send_array[i]);
+                QTableWidgetItem *item = ui->tb_state->item(0,2);
+                item->setText(QString("正在发送 [%1]").arg(i));
+                break;
+            }
+        }
+        if(i==EEPROM_DATA_SEND_MARK){
+            eeprom_recv_data_flag = false;
+            QTableWidgetItem *item = ui->tb_state->item(0,2);
+            item->setText("发送完成\0");
         }
     }
 }
@@ -580,7 +599,7 @@ void TkbmWidget::update_msg_timeout()
         }
     }
     if(eeprom_info.recv_finish_flag == true){        //分析EEPROM数据
-        tb_eeprom_file_setting(eeprom_info.eeprom,1);
+        tb_eeprom_file_setting(eeprom_info.eeprom,EEP_TB_RECV);
     }
 }
 
@@ -589,7 +608,8 @@ void TkbmWidget::tb_eeprom_file_setting(unsigned char *data,int col)
     int item_count,i,j;
     int iparam;
     double dparam;
-    QString msg;
+    QString msg,msg1,msg2;
+    QTableWidgetItem *item,*item1,*item2;
     item_count = ui->tb_eep_file->rowCount();
     eep_config.pos = 0;
     for(i=0;i<item_count;i++){
@@ -598,14 +618,29 @@ void TkbmWidget::tb_eeprom_file_setting(unsigned char *data,int col)
             iparam += data[eep_config.pos + j] << (8*j);
         eep_config.pos += eep_config.param[i].o_byte_len;
         dparam = iparam * eep_config.param[i].o_rate + eep_config.param[i].o_off;
-        QTableWidgetItem *item = ui->tb_eep_file->item(i,col);
+        item = ui->tb_eep_file->item(i,col);
         if(eep_config.param[i].o_dis_format == 10){
-            msg = QString("D: %1").arg(dparam,0,'g',16);
+            msg = QString("D: %1").arg(dparam,0,'g',10);
         }else{
             msg = QString("H: %1").arg((int)dparam,2,eep_config.param[i].o_dis_format,QLatin1Char('0')).toUpper();
         }
+        item1 = ui->tb_eep_file->item(i,EEP_TB_RECV);
+        msg1 = item1->text().toUpper();
+        item2 = ui->tb_eep_file->item(i,EEP_TB_FILE);
+        msg2 = item2->text().toUpper();
+        if(msg1.isEmpty() || msg1.isNull() || msg2.isEmpty() || msg2.isNull()){
+        }else{
+            if(QString::compare(msg1,msg2,Qt::CaseInsensitive) != 0)
+                item->setBackgroundColor(QColor(255,150,45));
+        }
         item->setText(msg);
     }
+    item1 = ui->tb_state->item(0,0);
+    if(col == EEP_TB_RECV){
+        item1->setText(QString("EEPROM 数据\0"));
+    }else if(col == EEP_TB_FILE){
+        item1->setText(file_path);
+    }else{}
 }
 
 void TkbmWidget::slot_get_board_id(int bid)
@@ -792,7 +827,7 @@ void TkbmWidget::read_excel_data()
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_RATE);     //获取比例
         cell_val = pCell->property("Value");
         val = cell_val.toString();
-        eep_config.param[eep_config.len].o_rate = val.toInt();
+        eep_config.param[eep_config.len].o_rate = val.toDouble();
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_OFF);     //获取偏移
         cell_val = pCell->property("Value");
@@ -907,8 +942,6 @@ void RecvCan::run()
         }
     }
 }
-
-
 
 void TkbmWidget::on_pb_sync_clicked()
 {
@@ -1145,9 +1178,13 @@ void TkbmWidget::on_pb_eep_read_clicked()
 
 void TkbmWidget::on_pb_out_data_clicked()
 {
+    int i,j=0,k=0;
     QString fn = QFileDialog::getSaveFileName(this,"Save","./","(*.xls*)");
     if(fn.isEmpty() || fn.isNull()){
-        QMessageBox::information(this,"ERROR","无效的文件名");
+        return;
+    }
+    if(eeprom_info.recv_finish_flag == false){
+        QMessageBox::information(this,"ERROR","[保存失败] 无效的数据\0");
         return;
     }
     QAxObject excel("Excel.Application");
@@ -1157,8 +1194,138 @@ void TkbmWidget::on_pb_out_data_clicked()
     QAxObject *workbook = excel.querySubObject("ActiveWorkBook");
     QAxObject *Sheets = workbook->querySubObject("Sheets");
     QAxObject *sheet = Sheets->querySubObject("Item (int)",1);
+    QAxObject *pCell;
+
+    for(i=0;i<EEP_XLS_COL_LENGTH;i++){          //设置列表头
+        pCell = sheet->querySubObject("Cells(int,int)",1,EEPROM_DATA_EXCEL_COL_S+i);
+        pCell->setProperty("HorizontalAlignment",-4108);
+        pCell->setProperty("Value",QString("%1").arg(i,2,16).toUpper());
+        QAxObject *pborder = pCell->querySubObject("Borders");
+        pborder->setProperty("Color",QColor(255,150,45));
+    }
+    do{
+        pCell = sheet->querySubObject("Cells(int,int)",EEPROM_DATA_EXCEL_ROW_S+j,1);        //设置行表头
+        pCell->setProperty("HorizontalAlignment",-4108);
+        pCell->setProperty("Value",QString("%1-%2").arg(k,3,16,QLatin1Char('0')).arg(k+0xF,3,16,QLatin1Char('0')).toUpper());
+        QAxObject *pborder = pCell->querySubObject("Borders");
+        pborder->setProperty("Color",QColor(255,150,45));
+
+        for(i=0;i<EEP_XLS_COL_LENGTH;i++){
+            pCell = sheet->querySubObject("Cells(int,int)",EEPROM_DATA_EXCEL_ROW_S+j,EEPROM_DATA_EXCEL_COL_S+i);
+            pCell->setProperty("HorizontalAlignment",-4108);
+            pCell->setProperty("Value",QString("%1").arg(eeprom_info.eeprom[k],2,16,QLatin1Char('0')).toUpper());
+            k++;
+            if(k > EEPROM_DATA_LENGTH)
+                goto out;
+        }
+        j++;
+    }while(true);
+    out:
 
     workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(fn));
     workbook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");
+}
+
+void TkbmWidget::on_pb_in_data_clicked()
+{
+    int i,j=0,k=0;
+    QString msg;
+    bool ok = false;
+    QString fp = QFileDialog::getOpenFileName(this,"Choice","./","*.xls*");
+    if(fp.isEmpty() || fp.isNull())
+        return;
+    file_path = QFileInfo(fp).fileName();
+    QAxObject excel("Excel.Application");
+    excel.setProperty("Visible",false);
+    QAxObject *pWorkBooks = excel.querySubObject("WorkBooks");
+    pWorkBooks->dynamicCall("Open (const QString&)",QDir::toNativeSeparators(fp));
+    QAxObject *pWorkbook = excel.querySubObject("ActiveWorkBook");
+    QAxObject *Sheet = pWorkbook->querySubObject("Sheets(int)",1);
+    QAxObject *pCell;
+    QVariant cell_val;
+
+    do{
+        for(i=0;i<EEP_XLS_COL_LENGTH;i++){
+            pCell = Sheet->querySubObject("Cells(int,int)",EEPROM_DATA_EXCEL_ROW_S+j,EEPROM_DATA_EXCEL_COL_S+i);
+            cell_val = pCell->property("Value");
+            msg = cell_val.toString();
+            if(msg.isEmpty() || msg.isNull())
+                goto out;
+            eeprom_info.eepcfg[k] = (unsigned char)msg.toUInt(&ok,16);
+            if(ok == false){
+                QMessageBox::information(this,"ERROR",QString("[转换失败]\nR:%1-C:%2").arg(EEPROM_DATA_EXCEL_ROW_S+j).arg(EEPROM_DATA_EXCEL_COL_S+i));
+            }
+            if(k > EEPROM_DATA_LENGTH)
+                goto out;
+            k++;
+        }
+        j++;
+    }while(true);
+    out:
+
+    pWorkbook->dynamicCall("Close()");
+    excel.dynamicCall("Quit(void)");
+    if(ok == true)
+        tb_eeprom_file_setting(eeprom_info.eepcfg,EEP_TB_FILE);
+}
+
+void TkbmWidget::on_pb_ensure_clicked()
+{
+    QTableWidgetItem *item;
+    QString msg;
+    int i,j,k=0;
+    int temp;
+    unsigned int utmp;
+    double dtmp;
+    bool ok;
+    int row_count = ui->tb_eep_file->rowCount();
+    item = ui->tb_state->item(0,EEP_MOD_TB_POS);
+    msg = item->text();
+    if(QString::compare(msg,QString(EEP_MOD_PASSWD)) != 0){
+        QMessageBox::information(this,"ERROR","确认失败\0");
+        item->setText("");
+        return;
+    }
+    item->setText("");
+    for(i=0;i<row_count;i++){
+        item = ui->tb_eep_file->item(i,EEP_TB_FILE);
+        msg = item->text();
+        if(msg.isEmpty() || msg.isNull()){
+            QMessageBox::information(this,"ERROR",QString("不接收空参数 [row: %1]").arg(i));
+            return;
+        }
+        msg = msg.mid(EEP_TB_PREX_LENG);
+        if(eep_config.param[i].o_dis_format == 10){
+            dtmp = msg.toDouble(&ok);
+            utmp = (unsigned int)(dtmp - eep_config.param[i].o_off) / eep_config.param[i].o_rate;
+        }else{
+            temp = msg.toInt(&ok,eep_config.param[i].o_dis_format);
+            utmp = (unsigned int)(temp - eep_config.param[i].o_off) / eep_config.param[i].o_rate;
+        }
+        if(ok == false){
+            QMessageBox::information(this,"ERROR",QString("转换失败 [row: %1]").arg(i));
+            return;
+        }
+        for(j=0;j<eep_config.param[i].o_byte_len;j++){
+            eeprom_info.eepcfg_cp[k] = (utmp >> (8*j)) & 0xFF;
+            k++;
+            if(k > EEPROM_DATA_LENGTH)
+                break;
+        }
+    }
+    for(i=0;i<EEPROM_DATA_RECV_MARK;i++)
+        eeprom_info.recv_mark[i] = 0;
+    for(i=0;i<EEPROM_DATA_SEND_MARK;i++){
+        eeprom_send_array[i].Data[0] = (unsigned char)i;
+        memcpy(eeprom_send_array[i].Data+1,eeprom_info.eepcfg_cp+i*7,sizeof(char)*7);
+        eeprom_send_array[i].DataLen = 8;
+        eeprom_send_array[i].ExternFlag = 1;
+        eeprom_send_array[i].ID = UPME_SET_MAIN_PARAM_ID;
+        eeprom_send_array[i].RemoteFlag = 0;
+        eeprom_send_array[i].SendType = 0;
+    }
+    eeprom_recv_data_flag = true;
+    item = ui->tb_state->item(0,2);
+    item->setText("启动发送\0");
 }

@@ -71,6 +71,10 @@ private slots:
 
     void on_pb_out_data_clicked();
 
+    void on_pb_in_data_clicked();
+
+    void on_pb_ensure_clicked();
+
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
@@ -82,7 +86,11 @@ private:
     int cnt_ctrl_clk;
     int vcu_alarm;
     bool main_is_test_mode;
-    bool eeprom_is_send_data;
+    bool eeprom_is_send_data;                           //下位机是否发送EEPROM数据
+    bool eeprom_recv_data_flag;                          //下位机开始接受EEPROM数据
+    int eeprom_recv_data_count;                         //下位机接收计数
+    QString file_path;
+    VCI_CAN_OBJ eeprom_send_array[EEPROM_DATA_SEND_MARK];
 
     struct excel_param_organize_ext eep_config;
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构

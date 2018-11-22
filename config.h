@@ -19,6 +19,14 @@
 #define EEPROM_ARRAY_LENGTH         512         //EEPROM长度
 #define EEPROM_SEND_DATA_LEN        7           //发送eeprom数据报文数据长度
 #define EEPROM_DATA_RECV_MARK       46         //eeprom数据报文桢数
+#define EEPROM_DATA_SEND_MARK       38          //eeprom数据发送帧数
+#define EEPROM_DATA_LENGTH          266         //EEPROM数据长度
+#define EEP_XLS_COL_LENGTH          16
+#define EEPROM_DATA_EXCEL_ROW_S     2
+#define EEPROM_DATA_EXCEL_COL_S     2
+#define EEP_TB_FILE                 2
+#define EEP_TB_RECV                 1
+#define EEP_TB_PREX_LENG            3
 
 #define CAN_RECV_BUFF_LEN_MAX       512         //CAN buff 长度
 #define LIST_WIDGET_MSG_LEN_MAX     256         //辅助列表框报文显示最大行数
@@ -135,5 +143,8 @@
 #define SOFT_VERSION                1
 #define HARD_VERSION                2
 #define SERIAL_NUMBER               3
+
+#define EEP_MOD_PASSWD              "1234"        //EEPROM修改密码
+#define EEP_MOD_TB_POS              3
 
 #endif // CONFIG_H

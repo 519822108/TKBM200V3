@@ -18,7 +18,7 @@ struct excel_param_organize{
     QString         s_note;                 //参数注释
     int             o_byte_len;             //参数占有的字节长度
     int             o_dis_format;           //参数的显示格式, 16进制或10进制
-    int             o_rate;                 //参数转换系数
+    double             o_rate;                 //参数转换系数
     int             o_off;                  //参数转换偏移
     int             d_cur_val;             //参数当前值
     int             d_obj_val;             //参数目标值
@@ -68,6 +68,7 @@ struct per_battery_info_discription{                    //BMS描述
 struct eeprom_data_info_discription{
     unsigned char eeprom[EEPROM_ARRAY_LENGTH];
     unsigned char eepcfg[EEPROM_ARRAY_LENGTH];
+    unsigned char eepcfg_cp[EEPROM_ARRAY_LENGTH];
     unsigned char recv_mark[EEPROM_DATA_RECV_MARK];
     bool recv_finish_flag;
 };
