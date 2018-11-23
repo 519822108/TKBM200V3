@@ -2060,7 +2060,7 @@ public:
 
         retranslateUi(TkbmWidget);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(TkbmWidget);

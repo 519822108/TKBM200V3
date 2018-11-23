@@ -19,6 +19,7 @@
 #include <QDir>
 #include <QColor>
 #include <QFileInfo>
+#include <QVector>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -81,6 +82,7 @@ void TkbmWidget::chg_stage_data_init()
     main_is_test_mode = false;
     eeprom_is_send_data = false;
     eeprom_recv_data_flag = false;
+    eeprom_read_btn_state = false;
     memset(&eeprom_info,0,sizeof(struct eeprom_data_info_discription));
 
     bms_sub_info = new struct per_battery_info_discription;
@@ -238,7 +240,7 @@ void TkbmWidget::comm_timeout()
                 msg_main_ctl_info[MSG_SOC_EXC_AFT].s_val = QString("%1").arg(can_data.data[i].Data[2]);
                 break;
             case 16:break;
-            case 17:                //从板配置信息
+            case 17:                //从板配置信息,计算从板第一通道在系统中的位置
                 bms_sub_info->unit_num = can_data.data[1].Data[7];
                 k=0;
                 for(auto iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
@@ -323,8 +325,10 @@ void TkbmWidget::comm_timeout()
         if(CONG_BOARD_VOL_ID == (can_data.data[i].ID & 0xfffffff0)){    //从板电压信息
             for(auto iter = bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
                 if(iter->bid == can_data.data[i].Data[0]){              
-                    for(j=0;j<CONG_BOARD_EACH_VOL;j++)
-                        iter->each_volt[can_data.data[i].Data[1]*CONG_BOARD_EACH_VOL+j] = can_data.data[i].Data[2+j*2] + can_data.data[i].Data[3+j*2]*256;
+                    for(j=0;j<CONG_BOARD_EACH_VOL;j++){
+                        k = can_data.data[i].Data[1]*CONG_BOARD_EACH_VOL+j;
+                        iter->each_volt[k] = can_data.data[i].Data[2+j*2] + can_data.data[i].Data[3+j*2]*256;
+                    }
                     break;
                 }
             }
@@ -341,11 +345,11 @@ void TkbmWidget::comm_timeout()
                     break;
             }
             if(j == EEPROM_DATA_RECV_MARK){
-                on_pb_eep_read_clicked();
+                eeprom_launch_send(false);
                 eeprom_info.recv_finish_flag = true;
             }
             if(can_data.data[i].Data[0] == 0xD0){
-                eeprom_info.recv_mark[can_data.data[i].Data[1]] = can_data.data[i].Data[2];
+                eeprom_info.send_mark[can_data.data[i].Data[1]] = can_data.data[i].Data[2];
             }
         }
     }
@@ -359,18 +363,70 @@ void TkbmWidget::comm_timeout()
     }
     if(eeprom_recv_data_flag == true){
         for(i=0;i<EEPROM_DATA_SEND_MARK;i++){
-            if(eeprom_info.recv_mark[i] != 1){
+            if(eeprom_info.send_mark[i] != 1){
                 can_bsp->send_msg(1,&eeprom_send_array[i]);
                 QTableWidgetItem *item = ui->tb_state->item(0,2);
-                item->setText(QString("正在发送 [%1]").arg(i));
+                item->setText(QString("正在发送[%1/%2]").arg(i).arg(EEPROM_DATA_SEND_MARK));
                 break;
             }
         }
         if(i==EEPROM_DATA_SEND_MARK){
             eeprom_recv_data_flag = false;
+            eeprom_launch_send(false);
             QTableWidgetItem *item = ui->tb_state->item(0,2);
             item->setText("发送完成\0");
         }
+    }
+    per_bat_vol_limit_cacul();
+}
+
+void TkbmWidget::per_bat_vol_limit_cacul()
+{
+    unsigned int i;
+    struct array_vol_pos vol_pos;
+    unsigned int board_size;
+    std::vector<struct array_vol_pos> temp;
+    for(auto iter=bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
+        if(iter->modu_num > 0){
+            for(i=0;i<iter->per_chinnal[0];i++){
+                vol_pos.voltag = iter->each_volt[i];
+                vol_pos.pos = iter->chinnel_start+i+1;
+                temp.push_back(vol_pos);
+            }
+        }
+        if(iter->modu_num > 1){
+            for(i=0;i<iter->per_chinnal[1];i++){
+                vol_pos.voltag = iter->each_volt[EACH_MODULE_CHINNEL+i];
+                vol_pos.pos = iter->chinnel_start+iter->per_chinnal[0]+i+1;
+                temp.push_back(vol_pos);
+            }
+        }
+        if(iter->modu_num > 2){
+            for(i=0;i<iter->per_chinnal[2];i++){
+                vol_pos.voltag = iter->each_volt[EACH_MODULE_CHINNEL*2+i];
+                vol_pos.pos = iter->chinnel_start+iter->per_chinnal[0]+iter->per_chinnal[1]+i+1;
+                temp.push_back(vol_pos);
+            }
+        }
+        if(iter->modu_num > 3){
+            for(i=0;i<iter->per_chinnal[3];i++){
+                vol_pos.voltag = iter->each_volt[EACH_MODULE_CHINNEL*3+i];
+                vol_pos.pos = iter->chinnel_start+iter->per_chinnal[0]+iter->per_chinnal[1]+iter->per_chinnal[2]+i+1;
+                temp.push_back(vol_pos);
+            }
+        }
+    }
+    board_size = temp.size();
+    board_size = (board_size < CONG_BOARD_LIMIT_VOL_LEN)?(board_size):(CONG_BOARD_LIMIT_VOL_LEN);
+    //按值大小升序排序
+    std::sort(temp.begin(),temp.end(),[](struct array_vol_pos a,struct array_vol_pos b){return a.voltag < b.voltag;});
+    limit_vol_info.max.clear();
+    limit_vol_info.min.clear();
+    for(i=0;i<board_size;i++){
+        vol_pos = QVector<struct array_vol_pos>::fromStdVector(temp).at(i);
+        limit_vol_info.min.push_back(vol_pos);
+        vol_pos = QVector<struct array_vol_pos>::fromStdVector(temp).at(temp.size()-i-1);
+        limit_vol_info.max.push_back(vol_pos);
     }
 }
 
@@ -557,7 +613,7 @@ void TkbmWidget::update_msg_timeout()
                         item = ui->tb_vol_m1->item(i,1);
                         item->setText(QString("%1").arg(iter->each_volt[i]));
                         item = ui->tb_vol_m1->item(i,0);
-                        item->setText(QString("%1").arg(iter->chinnel_start+i));
+                        item->setText(QString("%1").arg(iter->chinnel_start+i+1));
                     }
                 }
                 if(iter->modu_num > 1){                     //更新模块B电压
@@ -565,7 +621,7 @@ void TkbmWidget::update_msg_timeout()
                         item = ui->tb_vol_m2->item(i,1);
                         item->setText(QString("%1").arg(iter->each_volt[EACH_MODULE_CHINNEL+i]));
                         item = ui->tb_vol_m2->item(i,0);
-                        item->setText(QString("%1").arg(iter->chinnel_start+iter->per_chinnal[0]+i));
+                        item->setText(QString("%1").arg(iter->chinnel_start+iter->per_chinnal[0]+i+1));
                     }
                 }
                 if(iter->modu_num > 2){                     //更新模块C电压
@@ -573,7 +629,7 @@ void TkbmWidget::update_msg_timeout()
                         item = ui->tb_vol_m3->item(i,1);
                         item->setText(QString("%1").arg(iter->each_volt[EACH_MODULE_CHINNEL*2+i]));
                         item = ui->tb_vol_m3->item(i,0);
-                        item->setText(QString("%1").arg(iter->chinnel_start+iter->per_chinnal[0]+iter->per_chinnal[1]+i));
+                        item->setText(QString("%1").arg(iter->chinnel_start+iter->per_chinnal[0]+iter->per_chinnal[1]+i+1));
                     }
                 }
                 if(iter->modu_num > 3){                     //更新模块D电压
@@ -581,7 +637,7 @@ void TkbmWidget::update_msg_timeout()
                         item = ui->tb_vol_m4->item(i,1);
                         item->setText(QString("%1").arg(iter->each_volt[EACH_MODULE_CHINNEL*3+i]));
                         item = ui->tb_vol_m4->item(i,0);
-                        item->setText(QString("%1").arg(iter->chinnel_start+iter->per_chinnal[0]+iter->per_chinnal[1]+iter->per_chinnal[2]+i));
+                        item->setText(QString("%1").arg(iter->chinnel_start+iter->per_chinnal[0]+iter->per_chinnal[1]+iter->per_chinnal[2]+i+1));
                     }
                 }
                 break;
@@ -601,6 +657,25 @@ void TkbmWidget::update_msg_timeout()
     if(eeprom_info.recv_finish_flag == true){        //分析EEPROM数据
         tb_eeprom_file_setting(eeprom_info.eeprom,EEP_TB_RECV);
     }
+    if(limit_vol_info.max.isEmpty() == false){          //更新单体最高最低
+        for(i=0;i<limit_vol_info.max.size();i++){
+            QTableWidgetItem *item = ui->tb_each_hi->item(i,0);
+            msg = QString("%1").arg(limit_vol_info.max.at(i).voltag);
+            item->setText(msg);
+            item = ui->tb_each_hi->item(i,1);
+            msg = QString("%1").arg(limit_vol_info.max.at(i).pos);
+            item->setText(msg);
+
+            item = ui->tb_each_lo->item(i,0);
+            msg = QString("%1").arg(limit_vol_info.min.at(i).voltag);
+            item->setText(msg);
+
+            item = ui->tb_each_lo->item(i,1);
+            msg = QString("%1").arg(limit_vol_info.min.at(i).pos);
+            item->setText(msg);
+        }
+    }
+
 }
 
 void TkbmWidget::tb_eeprom_file_setting(unsigned char *data,int col)
@@ -1154,12 +1229,18 @@ void TkbmWidget::on_pb_mian_into_t_clicked(bool checked)
     }
 }
 
-void TkbmWidget::on_pb_eep_read_clicked()
+void TkbmWidget::on_pb_eep_read_clicked(bool click)
+{
+    eeprom_read_btn_state = !eeprom_read_btn_state;
+    eeprom_launch_send(eeprom_read_btn_state);
+}
+
+void TkbmWidget::eeprom_launch_send(bool state)
 {
     QString style;
     QTableWidgetItem *item = ui->tb_state->item(0,1);
     unsigned char data[8] = {0,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-    if(eeprom_is_send_data == false){
+    if(state == true){
         eeprom_is_send_data = true;
         memset(&eeprom_info,0,sizeof(struct eeprom_data_info_discription));
         data[0] = 0xF1;
@@ -1314,8 +1395,8 @@ void TkbmWidget::on_pb_ensure_clicked()
                 break;
         }
     }
-    for(i=0;i<EEPROM_DATA_RECV_MARK;i++)
-        eeprom_info.recv_mark[i] = 0;
+    for(i=0;i<EEPROM_DATA_SEND_MARK;i++)
+        eeprom_info.send_mark[i] = 0;
     for(i=0;i<EEPROM_DATA_SEND_MARK;i++){
         eeprom_send_array[i].Data[0] = (unsigned char)i;
         memcpy(eeprom_send_array[i].Data+1,eeprom_info.eepcfg_cp+i*7,sizeof(char)*7);
@@ -1327,5 +1408,6 @@ void TkbmWidget::on_pb_ensure_clicked()
     }
     eeprom_recv_data_flag = true;
     item = ui->tb_state->item(0,2);
+    eeprom_launch_send(true);
     item->setText("启动发送\0");
 }

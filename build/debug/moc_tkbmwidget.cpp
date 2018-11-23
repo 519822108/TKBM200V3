@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TkbmWidget_t {
-    QByteArrayData data[35];
-    char stringdata0[566];
+    QByteArrayData data[36];
+    char stringdata0[572];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -61,9 +61,10 @@ QT_MOC_LITERAL(28, 422, 20), // "on_pb_before_clicked"
 QT_MOC_LITERAL(29, 443, 25), // "on_pb_mian_into_t_clicked"
 QT_MOC_LITERAL(30, 469, 7), // "checked"
 QT_MOC_LITERAL(31, 477, 22), // "on_pb_eep_read_clicked"
-QT_MOC_LITERAL(32, 500, 22), // "on_pb_out_data_clicked"
-QT_MOC_LITERAL(33, 523, 21), // "on_pb_in_data_clicked"
-QT_MOC_LITERAL(34, 545, 20) // "on_pb_ensure_clicked"
+QT_MOC_LITERAL(32, 500, 5), // "click"
+QT_MOC_LITERAL(33, 506, 22), // "on_pb_out_data_clicked"
+QT_MOC_LITERAL(34, 529, 21), // "on_pb_in_data_clicked"
+QT_MOC_LITERAL(35, 551, 20) // "on_pb_ensure_clicked"
 
     },
     "TkbmWidget\0sig_set_cthread_state\0\0"
@@ -79,8 +80,9 @@ QT_MOC_LITERAL(34, 545, 20) // "on_pb_ensure_clicked"
     "on_le_id_in_editingFinished\0"
     "on_pb_after_clicked\0on_pb_before_clicked\0"
     "on_pb_mian_into_t_clicked\0checked\0"
-    "on_pb_eep_read_clicked\0on_pb_out_data_clicked\0"
-    "on_pb_in_data_clicked\0on_pb_ensure_clicked"
+    "on_pb_eep_read_clicked\0click\0"
+    "on_pb_out_data_clicked\0on_pb_in_data_clicked\0"
+    "on_pb_ensure_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -119,10 +121,10 @@ static const uint qt_meta_data_TkbmWidget[] = {
       27,    0,  165,    2, 0x08 /* Private */,
       28,    0,  166,    2, 0x08 /* Private */,
       29,    1,  167,    2, 0x08 /* Private */,
-      31,    0,  170,    2, 0x08 /* Private */,
-      32,    0,  171,    2, 0x08 /* Private */,
-      33,    0,  172,    2, 0x08 /* Private */,
-      34,    0,  173,    2, 0x08 /* Private */,
+      31,    1,  170,    2, 0x08 /* Private */,
+      33,    0,  173,    2, 0x08 /* Private */,
+      34,    0,  174,    2, 0x08 /* Private */,
+      35,    0,  175,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -146,7 +148,7 @@ static const uint qt_meta_data_TkbmWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Bool,   30,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,   32,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -179,7 +181,7 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 16: _t->on_pb_after_clicked(); break;
         case 17: _t->on_pb_before_clicked(); break;
         case 18: _t->on_pb_mian_into_t_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 19: _t->on_pb_eep_read_clicked(); break;
+        case 19: _t->on_pb_eep_read_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 20: _t->on_pb_out_data_clicked(); break;
         case 21: _t->on_pb_in_data_clicked(); break;
         case 22: _t->on_pb_ensure_clicked(); break;

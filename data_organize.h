@@ -70,7 +70,18 @@ struct eeprom_data_info_discription{
     unsigned char eepcfg[EEPROM_ARRAY_LENGTH];
     unsigned char eepcfg_cp[EEPROM_ARRAY_LENGTH];
     unsigned char recv_mark[EEPROM_DATA_RECV_MARK];
+    unsigned char send_mark[EEPROM_DATA_SEND_MARK];
     bool recv_finish_flag;
+};
+
+struct array_vol_pos{
+    int voltag;
+    int pos;
+};
+
+struct each_bat_info_discription{
+    QVector<struct array_vol_pos> max;
+    QVector<struct array_vol_pos> min;
 };
 
 #endif // DATA_ORGANIZE_H

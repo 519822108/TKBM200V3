@@ -45,6 +45,8 @@
 #define CONG_BOARD_VOL_ID           0x0823F4C0      //从板电压信息
 #define CONG_BOARD_EACH_VOL         3               //每个从板电压报文带有的电压数据数
 
+#define CONG_BOARD_LIMIT_VOL_LEN    6               //单体电压最高最低保存长度
+
 #define UPME_SET_MAIN_PARAM_ID      0x0831F4F7      //上位机设置主板参数ID
 
 #define BMS_UNIT_OUTLINE_CNT        100     //从板超时离线计数,5s

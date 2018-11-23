@@ -31,6 +31,8 @@ public:
     void chg_stage_data_init(void);
     void sub_state_msg_ana(struct sub_each_board *bd,unsigned char data[8]);
     void tb_eeprom_file_setting(unsigned char *data,int col);
+    void eeprom_launch_send(bool state);
+    void per_bat_vol_limit_cacul();
 
     QString anasy_alart_msg(unsigned char data[5]);
     QString main_info_msg(unsigned char data,char pos);
@@ -67,7 +69,7 @@ private slots:
 
     void on_pb_mian_into_t_clicked(bool checked);
 
-    void on_pb_eep_read_clicked();
+    void on_pb_eep_read_clicked(bool click);
 
     void on_pb_out_data_clicked();
 
@@ -88,7 +90,7 @@ private:
     bool main_is_test_mode;
     bool eeprom_is_send_data;                           //下位机是否发送EEPROM数据
     bool eeprom_recv_data_flag;                          //下位机开始接受EEPROM数据
-    int eeprom_recv_data_count;                         //下位机接收计数
+    bool eeprom_read_btn_state;                         //eeprom读取按钮状态
     QString file_path;
     VCI_CAN_OBJ eeprom_send_array[EEPROM_DATA_SEND_MARK];
 
@@ -102,6 +104,7 @@ private:
     struct msg_discripte msg_bms_run_state_dsc[UNIT_INFO_NUM_MAX];        //从板状态信息
     struct per_battery_info_discription *bms_sub_info;                       //BMS描述
     struct eeprom_data_info_discription eeprom_info;                    //EEPROM 信息描述
+    struct each_bat_info_discription limit_vol_info;                    //最高最低电压记录
 
 protected:
     void closeEvent(QCloseEvent *event);
