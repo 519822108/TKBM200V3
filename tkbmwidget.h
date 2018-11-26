@@ -41,6 +41,7 @@ signals:
     void sig_set_cthread_state(CtlCan *pCan);
     void sig_process_exit(void);
     void sig_sub_unit_outline(void);
+    void sig_get_store_obj(struct sub_each_board *unit,unsigned int len);
 
 private slots:
     void on_tb_eep_file_cellClicked(int row, int column);
@@ -127,6 +128,20 @@ protected:
 
 private:
     CtlCan *can_bps;
+};
+
+class BatteryStore : public QThread
+{
+    Q_OBJECT
+
+public slots:
+    void slot_get_store_obj(struct sub_each_board *unit,unsigned int len);
+
+protected:
+    void run();
+
+private:
+    QVector<struct sub_each_board> bat_unit;
 };
 
 #endif // TKBMWIDGET_H

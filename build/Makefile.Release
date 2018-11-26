@@ -935,7 +935,99 @@ release\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		../static_string.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
 		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
-		D:\Qt\5.7\msvc2013\include\QtGui\QIntValidator
+		D:\Qt\5.7\msvc2013\include\QtGui\QIntValidator \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QFileDialog \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qfiledialog.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\qdir.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\qfileinfo.h \
+		D:\Qt\5.7\msvc2013\include\QtCore\QDir \
+		D:\Qt\5.7\msvc2013\include\QtGui\QColor \
+		D:\Qt\5.7\msvc2013\include\QtCore\QFileInfo \
+		D:\Qt\5.7\msvc2013\include\QtCore\qt_windows.h \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\windows.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\sdkddkver.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winresrc.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winuser.rh" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\commctrl.rh" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\dde.rh" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winnt.rh" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\dlgs.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winver.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\SpecStrings.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\verrsrc.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\windef.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winnt.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\kernelspecs.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\DriverSpecs.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\basetsd.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\guiddef.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\pshpack4.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\poppack.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\pshpack2.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\pshpack1.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\pshpack8.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\ktmtypes.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\wingdi.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winuser.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\tvout.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winuser.inl" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winnls.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\wincon.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winreg.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\reason.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winnetwk.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\wnnc.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\cderr.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\dde.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\ddeml.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\lzexpand.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\mmsystem.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\nb30.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpc.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcdce.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcdcep.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcnsi.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcnterr.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcasync.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\shellapi.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winperf.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winsock.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\inaddr.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\wincrypt.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\bcrypt.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\ncrypt.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winefs.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winscard.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\wtypes.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcndr.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcnsip.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\rpcsal.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winioctl.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winsmcrd.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\SCardErr.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winspool.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\prsht.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\prsht.inl" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\ole.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\ole2.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\objbase.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\unknwn.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\objidl.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\cguid.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\urlmon.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\oleidl.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\servprov.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\msxml.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\oaidl.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\propidl.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\oleauto.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\commdlg.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\commdlg.inl" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\stralign.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\winsvc.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\mcx.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\imm.h" \
+		"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\ime_cmodes.h"
 
 release\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \

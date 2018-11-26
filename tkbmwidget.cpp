@@ -20,6 +20,7 @@
 #include <QColor>
 #include <QFileInfo>
 #include <QVector>
+#include <qt_windows.h>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -88,11 +89,6 @@ void TkbmWidget::chg_stage_data_init()
     bms_sub_info = new struct per_battery_info_discription;
     bms_sub_info->cur_id = 0;
     bms_sub_info->unit_num = 0;
-    struct sub_each_board each_bd;
-    each_bd.per_chinnal[0] = each_bd.per_chinnal[1] = each_bd.per_chinnal[2] = each_bd.per_chinnal[3] = EACH_MODULE_CHINNEL;
-    memset(&each_bd,0,sizeof (struct sub_each_board));
-
-    bms_sub_info->each_board.push_back(each_bd);
 }
 
 void TkbmWidget::comm_timeout()
@@ -311,7 +307,8 @@ void TkbmWidget::comm_timeout()
                 }
                 if(j != -1)
                     bms_sub_info->each_board.push_back(ebd);
-            }
+                bms_sub_info->unit_num++;
+            }            
         }    
         if(CONG_BOARD_TEMP_ID == (can_data.data[i].ID & 0xfffffff0)){   //处理从板温度信息
             for(auto iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
@@ -548,13 +545,15 @@ void TkbmWidget::update_msg_timeout()
     if(bms_sub_info->each_board.size() != 0){        //更新单体信息
         QVector<struct sub_each_board>::iterator iter;
         for(iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
-            if(iter->bid == bms_sub_info->cur_id){
+            if(iter->bid == bms_sub_info->cur_id){                
                 msg = "";
                 for(i=0;i<8;i++){
                     if((iter->state >> i) & 0x01)
                         msg += msg_bms_run_state[i] + '\n';
                 }
                 QTableWidgetItem *item = ui->tb_run_state->item(0,1);
+                if(iter->online_count == 0)
+                    msg += QString("从板离线中\0");
                 item->setText(msg);
                 item = ui->tb_run_state->item(0,2);
                 item->setText(QString("%1").arg(iter->htick));
@@ -789,6 +788,12 @@ void TkbmWidget::data_struct_init()
         msg_bms_run_state_dsc[i].i_val = 0;
         msg_bms_run_state_dsc[i].s_val = ' ';
     }
+
+    auto iter = bms_sub_info->each_board.begin();
+    BatteryStore *bs = new BatteryStore;
+    connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
+    emit sig_get_store_obj(iter,1);
+    bs->start();
 }
 
 void TkbmWidget::ui_init(void)
@@ -1188,8 +1193,8 @@ void TkbmWidget::on_pb_after_clicked()
         bid = bms_sub_info->unit_num-1;
     }
     for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
-        if(bid < iter->bid){
-            bid = iter->bid;
+        if(bid <= iter->bid){
+            bid = (++iter)->bid;
             break;
         }
     }
@@ -1411,3 +1416,75 @@ void TkbmWidget::on_pb_ensure_clicked()
     eeprom_launch_send(true);
     item->setText("启动发送\0");
 }
+
+void BatteryStore::slot_get_store_obj(struct sub_each_board *unit,unsigned int len)
+{
+    for(int i=0;i<len;i++)
+       bat_unit.push_back(unit[i]);
+}
+
+void BatteryStore::run()
+{
+    OleInitialize(NULL);
+    int i,j;
+    int num;
+    QVector<struct sub_each_board>::iterator iter;
+    if(bat_unit.size() == 0)
+        return;
+    QString bid,sbid;
+    QString fn = QDate::currentDate().toString("yy_MM_dd") + ".xlsx";
+    QString fp = QCoreApplication::applicationDirPath() + "/store_file/";
+    QString fnp = fp + fn;
+    bool fe = QFile::exists(fnp);
+    QDir dir(fp);
+    if(dir.exists() == false)
+        dir.mkdir(fp);
+
+    QAxObject excel("Excel.Application");
+    excel.setProperty("Visible",false);
+    excel.setProperty("DisplayAlerts",false);
+    QAxObject *pWorkbooks = excel.querySubObject("WorkBooks");
+    if(fe == false){
+        pWorkbooks->dynamicCall("Add");                     //如果文件不存在，则创建文件
+    }else{
+        pWorkbooks->dynamicCall("Open (const QString&)",QDir::toNativeSeparators(fnp));     //如果文件存在，则打开
+    }
+
+    QAxObject *pWorkBook = excel.querySubObject("ActiveWorkBook");
+    QAxObject *pSheets = pWorkBook->querySubObject("Sheets");
+    QAxObject *pSheet;
+    num = pSheets->dynamicCall("Count").toInt();
+    if(fe == false){                        //如果是新建的表格，则删除表单仅保留1张
+        for(i=0;i<num;i++){
+            pSheet = pSheets->querySubObject("Item(int)",num-i);
+            pSheet->dynamicCall("Delete");
+        }
+        pSheet = pSheets->querySubObject("Item(int)",1);
+        pSheet->setProperty("Name",QString("NoUse"));
+    }
+
+    num = pSheets->dynamicCall("Count").toInt();
+    for(j=0;j<bat_unit.size();j++){
+        iter = bat_unit.end();
+        --iter;
+        sbid = QString("BID%1").arg(iter->bid);
+        for(i=0;i<num;i++){             //查找表格中是否有以 从板ID为表单名的表单
+            pSheet = pSheets->querySubObject("Item(int)",i+1);
+            bid = pSheet->property("Name").toString();
+            if(QString::compare(sbid,bid) == 0)
+                break;
+        }
+        if(i == num){               //如果没有找到从板ID的表单，则添加1张表单,添加到最后之前
+            pSheet = pSheets->querySubObject("Item(int)",num);
+            QAxObject *pNSheet = pSheets->querySubObject("Add(QVariant)",pSheet->asVariant());
+            pSheet->dynamicCall("Move(QVariant)",pNSheet->asVariant());
+            pSheet->setProperty("Name",sbid);
+        }
+    }
+    if(fe == false)
+        pWorkBook->dynamicCall("SaveAs (const QString&)",QDir::toNativeSeparators(fnp));
+    pWorkBook->dynamicCall("Close()");
+    excel.dynamicCall("Quit(void)");
+    OleUninitialize();
+}
+
