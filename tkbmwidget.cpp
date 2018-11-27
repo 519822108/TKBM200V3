@@ -21,6 +21,7 @@
 #include <QFileInfo>
 #include <QVector>
 #include <qt_windows.h>
+#include <QChar>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -1426,12 +1427,14 @@ void BatteryStore::slot_get_store_obj(struct sub_each_board *unit,unsigned int l
 void BatteryStore::run()
 {
     OleInitialize(NULL);
-    int i,j;
-    int num;
+    int i,j,k=0;
+    int num,col;
+    QVector<int> id_table;
     QVector<struct sub_each_board>::iterator iter;
     if(bat_unit.size() == 0)
         return;
     QString bid,sbid;
+    QString msg;
     QString fn = QDate::currentDate().toString("yy_MM_dd") + ".xlsx";
     QString fp = QCoreApplication::applicationDirPath() + "/store_file/";
     QString fnp = fp + fn;
@@ -1464,9 +1467,7 @@ void BatteryStore::run()
     }
 
     num = pSheets->dynamicCall("Count").toInt();
-    for(j=0;j<bat_unit.size();j++){
-        iter = bat_unit.end();
-        --iter;
+    for(iter = bat_unit.begin();iter != bat_unit.end();iter++){
         sbid = QString("BID%1").arg(iter->bid);
         for(i=0;i<num;i++){             //查找表格中是否有以 从板ID为表单名的表单
             pSheet = pSheets->querySubObject("Item(int)",i+1);
@@ -1480,11 +1481,54 @@ void BatteryStore::run()
             pSheet->dynamicCall("Move(QVariant)",pNSheet->asVariant());
             pSheet->setProperty("Name",sbid);
         }
+        for(auto iditer = id_table.begin();iditer != id_table.end();iditer++)
+            if(*iditer == iter->bid)
+                k = -1;
+        if(k != -1){         //每次记录电压时先写一次电池标号
+            pSheet = pSheets->querySubObject("Item(int)",i+1);
+            QAxObject *usedPage = pSheet->querySubObject("UsedRange");
+            QAxObject *Rows = usedPage->querySubObject("Rows");
+            int start_row = usedPage->property("Row").toInt();
+            num = start_row + Rows->property("Count").toInt();      //获取位置
+            col = 0;
+            for(j=0;j<iter->modu_num;j++)
+                col += iter->per_chinnal[j];
+            QList<QVariant> rowData;
+            for(j=0;j<col;j++){
+                msg = QString("BAT %1").arg(iter->chinnel_start + i);
+                rowData.push_back(msg);
+            }
+            QAxObject *pCells = pSheet->querySubObject("Cells(int,int)",num,2);
+            QAxObject *pCelle = pSheet->querySubObject("Cells(int,int)",num,2+col);
+            QAxObject *pRange = pSheet->querySubObject("Range(QVariant,QVariant)",pCells->asVariant(),pCelle->asVariant());
+            pRange->dynamicCall("SetValue(const QVariant&)",QVariant(rowData));
+            id_table.push_back(iter->bid);
+        }
     }
+    id_table.clear();
     if(fe == false)
         pWorkBook->dynamicCall("SaveAs (const QString&)",QDir::toNativeSeparators(fnp));
     pWorkBook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");
     OleUninitialize();
+}
+
+QString BatteryStore::convert_col_to_exc(int pos)
+{
+    int i;
+    QString el = QString("%1").arg(pos,0,26);
+    QString temp,ret = "";
+    char val;
+    QChar qval;
+    bool ok;
+    for(i=0;i<el.size();i++){
+        temp = el.at(i);
+        val = (char)temp.toInt(&ok,26);
+        val += 'A' -1;
+        qval = QChar(val);
+        ret += QString(val);
+    }
+
+    return ret;
 }
 

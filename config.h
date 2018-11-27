@@ -56,6 +56,7 @@
 #define SUB_TEMPRATURE_NUM_MAX      16      //从板最大温度采集数
 #define SUB_TEMP_DISPLAY_ROW        4       //温度显示行数
 #define SUB_TEMP_DISPLAY_COL        4       //温度显示烈数
+#define BMS_MAX_CONG_LINE           16      //从板最大连接数
 
 #define MSG_SUMMARY_LIST_LENGTH     32      //概述数组总长度
 #define MSG_SUMMARY_LIST_HERTICK    1       //概述 心跳
