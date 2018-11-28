@@ -28,7 +28,10 @@ MonitorDialog::MonitorDialog(QWidget *parent) :
     filter_id = 0;
     temp_array.clear();
 
-    std::cout << QString("%1").arg((int)windowFlags(),0,16).toStdString() << std::endl;
+    int flag = windowFlags();
+    flag &= (~Qt::WindowContextHelpButtonHint);
+
+    this->setWindowFlags(Qt::WindowFlags(flag));
 
     timer_100 = new QTimer(this);
     connect(timer_100,&QTimer::timeout,this,&MonitorDialog::timer100_timeout);

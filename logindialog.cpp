@@ -3,6 +3,7 @@
 #include <QDesktopWidget>
 #include "ControlCAN.h"
 #include "ctlcan.h"
+#include <iostream>
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
@@ -14,6 +15,11 @@ LoginDialog::LoginDialog(QWidget *parent) :
     QDesktopWidget *thisDesk = QApplication::desktop();
     QRect rect = thisDesk->availableGeometry();
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
+
+    int flag = windowFlags();
+    flag &= (~Qt::WindowContextHelpButtonHint);
+
+    this->setWindowFlags(Qt::WindowFlags(flag));
 }
 
 LoginDialog::~LoginDialog()

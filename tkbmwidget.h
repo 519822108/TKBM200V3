@@ -81,7 +81,7 @@ private slots:
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
-    MonitorDialog *monitor_dialog;    
+    MonitorDialog monitor_dialog;
     CtlCan *can_bsp;
     QTimer *timer10;
     QTimer *timer_100;
@@ -135,7 +135,7 @@ class BatteryStore : public QThread
     Q_OBJECT
 
 public:
-    QString convert_col_to_exc(int pos);
+
 
 public slots:
     void slot_get_store_obj(struct sub_each_board *unit,unsigned int len);

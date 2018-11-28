@@ -44,10 +44,10 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     this->chg_stage_data_init();
     this->data_struct_init();
     this->set_eep_config();
+
     login_dialog.show();
 
     timer_100 = new QTimer(this);
-    monitor_dialog = new MonitorDialog(this);
     connect(timer_100,&QTimer::timeout,this,&TkbmWidget::update_msg_timeout);
     timer_100->start(100);
     timer_5s = new QTimer(this);
@@ -57,11 +57,12 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
     connect(this,&TkbmWidget::sig_process_exit,&login_dialog,&QDialog::close);
-    connect(this,&TkbmWidget::sig_process_exit,monitor_dialog,&QDialog::close);
-    connect(monitor_dialog,&MonitorDialog::sig_send_board_id,this,&TkbmWidget::slot_get_board_id);
-    connect(this,&TkbmWidget::sig_sub_unit_outline,monitor_dialog,&MonitorDialog::slots_unit_outline);
+    connect(this,&TkbmWidget::sig_process_exit,&monitor_dialog,&QDialog::close);
+    connect(&monitor_dialog,&MonitorDialog::sig_send_board_id,this,&TkbmWidget::slot_get_board_id);
+    connect(this,&TkbmWidget::sig_sub_unit_outline,&monitor_dialog,&MonitorDialog::slots_unit_outline);
 }
-
+/***    @breif: 启动时初始化的数据
+*/
 void TkbmWidget::chg_stage_data_init()
 {
     QTableWidgetItem *item;
@@ -295,6 +296,7 @@ void TkbmWidget::comm_timeout()
             if(j != -1){                    //如果不存在该id,则创建一个数据,查找合适的位置放入
                 struct sub_each_board ebd;
                 memset(&ebd,0,sizeof(struct sub_each_board));
+                ebd.modu_num = SUB_MODULE_NUM_MAX;
                 ebd.per_chinnal[0] = ebd.per_chinnal[1] = ebd.per_chinnal[2] = ebd.per_chinnal[3] = EACH_MODULE_CHINNEL;
                 sub_state_msg_ana(&ebd,can_data.data[i].Data);
                 int k=0;
@@ -789,12 +791,13 @@ void TkbmWidget::data_struct_init()
         msg_bms_run_state_dsc[i].i_val = 0;
         msg_bms_run_state_dsc[i].s_val = ' ';
     }
-
-    auto iter = bms_sub_info->each_board.begin();
-    BatteryStore *bs = new BatteryStore;
-    connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
-    emit sig_get_store_obj(iter,1);
-    bs->start();
+    if(bms_sub_info->each_board.size() > 0){
+        auto iter = bms_sub_info->each_board.begin();
+        BatteryStore *bs = new BatteryStore;
+        connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
+        emit sig_get_store_obj(iter,1);
+        bs->start();
+    }
 }
 
 void TkbmWidget::ui_init(void)
@@ -957,7 +960,7 @@ void TkbmWidget::closeEvent(QCloseEvent *event)
 {
     emit sig_set_cthread_state(NULL);
     emit sig_process_exit();
-    monitor_dialog->hide();
+    monitor_dialog.hide();
     if(can_bsp != NULL)
         can_bsp->close();
     QWidget::closeEvent(event);
@@ -967,9 +970,9 @@ void TkbmWidget::on_rb_exp_dis_clicked()
 {
     if(ui->rb_exp_dis->isChecked())
     {
-        monitor_dialog->show();
+        monitor_dialog.show();
     }else{
-        monitor_dialog->hide();
+        monitor_dialog.hide();
     }
 }
 
@@ -1428,14 +1431,14 @@ void BatteryStore::run()
 {
     OleInitialize(NULL);
     int i,j,k=0;
-    int num,col;
+    int num,colct;
     QVector<int> id_table;
     QVector<struct sub_each_board>::iterator iter;
     if(bat_unit.size() == 0)
         return;
     QString bid,sbid;
     QString msg;
-    QString fn = QDate::currentDate().toString("yy_MM_dd") + ".xlsx";
+    QString fn = QDate::currentDate().toString("yy_MM_dd") + ".xls";
     QString fp = QCoreApplication::applicationDirPath() + "/store_file/";
     QString fnp = fp + fn;
     bool fe = QFile::exists(fnp);
@@ -1484,51 +1487,81 @@ void BatteryStore::run()
         for(auto iditer = id_table.begin();iditer != id_table.end();iditer++)
             if(*iditer == iter->bid)
                 k = -1;
+
+        //---------开始记录数据-----------
+        pSheet = pSheets->querySubObject("Item(int)",i+1);
+        QAxObject *usedPage;
+        QAxObject *Rows;
+        int start_row;
+        QAxObject *pCells;
+        QAxObject *pCelle;
+        QAxObject *pRange;
+        QList<QVariant> rowData;
         if(k != -1){         //每次记录电压时先写一次电池标号
-            pSheet = pSheets->querySubObject("Item(int)",i+1);
-            QAxObject *usedPage = pSheet->querySubObject("UsedRange");
-            QAxObject *Rows = usedPage->querySubObject("Rows");
-            int start_row = usedPage->property("Row").toInt();
+            usedPage = pSheet->querySubObject("UsedRange");
+            Rows = usedPage->querySubObject("Rows");
+            start_row = usedPage->property("Row").toInt();
             num = start_row + Rows->property("Count").toInt();      //获取位置
-            col = 0;
+            colct = 0;
             for(j=0;j<iter->modu_num;j++)
-                col += iter->per_chinnal[j];
-            QList<QVariant> rowData;
-            for(j=0;j<col;j++){
-                msg = QString("BAT %1").arg(iter->chinnel_start + i);
-                rowData.push_back(msg);
+                colct += iter->per_chinnal[j];
+            for(j=0;j<colct;j++){
+                msg = QString("BAT %1").arg(iter->chinnel_start + j + 1);
+                rowData.push_back(QVariant(msg));
             }
-            QAxObject *pCells = pSheet->querySubObject("Cells(int,int)",num,2);
-            QAxObject *pCelle = pSheet->querySubObject("Cells(int,int)",num,2+col);
-            QAxObject *pRange = pSheet->querySubObject("Range(QVariant,QVariant)",pCells->asVariant(),pCelle->asVariant());
-            pRange->dynamicCall("SetValue(const QVariant&)",QVariant(rowData));
+            pCells = pSheet->querySubObject("Cells(int,int)",num,2);
+            pCelle = pSheet->querySubObject("Cells(int,int)",num,colct+1);
+            pRange = pSheet->querySubObject("Range(const QVariant&,const QVariant&)",pCells->asVariant(),pCelle->asVariant());
+            QAxObject *pInterior = pRange->querySubObject("Interior");
+            pInterior->setProperty("Color",QColor(255,255,230));
+            pRange->dynamicCall("SetValue (const QVariant&)",QVariant(rowData));
+            pRange->setProperty("HorizontalAlignment",-4108);
             id_table.push_back(iter->bid);
         }
+        //写数据
+        usedPage = pSheet->querySubObject("UsedRange");
+        Rows = usedPage->querySubObject("Rows");
+        start_row = usedPage->property("Row").toInt();
+        num = start_row + Rows->property("Count").toInt();
+        rowData.clear();
+
+        rowData.push_back(QVariant(QDateTime::currentDateTime().toString("hh:mm:ss")));
+        if(iter->modu_num>0){
+            for(j=0;j<iter->per_chinnal[0];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j])));
+            colct = iter->per_chinnal[0];
+        }
+        if(iter->modu_num>1){
+            for(j=0;j<iter->per_chinnal[1];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j+EACH_MODULE_CHINNEL])));
+            colct += iter->per_chinnal[1];
+        }
+        if(iter->modu_num>2){
+            for(j=0;j<iter->per_chinnal[2];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j+EACH_MODULE_CHINNEL*2])));
+            colct += iter->per_chinnal[2];
+        }
+        if(iter->modu_num>3){
+            for(j=0;j<iter->per_chinnal[3];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j+EACH_MODULE_CHINNEL*3])));
+            colct += iter->per_chinnal[3];
+        }
+        pCells = pSheet->querySubObject("Cells(int,int)",num,1);
+        pCelle = pSheet->querySubObject("Cells(int,int)",num,colct+1);
+        pRange = pSheet->querySubObject("Range(const QVariant&,const QVariant&)",pCells->asVariant(),pCelle->asVariant());
+        pRange->dynamicCall("SetValue (const QVariant&)",QVariant(rowData));
+        pRange->setProperty("HorizontalAlignment",-4108);
+        rowData.clear();
+        k=0;
     }
+
     id_table.clear();
-    if(fe == false)
+    if(fe == false){
         pWorkBook->dynamicCall("SaveAs (const QString&)",QDir::toNativeSeparators(fnp));
+    }else{
+        pWorkBook->dynamicCall("Save");
+    }
     pWorkBook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");
     OleUninitialize();
 }
-
-QString BatteryStore::convert_col_to_exc(int pos)
-{
-    int i;
-    QString el = QString("%1").arg(pos,0,26);
-    QString temp,ret = "";
-    char val;
-    QChar qval;
-    bool ok;
-    for(i=0;i<el.size();i++){
-        temp = el.at(i);
-        val = (char)temp.toInt(&ok,26);
-        val += 'A' -1;
-        qval = QChar(val);
-        ret += QString(val);
-    }
-
-    return ret;
-}
-
