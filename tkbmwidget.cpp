@@ -22,6 +22,7 @@
 #include <QVector>
 #include <qt_windows.h>
 #include <QChar>
+#include <QDomDocument>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -41,6 +42,7 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
     this->ui_init();
 
+    this->txt_xml_anasys();
     this->chg_stage_data_init();
     this->data_struct_init();
     this->set_eep_config();
@@ -60,6 +62,18 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     connect(this,&TkbmWidget::sig_process_exit,&monitor_dialog,&QDialog::close);
     connect(&monitor_dialog,&MonitorDialog::sig_send_board_id,this,&TkbmWidget::slot_get_board_id);
     connect(this,&TkbmWidget::sig_sub_unit_outline,&monitor_dialog,&MonitorDialog::slots_unit_outline);
+}
+
+void TkbmWidget::txt_xml_anasys()
+{
+    QString file_path = QApplication::applicationDirPath() + FILE_PATH_ARRTXT;
+    QFile file(file_path);
+    if(file.exists() == true){
+        QString fp = file.fileName();
+    }else{
+        QMessageBox::information(this,"ERROR",QString("缺少配置文件\n[%1]\n无法启动").arg(file.fileName()));
+        this->~TkbmWidget();
+    }
 }
 /***    @breif: 启动时初始化的数据
 */
@@ -155,7 +169,7 @@ void TkbmWidget::comm_timeout()
                 msg_chg_summary[MSG_CHG_SUMMARY_CHG_STAGE].s_val = msg_chg_stage[can_data.data[i].Data[1]];
                 msg_chg_summary[MSG_CHG_SUMMARY_IIME_NEED].s_val = QString("%1").arg(can_data.data[i].Data[2]+can_data.data[i].Data[3]*256);
                 msg_chg_summary[MSG_CHG_SUMMARY_OUT_POW].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256)*0.1);
-                msg_chg_summary[MSG_CHG_SUMMARY_CHG_TIM].s_val = QString("%1").arg(can_data.data[i].Data[6]+can_data.data->Data[7]);
+                msg_chg_summary[MSG_CHG_SUMMARY_CHG_TIM].s_val = QString("%1").arg(can_data.data[i].Data[6]+can_data.data[i].Data[7]*256);
                 break;
             case 8:
                 msg_chg_summary[MSG_CHG_SUMMARY_VOL_MAX].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.1);
@@ -178,7 +192,7 @@ void TkbmWidget::comm_timeout()
 
                 msg = QString("");
                 for(j=0;j<4;j++){
-                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                    if((can_data.data[i].Data[2] >> j) & 0x01)
                         msg += QString("%1:").arg(j) + msg_chg_stop_err[j] + "  ";
                 }
                 if(j==4)    msg = ' ';
@@ -186,7 +200,7 @@ void TkbmWidget::comm_timeout()
 
                 msg = QString("");
                 for(j=0;j<8;j++){
-                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                    if((can_data.data[i].Data[3] >> j) & 0x01)
                         msg += QString("%1:").arg(j) + msg_chg_stop_fat[j] + "  ";
                 }
                 if(j==8)    msg = ' ';
@@ -194,7 +208,7 @@ void TkbmWidget::comm_timeout()
 
                 msg = QString("");
                 for(j=0;j<7;j++){
-                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                    if((can_data.data[i].Data[4] >> j) & 0x01)
                         msg += QString("%1:").arg(j) + msg_bms_rcv_err[j] + "  ";
                 }
                 if(j==7)    msg = ' ';
@@ -202,7 +216,7 @@ void TkbmWidget::comm_timeout()
 
                 msg = QString("");
                 for(j=0;j<8;j++){
-                    if((can_data.data[i].Data[1] >> j) & 0x01)
+                    if((can_data.data[i].Data[5] >> j) & 0x01)
                         msg += QString("%1:").arg(j) + msg_chg_rcv_err[j] + "  ";
                 }
                 if(j==8)    msg = ' ';
@@ -288,8 +302,8 @@ void TkbmWidget::comm_timeout()
             QVector<struct sub_each_board>::iterator iter;
             for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
                 if(iter->bid == can_data.data[i].Data[0]){          //如果存在该id,则按id修改内容
-                    iter->online_count = BMS_UNIT_OUTLINE_CNT;
-                    sub_state_msg_ana(iter,can_data.data[i].Data);
+                    iter->online_count = BMS_UNIT_OUTLINE_CNT;                    
+                    sub_state_msg_ana(iter,can_data.data[i].Data);                    
                     j = -1;
                 }
             }
@@ -299,7 +313,8 @@ void TkbmWidget::comm_timeout()
                 ebd.modu_num = SUB_MODULE_NUM_MAX;
                 ebd.per_chinnal[0] = ebd.per_chinnal[1] = ebd.per_chinnal[2] = ebd.per_chinnal[3] = EACH_MODULE_CHINNEL;
                 sub_state_msg_ana(&ebd,can_data.data[i].Data);
-                int k=0;
+                k=0;
+                //按ID顺序查找，插入Vector
                 for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
                     if(ebd.bid < iter->bid){
                         bms_sub_info->each_board.insert(k,ebd);
@@ -308,8 +323,14 @@ void TkbmWidget::comm_timeout()
                     }
                     k++;
                 }
+                //如果没有找到比当前ID更大的值，则把当前ID放到最后
                 if(j != -1)
                     bms_sub_info->each_board.push_back(ebd);
+                //插入新从板后重新计算起始端口在系统中的位置
+                for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
+                    if(iter != bms_sub_info->each_board.begin())
+                        iter->chinnel_start = (iter-1)->chinnel_start + EACH_MODULE_CHINNEL*4;
+                }
                 bms_sub_info->unit_num++;
             }            
         }    
@@ -792,10 +813,12 @@ void TkbmWidget::data_struct_init()
         msg_bms_run_state_dsc[i].s_val = ' ';
     }
     if(bms_sub_info->each_board.size() > 0){
-        auto iter = bms_sub_info->each_board.begin();
+        QVector<struct sub_each_board> send_data;
+        for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++)
+            send_data.push_back(*iter);
         BatteryStore *bs = new BatteryStore;
         connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
-        emit sig_get_store_obj(iter,1);
+        emit sig_get_store_obj(send_data);
         bs->start();
     }
 }
@@ -1421,12 +1444,23 @@ void TkbmWidget::on_pb_ensure_clicked()
     item->setText("启动发送\0");
 }
 
-void BatteryStore::slot_get_store_obj(struct sub_each_board *unit,unsigned int len)
+void BatteryStore::slot_get_store_obj(QVector<struct sub_each_board> send_data)
 {
-    for(int i=0;i<len;i++)
-       bat_unit.push_back(unit[i]);
+    for(int i=0;i<send_data.size();i++)
+       bat_unit.push_back(send_data.at(i));
 }
-
+/***    @breif: 线程开始处理数据保存
+ *      @attention:
+ *          每次保存数据视作一次新的数据存储过程:
+ *          1.判断文件是否存在，如不存在则创建文件
+ *          2.打开文件
+ *          3.按id查找表单，如果没有此id则创建新表单，并设置表单名为当前id
+ *          4.进入该表单,索引使用行数以便设置数据的起始位置
+ *          5.开始记录数据,每张表单第一次写入先写入一次电池标号
+ *          6.循环写入数据到完成
+ *          7.保存退出
+ *      使用批量写入Excel，但远程调用Excel仍需大量时间
+*/
 void BatteryStore::run()
 {
     OleInitialize(NULL);
@@ -1469,27 +1503,33 @@ void BatteryStore::run()
         pSheet->setProperty("Name",QString("NoUse"));
     }
 
-    num = pSheets->dynamicCall("Count").toInt();
     for(iter = bat_unit.begin();iter != bat_unit.end();iter++){
+        num = pSheets->dynamicCall("Count").toInt();
         sbid = QString("BID%1").arg(iter->bid);
-        for(i=0;i<num;i++){             //查找表格中是否有以 从板ID为表单名的表单
-            pSheet = pSheets->querySubObject("Item(int)",i+1);
+        for(i=1;i<=num;i++){             //查找表格中是否有以 从板ID为表单名的表单
+            pSheet = pSheets->querySubObject("Item(int)",i);
             bid = pSheet->property("Name").toString();
             if(QString::compare(sbid,bid) == 0)
                 break;
         }
-        if(i == num){               //如果没有找到从板ID的表单，则添加1张表单,添加到最后之前
+        if(i > num){               //如果没有找到从板ID的表单，则添加1张表单,添加到最后之前
             pSheet = pSheets->querySubObject("Item(int)",num);
             QAxObject *pNSheet = pSheets->querySubObject("Add(QVariant)",pSheet->asVariant());
-            pSheet->dynamicCall("Move(QVariant)",pNSheet->asVariant());
-            pSheet->setProperty("Name",sbid);
+            pNSheet->setProperty("Name",sbid);
         }
-        for(auto iditer = id_table.begin();iditer != id_table.end();iditer++)
-            if(*iditer == iter->bid)
+        for(auto iditer = id_table.begin();iditer != id_table.end();iditer++){
+            if(*iditer == iter->bid){
                 k = -1;
+                break;
+            }
+        }
 
         //---------开始记录数据-----------
-        pSheet = pSheets->querySubObject("Item(int)",i+1);
+        if(i > num){
+            pSheet = pSheets->querySubObject("Item(int)",num);
+        }else{
+            pSheet = pSheets->querySubObject("item(int)",i);
+        }
         QAxObject *usedPage;
         QAxObject *Rows;
         int start_row;

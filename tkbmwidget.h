@@ -33,6 +33,7 @@ public:
     void tb_eeprom_file_setting(unsigned char *data,int col);
     void eeprom_launch_send(bool state);
     void per_bat_vol_limit_cacul();
+    void txt_xml_anasys(void);
 
     QString anasy_alart_msg(unsigned char data[5]);
     QString main_info_msg(unsigned char data,char pos);
@@ -41,7 +42,7 @@ signals:
     void sig_set_cthread_state(CtlCan *pCan);
     void sig_process_exit(void);
     void sig_sub_unit_outline(void);
-    void sig_get_store_obj(struct sub_each_board *unit,unsigned int len);
+    void sig_get_store_obj(QVector<struct sub_each_board> send_data);
 
 private slots:
     void on_tb_eep_file_cellClicked(int row, int column);
@@ -138,7 +139,7 @@ public:
 
 
 public slots:
-    void slot_get_store_obj(struct sub_each_board *unit,unsigned int len);
+    void slot_get_store_obj(QVector<struct sub_each_board> send_data);
 
 protected:
     void run();

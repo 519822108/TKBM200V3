@@ -218,6 +218,7 @@ Makefile: ..\TM-BM200_monitor.pro D:\Qt\5.7\msvc2013\mkspecs\win32-msvc2013\qmak
 		D:\Qt\5.7\msvc2013\lib\Qt5AxBase.prl \
 		D:\Qt\5.7\msvc2013\lib\Qt5Widgets.prl \
 		D:\Qt\5.7\msvc2013\lib\Qt5Gui.prl \
+		D:\Qt\5.7\msvc2013\lib\Qt5Xml.prl \
 		D:\Qt\5.7\msvc2013\lib\Qt5Core.prl
 	$(QMAKE) -spec win32-msvc2013 "CONFIG+=debug" "CONFIG+=qml_debug" -o Makefile ..\TM-BM200_monitor.pro
 D:\Qt\5.7\msvc2013\mkspecs\features\spec_pre.prf:
@@ -365,6 +366,7 @@ D:\Qt\5.7\msvc2013\lib\Qt5AxContainer.prl:
 D:\Qt\5.7\msvc2013\lib\Qt5AxBase.prl:
 D:\Qt\5.7\msvc2013\lib\Qt5Widgets.prl:
 D:\Qt\5.7\msvc2013\lib\Qt5Gui.prl:
+D:\Qt\5.7\msvc2013\lib\Qt5Xml.prl:
 D:\Qt\5.7\msvc2013\lib\Qt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec win32-msvc2013 "CONFIG+=debug" "CONFIG+=qml_debug" -o Makefile ..\TM-BM200_monitor.pro

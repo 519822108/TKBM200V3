@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <msg_alart_level len=5>
+        <elem0>无报警</elem0>
+        <elem1>一级报警</elem1>
+        <elem2>二级报警</elem2>
+        <elem3>三级报警</elem3>
+        <elem4>NULL</elem4>
+    </msg_alart_level>
+    
+</root>

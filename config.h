@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #define FILE_PATH_CONFIG    "/config/BMS_config.xlsx"
+#define FILE_PATH_ARRTXT    "/config/ctxt.xml"
 #define FILE_CONFIG_COL_START   1               //配置文件数据区列起始坐标
 #define FILE_CONFIG_COL_END     7               //配置文件数据区列终止坐标
 #define FILE_CONFIG_ROW_START   2               //配置文件数据区行起始坐标

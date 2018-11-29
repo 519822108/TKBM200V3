@@ -9,6 +9,7 @@
 #include "../../tkbmwidget.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
+#include <QtCore/QVector>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'tkbmwidget.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
@@ -19,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TkbmWidget_t {
-    QByteArrayData data[40];
-    char stringdata0[615];
+    QByteArrayData data[39];
+    char stringdata0[624];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,44 +38,43 @@ QT_MOC_LITERAL(4, 42, 4), // "pCan"
 QT_MOC_LITERAL(5, 47, 16), // "sig_process_exit"
 QT_MOC_LITERAL(6, 64, 20), // "sig_sub_unit_outline"
 QT_MOC_LITERAL(7, 85, 17), // "sig_get_store_obj"
-QT_MOC_LITERAL(8, 103, 15), // "sub_each_board*"
-QT_MOC_LITERAL(9, 119, 4), // "unit"
-QT_MOC_LITERAL(10, 124, 3), // "len"
-QT_MOC_LITERAL(11, 128, 26), // "on_tb_eep_file_cellClicked"
-QT_MOC_LITERAL(12, 155, 3), // "row"
-QT_MOC_LITERAL(13, 159, 6), // "column"
-QT_MOC_LITERAL(14, 166, 17), // "sig_get_can_param"
-QT_MOC_LITERAL(15, 184, 3), // "dev"
-QT_MOC_LITERAL(16, 188, 3), // "num"
-QT_MOC_LITERAL(17, 192, 4), // "rate"
-QT_MOC_LITERAL(18, 197, 4), // "port"
-QT_MOC_LITERAL(19, 202, 12), // "comm_timeout"
-QT_MOC_LITERAL(20, 215, 21), // "on_rb_exp_dis_clicked"
-QT_MOC_LITERAL(21, 237, 18), // "update_msg_timeout"
-QT_MOC_LITERAL(22, 256, 19), // "update_data_timeout"
-QT_MOC_LITERAL(23, 276, 17), // "slot_get_board_id"
-QT_MOC_LITERAL(24, 294, 3), // "bid"
-QT_MOC_LITERAL(25, 298, 18), // "on_pb_sync_clicked"
-QT_MOC_LITERAL(26, 317, 20), // "on_pb_modify_clicked"
-QT_MOC_LITERAL(27, 338, 32), // "on_tb_ctl_info_cellDoubleClicked"
-QT_MOC_LITERAL(28, 371, 21), // "on_pb_ctl_tch_clicked"
-QT_MOC_LITERAL(29, 393, 23), // "on_pb_ctl_alarm_clicked"
-QT_MOC_LITERAL(30, 417, 27), // "on_le_id_in_editingFinished"
-QT_MOC_LITERAL(31, 445, 19), // "on_pb_after_clicked"
-QT_MOC_LITERAL(32, 465, 20), // "on_pb_before_clicked"
-QT_MOC_LITERAL(33, 486, 25), // "on_pb_mian_into_t_clicked"
-QT_MOC_LITERAL(34, 512, 7), // "checked"
-QT_MOC_LITERAL(35, 520, 22), // "on_pb_eep_read_clicked"
-QT_MOC_LITERAL(36, 543, 5), // "click"
-QT_MOC_LITERAL(37, 549, 22), // "on_pb_out_data_clicked"
-QT_MOC_LITERAL(38, 572, 21), // "on_pb_in_data_clicked"
-QT_MOC_LITERAL(39, 594, 20) // "on_pb_ensure_clicked"
+QT_MOC_LITERAL(8, 103, 23), // "QVector<sub_each_board>"
+QT_MOC_LITERAL(9, 127, 9), // "send_data"
+QT_MOC_LITERAL(10, 137, 26), // "on_tb_eep_file_cellClicked"
+QT_MOC_LITERAL(11, 164, 3), // "row"
+QT_MOC_LITERAL(12, 168, 6), // "column"
+QT_MOC_LITERAL(13, 175, 17), // "sig_get_can_param"
+QT_MOC_LITERAL(14, 193, 3), // "dev"
+QT_MOC_LITERAL(15, 197, 3), // "num"
+QT_MOC_LITERAL(16, 201, 4), // "rate"
+QT_MOC_LITERAL(17, 206, 4), // "port"
+QT_MOC_LITERAL(18, 211, 12), // "comm_timeout"
+QT_MOC_LITERAL(19, 224, 21), // "on_rb_exp_dis_clicked"
+QT_MOC_LITERAL(20, 246, 18), // "update_msg_timeout"
+QT_MOC_LITERAL(21, 265, 19), // "update_data_timeout"
+QT_MOC_LITERAL(22, 285, 17), // "slot_get_board_id"
+QT_MOC_LITERAL(23, 303, 3), // "bid"
+QT_MOC_LITERAL(24, 307, 18), // "on_pb_sync_clicked"
+QT_MOC_LITERAL(25, 326, 20), // "on_pb_modify_clicked"
+QT_MOC_LITERAL(26, 347, 32), // "on_tb_ctl_info_cellDoubleClicked"
+QT_MOC_LITERAL(27, 380, 21), // "on_pb_ctl_tch_clicked"
+QT_MOC_LITERAL(28, 402, 23), // "on_pb_ctl_alarm_clicked"
+QT_MOC_LITERAL(29, 426, 27), // "on_le_id_in_editingFinished"
+QT_MOC_LITERAL(30, 454, 19), // "on_pb_after_clicked"
+QT_MOC_LITERAL(31, 474, 20), // "on_pb_before_clicked"
+QT_MOC_LITERAL(32, 495, 25), // "on_pb_mian_into_t_clicked"
+QT_MOC_LITERAL(33, 521, 7), // "checked"
+QT_MOC_LITERAL(34, 529, 22), // "on_pb_eep_read_clicked"
+QT_MOC_LITERAL(35, 552, 5), // "click"
+QT_MOC_LITERAL(36, 558, 22), // "on_pb_out_data_clicked"
+QT_MOC_LITERAL(37, 581, 21), // "on_pb_in_data_clicked"
+QT_MOC_LITERAL(38, 603, 20) // "on_pb_ensure_clicked"
 
     },
     "TkbmWidget\0sig_set_cthread_state\0\0"
     "CtlCan*\0pCan\0sig_process_exit\0"
     "sig_sub_unit_outline\0sig_get_store_obj\0"
-    "sub_each_board*\0unit\0len\0"
+    "QVector<sub_each_board>\0send_data\0"
     "on_tb_eep_file_cellClicked\0row\0column\0"
     "sig_get_can_param\0dev\0num\0rate\0port\0"
     "comm_timeout\0on_rb_exp_dis_clicked\0"
@@ -109,54 +109,54 @@ static const uint qt_meta_data_TkbmWidget[] = {
        1,    1,  134,    2, 0x06 /* Public */,
        5,    0,  137,    2, 0x06 /* Public */,
        6,    0,  138,    2, 0x06 /* Public */,
-       7,    2,  139,    2, 0x06 /* Public */,
+       7,    1,  139,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      11,    2,  144,    2, 0x08 /* Private */,
-      14,    4,  149,    2, 0x08 /* Private */,
-      19,    0,  158,    2, 0x08 /* Private */,
-      20,    0,  159,    2, 0x08 /* Private */,
-      21,    0,  160,    2, 0x08 /* Private */,
-      22,    0,  161,    2, 0x08 /* Private */,
-      23,    1,  162,    2, 0x08 /* Private */,
-      25,    0,  165,    2, 0x08 /* Private */,
-      26,    0,  166,    2, 0x08 /* Private */,
-      27,    2,  167,    2, 0x08 /* Private */,
-      28,    0,  172,    2, 0x08 /* Private */,
-      29,    0,  173,    2, 0x08 /* Private */,
-      30,    0,  174,    2, 0x08 /* Private */,
-      31,    0,  175,    2, 0x08 /* Private */,
-      32,    0,  176,    2, 0x08 /* Private */,
-      33,    1,  177,    2, 0x08 /* Private */,
-      35,    1,  180,    2, 0x08 /* Private */,
-      37,    0,  183,    2, 0x08 /* Private */,
-      38,    0,  184,    2, 0x08 /* Private */,
-      39,    0,  185,    2, 0x08 /* Private */,
+      10,    2,  142,    2, 0x08 /* Private */,
+      13,    4,  147,    2, 0x08 /* Private */,
+      18,    0,  156,    2, 0x08 /* Private */,
+      19,    0,  157,    2, 0x08 /* Private */,
+      20,    0,  158,    2, 0x08 /* Private */,
+      21,    0,  159,    2, 0x08 /* Private */,
+      22,    1,  160,    2, 0x08 /* Private */,
+      24,    0,  163,    2, 0x08 /* Private */,
+      25,    0,  164,    2, 0x08 /* Private */,
+      26,    2,  165,    2, 0x08 /* Private */,
+      27,    0,  170,    2, 0x08 /* Private */,
+      28,    0,  171,    2, 0x08 /* Private */,
+      29,    0,  172,    2, 0x08 /* Private */,
+      30,    0,  173,    2, 0x08 /* Private */,
+      31,    0,  174,    2, 0x08 /* Private */,
+      32,    1,  175,    2, 0x08 /* Private */,
+      34,    1,  178,    2, 0x08 /* Private */,
+      36,    0,  181,    2, 0x08 /* Private */,
+      37,    0,  182,    2, 0x08 /* Private */,
+      38,    0,  183,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 8, QMetaType::UInt,    9,   10,
+    QMetaType::Void, 0x80000000 | 8,    9,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,   12,   13,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   15,   16,   17,   18,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,   11,   12,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   14,   15,   16,   17,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   24,
+    QMetaType::Void, QMetaType::Int,   23,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,   12,   13,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,   11,   12,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   34,
-    QMetaType::Void, QMetaType::Bool,   36,
+    QMetaType::Void, QMetaType::Bool,   33,
+    QMetaType::Void, QMetaType::Bool,   35,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -173,7 +173,7 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->sig_set_cthread_state((*reinterpret_cast< CtlCan*(*)>(_a[1]))); break;
         case 1: _t->sig_process_exit(); break;
         case 2: _t->sig_sub_unit_outline(); break;
-        case 3: _t->sig_get_store_obj((*reinterpret_cast< sub_each_board*(*)>(_a[1])),(*reinterpret_cast< uint(*)>(_a[2]))); break;
+        case 3: _t->sig_get_store_obj((*reinterpret_cast< QVector<sub_each_board>(*)>(_a[1]))); break;
         case 4: _t->on_tb_eep_file_cellClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 5: _t->sig_get_can_param((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
         case 6: _t->comm_timeout(); break;
@@ -221,7 +221,7 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             }
         }
         {
-            typedef void (TkbmWidget::*_t)(sub_each_board * , unsigned int );
+            typedef void (TkbmWidget::*_t)(QVector<struct sub_each_board> );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&TkbmWidget::sig_get_store_obj)) {
                 *result = 3;
                 return;
@@ -286,9 +286,9 @@ void TkbmWidget::sig_sub_unit_outline()
 }
 
 // SIGNAL 3
-void TkbmWidget::sig_get_store_obj(sub_each_board * _t1, unsigned int _t2)
+void TkbmWidget::sig_get_store_obj(QVector<struct sub_each_board> _t1)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 struct qt_meta_stringdata_RecvCan_t {
@@ -383,8 +383,8 @@ int RecvCan::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     return _id;
 }
 struct qt_meta_stringdata_BatteryStore_t {
-    QByteArrayData data[6];
-    char stringdata0[58];
+    QByteArrayData data[5];
+    char stringdata0[67];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -396,13 +396,12 @@ static const qt_meta_stringdata_BatteryStore_t qt_meta_stringdata_BatteryStore =
 QT_MOC_LITERAL(0, 0, 12), // "BatteryStore"
 QT_MOC_LITERAL(1, 13, 18), // "slot_get_store_obj"
 QT_MOC_LITERAL(2, 32, 0), // ""
-QT_MOC_LITERAL(3, 33, 15), // "sub_each_board*"
-QT_MOC_LITERAL(4, 49, 4), // "unit"
-QT_MOC_LITERAL(5, 54, 3) // "len"
+QT_MOC_LITERAL(3, 33, 23), // "QVector<sub_each_board>"
+QT_MOC_LITERAL(4, 57, 9) // "send_data"
 
     },
     "BatteryStore\0slot_get_store_obj\0\0"
-    "sub_each_board*\0unit\0len"
+    "QVector<sub_each_board>\0send_data"
 };
 #undef QT_MOC_LITERAL
 
@@ -420,10 +419,10 @@ static const uint qt_meta_data_BatteryStore[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    2,   19,    2, 0x0a /* Public */,
+       1,    1,   19,    2, 0x0a /* Public */,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 3, QMetaType::UInt,    4,    5,
+    QMetaType::Void, 0x80000000 | 3,    4,
 
        0        // eod
 };
@@ -434,7 +433,7 @@ void BatteryStore::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         BatteryStore *_t = static_cast<BatteryStore *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->slot_get_store_obj((*reinterpret_cast< sub_each_board*(*)>(_a[1])),(*reinterpret_cast< uint(*)>(_a[2]))); break;
+        case 0: _t->slot_get_store_obj((*reinterpret_cast< QVector<sub_each_board>(*)>(_a[1]))); break;
         default: ;
         }
     }
