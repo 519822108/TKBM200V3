@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <msg_alart_level len=5>
+    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>
+    <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>      
+    
+    <msg_alart_level id="1">
         <elem0>无报警</elem0>
         <elem1>一级报警</elem1>
         <elem2>二级报警</elem2>
         <elem3>三级报警</elem3>
-        <elem4>NULL</elem4>
     </msg_alart_level>
+    <msg_connector_state id="2">
+        <elem0>自检中</elem0>
+        <elem1>接触器吸合</elem1>
+        <elem2>单体过压保护</elem2>
+        <elem3>单体欠压保护</elem3>
+        <elem4>总压过高保护</elem4>
+        <elem5>总压过低保护</elem5>
+        <elem6>电池过温保护</elem6>
+        <elem7>电池低温保护</elem7>
+        <elem8>压差过大保护</elem8>
+        <elem9>温差过大保护</elem9>
+        <elem10>充电过流保护</elem10>
+        <elem11>放电过流保护</elem11>
+        <elem12>绝缘过低保护</elem12>
+        <elem13>从板离线保护</elem13>
+        <elem14>上位机强制闭合</elem14>
+        <elem15>上位机强制断开</elem15>
+    </msg_connector_state>
+    <msg_chg_state id="3">
+        <elem0>放电中</elem0>
+        <elem1>充电枪连接,未充</elem1>
+        <elem2>充电枪连接,充电中</elem2>
+        <elem3>非充电枪,充电中</elem3>
+    </msg_chg_state>
+    <msg_cc2_state id="4">
+        <elem0>未可靠连接</elem0>
+        <elem1>可靠连接</elem1>
+    </msg_cc2_state>
+    <msg_need_mode id="5">
+        <elem0>禁止充电</elem0>
+        <elem1>恒压充电</elem1>
+        <elem2>恒流充电</elem2>
+    </msg_need_mode>
+    <msg_bms_stop_chg id="6">
+        <elem0>达到总压上限</elem0>
+        <elem1>达到单体上限</elem1>
+        <elem2>收到充电机CST</elem2>
+        <elem3>绝缘电阻过低</elem3>
+        <elem4>电池过温</elem4>
+        <elem5>CC2信号异常</elem5>
+        <elem6>电流异常</elem6>
+        <elem7>从板离线</elem7>
+    </msg_bms_stop_chg>
+    <msg_chg_stop_err id="8">
+        <elem0>达到充电设定</elem0>
+        <elem1>人工中止</elem1>
+        <elem2>故障中止</elem2>
+        <elem3>BMS主动中止</elem3>
+    </msg_chg_stop_err>
+    <msg_chg_stop_fat id="9">
+        <elem0>充电机过温</elem0>
+        <elem1>连接器故障</elem1>
+        <elem2>充电机内部过温</elem2>
+        <elem3>电量不能传送</elem3>
+        <elem4>急停故障</elem4>
+        <elem5>电流不能匹配</elem5>
+        <elem6>电压异常</elem6>
+        <elem7>其它故障</elem7>
+    </msg_chg_stop_fat>
+    <msg_state_enable id="10">
+        <elem0>使能</elem0>
+        <elem1>禁止</elem1>
+    </msg_state_enable>
+    <msg_ac_chg_state_a id="11">
+        <elem0>未开始</elem0>
+        <elem1>充电中</elem1>
+        <elem2>接触器断开,充电停止</elem2>
+        <elem3>报警,充电停止</elem3>
+        <elem4>单体达到充电停止条件,充电停止</elem4>
+        <elem5>总压达到充电停止条件,充电停止</elem5>
+        <elem6>接口未可靠连接,充电停止</elem6>
+    </msg_ac_chg_state_a>
+    <msg_ac_chger_out_state id="12">
+        <elem0>未开始</elem0>
+        <elem1>充电中</elem1>
+        <elem2>充电停止</elem2>
+        <elem3>充电停止</elem3>
+        <elem4>充电停止</elem4>
+        <elem5>充电停止</elem5>
+    </msg_ac_chger_out_state>
+    <msg_over_chg_acc_flag id="13">
+        <elem0>未完成</elem0>
+        <elem1>完成</elem1>
+    </msg_over_chg_acc_flag>
+    <msg_cnt_force_ctrol id="14">
+        <elem0>00H:不控制</elem0>
+        <elem1>A0H:强制闭合</elem1>
+        <elem2>A1H:强制断开</elem2>
+    </msg_cnt_force_ctrol>
+    <msg_vcu_can_alarm id="15">
+        <elem0>00H:不控制</elem0>
+        <elem1>A0H:屏蔽报警</elem1>
+    </msg_vcu_can_alarm>
+    <msg_bms_run_state id="16">
+        <elem0>模块A错误</elem0>
+        <elem1>模块B错误</elem1>
+        <elem2>模块C错误</elem2>
+        <elem3>模块D错误</elem3>
+        <elem4>EEPROM错误</elem4>
+        <elem5>reserved</elem5>
+        <elem6>reserved</elem6>
+        <elem7>测试模式</elem7>
+    </msg_bms_run_state>
+    <msg_chg_stage_orgin id="17">
+        <elem0>握手识别阶段1</elem0>
+        <elem1>握手识别阶段2</elem1>
+        <elem2>参数准备阶段1</elem2>
+        <elem3>参数准备阶段2</elem3>
+        <elem4>充电阶段1</elem4>
+        <elem5>充电阶段2</elem5>
+        <elem6>充电结束</elem6>
+    </msg_chg_stage_orgin>
+   
     
 </root>

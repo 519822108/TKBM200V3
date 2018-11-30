@@ -35,6 +35,7 @@
 #define THIS_SOFT_VERSION           "TB-BM200 V3.0"
 
 #define CHG_STAGE_ARRAY_SIZE        50
+#define CHG_STAGE_ARRAY_SIZE_ORG    7
 
 #define SUB_MAIN_MSG1_ID            0x0841F7F4     //主板数据1
 #define SUB_MAIN_MSG2_ID            0x0842F7F4     //主板数据2

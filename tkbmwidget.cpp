@@ -23,6 +23,9 @@
 #include <qt_windows.h>
 #include <QChar>
 #include <QDomDocument>
+#include <QDomElement>
+#include <QDomAttr>
+#include <QDomNodeList>
 
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
@@ -68,12 +71,106 @@ void TkbmWidget::txt_xml_anasys()
 {
     QString file_path = QApplication::applicationDirPath() + FILE_PATH_ARRTXT;
     QFile file(file_path);
+    QString msg;
+    int line,col;
+    int i,j;
+
     if(file.exists() == true){
-        QString fp = file.fileName();
+        file.open(QIODevice::ReadOnly|QFile::Text);
     }else{
         QMessageBox::information(this,"ERROR",QString("缺少配置文件\n[%1]\n无法启动").arg(file.fileName()));
         this->~TkbmWidget();
     }
+    QDomDocument doc;
+    if(doc.setContent(&file,false,&msg,&line,&col) == false){
+        QMessageBox::information(this,"ERROR",QString("打开配置文件失败\n[%1:Line%2Col%3]").arg(msg).arg(line).arg(col));
+        file.close();
+    }
+
+    QDomElement root = doc.documentElement();
+    QDomNodeList dl;
+    //填充报警等级
+    dl = doc.elementsByTagName("msg_alart_level").item(0).childNodes();
+    for (i=0;i<dl.length();i++) {
+        msg_alart_level[i] = dl.item(i).toElement().text();
+    }
+    //填充充电状态
+    dl = doc.elementsByTagName("msg_chg_state").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_chg_state[i] = dl.item(i).toElement().text();
+    }
+    //填充连接器状态
+    dl = doc.elementsByTagName("msg_connector_state").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_connector_state[i] = dl.item(i).toElement().text();
+    }
+    //填充CC2连接状态
+    dl = doc.elementsByTagName("msg_cc2_state").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_cc2_state[i] = dl.item(i).toElement().text();
+    }
+    //填充充电需求
+    dl = doc.elementsByTagName("msg_need_mode").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_need_mode[i] = dl.item(i).toElement().text();
+    }
+    //填充BMS停止充电原因
+    dl = doc.elementsByTagName("msg_bms_stop_chg").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_bms_stop_chg[i] = dl.item(i).toElement().text();
+    }
+    //填充充电机故障
+    dl = doc.elementsByTagName("msg_chg_stop_err").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_chg_stop_err[i] = dl.item(i).toElement().text();
+    }
+    //填充充电停止原因
+    dl = doc.elementsByTagName("msg_chg_stop_fat").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_chg_stop_fat[i] = dl.item(i).toElement().text();
+    }
+    //填充状态
+    dl = doc.elementsByTagName("msg_state_enable").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_state_enable[i] = dl.item(i).toElement().text();
+    }
+    //填充交流充电状态
+    dl = doc.elementsByTagName("msg_ac_chg_state_a").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_ac_chg_state_a[i] = dl.item(i).toElement().text();
+    }
+    //填充交流充电机输出状态
+    dl = doc.elementsByTagName("msg_ac_chger_out_state").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_ac_chger_out_state[i] = dl.item(i).toElement().text();
+    }
+    //填充
+    dl = doc.elementsByTagName("msg_over_chg_acc_flag").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_over_chg_acc_flag[i] = dl.item(i).toElement().text();
+    }
+    //填充解除器强制控制
+    dl = doc.elementsByTagName("msg_cnt_force_ctrol").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_cnt_force_ctrol[i] = dl.item(i).toElement().text();
+    }
+    //填充整车控制器报警控制
+    dl = doc.elementsByTagName("msg_vcu_can_alarm").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_vcu_can_alarm[i] = dl.item(i).toElement().text();
+    }
+    //填充BMS运行状态
+    dl = doc.elementsByTagName("msg_bms_run_state").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_bms_run_state[i] = dl.item(i).toElement().text();
+    }
+    //填充充电阶段
+    dl = doc.elementsByTagName("msg_chg_stage_orgin").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_chg_stage_orgin[i] = dl.item(i).toElement().text();
+    }
+
+    file.close();
 }
 /***    @breif: 启动时初始化的数据
 */
@@ -83,13 +180,13 @@ void TkbmWidget::chg_stage_data_init()
     for(int i=0;i<CHG_STAGE_ARRAY_SIZE;i++){
         msg_chg_stage[i] = ' ';
     }
-    msg_chg_stage[0] = QString("握手识别阶段1");
-    msg_chg_stage[1] = QString("握手识别阶段2");
-    msg_chg_stage[0x10] = QString("参数准备阶段1");
-    msg_chg_stage[0x11] = QString("参数准备阶段2");
-    msg_chg_stage[0x20] = QString("充电阶段1");
-    msg_chg_stage[0x21] = QString("充电阶段2");
-    msg_chg_stage[0x30] = QString("充电结束");
+    msg_chg_stage[0] = msg_chg_stage_orgin[0];
+    msg_chg_stage[1] = msg_chg_stage_orgin[1];
+    msg_chg_stage[0x10] = msg_chg_stage_orgin[2];
+    msg_chg_stage[0x11] = msg_chg_stage_orgin[3];
+    msg_chg_stage[0x20] = msg_chg_stage_orgin[4];
+    msg_chg_stage[0x21] = msg_chg_stage_orgin[5];
+    msg_chg_stage[0x30] = msg_chg_stage_orgin[6];
     item = ui->tb_ctl_info->item(MSG_CNT_FORCE_CTL,0);
     item->setText(msg_cnt_force_ctrol[0]);
     item = ui->tb_ctl_info->item(MSG_VCUCAN_ALM_CTL,0);

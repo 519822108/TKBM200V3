@@ -65,3 +65,5 @@ win32: LIBS += -L$$PWD/build/ -lControlCAN
 
 INCLUDEPATH += $$PWD/build
 DEPENDPATH += $$PWD/build
+
+DISTFILES +=
