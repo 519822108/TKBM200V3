@@ -1,5 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
+#include <QString>
 
 #define FILE_PATH_CONFIG    "/config/BMS_config.xlsx"
 #define FILE_PATH_ARRTXT    "/config/ctxt.xml"
@@ -29,29 +30,35 @@
 #define EEP_TB_RECV                 1
 #define EEP_TB_PREX_LENG            3
 
-#define CAN_RECV_BUFF_LEN_MAX       512         //CAN buff 长度
-#define LIST_WIDGET_MSG_LEN_MAX     256         //辅助列表框报文显示最大行数
+#define CONFIG_USE_FILE_CTXTXML     1           //启用配置文件配置部分参数
 
-#define THIS_SOFT_VERSION           "TB-BM200 V3.0"
+static int VOLTAG_SAVE_TIME   =     20;          //电压数据保存时间间隔    *50ms
+static int VOLTAG_IS_SAVE     =     1;           //是否存储电压数据
+static int IS_DATA_ARRY_CLEAR =     0;           //是否执行数据保存数组清空,不清空则屏幕不闪烁但数据会残留
+
+#define CAN_RECV_BUFF_LEN_MAX   512         //CAN buff 长度
+#define LIST_WIDGET_MSG_LEN_MAX 256        //辅助列表框报文显示最大行数
+
+static QString THIS_SOFT_VERSION = "TB-BM200 V3.0";
 
 #define CHG_STAGE_ARRAY_SIZE        50
 #define CHG_STAGE_ARRAY_SIZE_ORG    7
 
-#define SUB_MAIN_MSG1_ID            0x0841F7F4     //主板数据1
-#define SUB_MAIN_MSG2_ID            0x0842F7F4     //主板数据2
-#define JURYUAN_MSG_ID              0x0851F4A5     //绝缘板数据
+static unsigned int SUB_MAIN_MSG1_ID  =  0x0841F7F4;     //主板数据1
+static unsigned int SUB_MAIN_MSG2_ID  =  0x0842F7F4;     //主板数据2
+static unsigned int JURYUAN_MSG_ID    =  0x0851F4A5;     //绝缘板数据
 
-#define CONG_BOARD_STATE_ID         0x0821F4C0      //从板状态信息
-#define CONG_BOARD_TEMP_ID          0x0822F4C0      //从板温度信息
+static unsigned int CONG_BOARD_STATE_ID = 0x0821F4C0;      //从板状态信息
+static unsigned int CONG_BOARD_TEMP_ID  = 0x0822F4C0;      //从板温度信息
 #define CONG_BOARD_EACH_TEMP        6               //每个从板温度保温带有温度数据数
-#define CONG_BOARD_VOL_ID           0x0823F4C0      //从板电压信息
+static unsigned int CONG_BOARD_VOL_ID   = 0x0823F4C0;      //从板电压信息
 #define CONG_BOARD_EACH_VOL         3               //每个从板电压报文带有的电压数据数
 
 #define CONG_BOARD_LIMIT_VOL_LEN    6               //单体电压最高最低保存长度
 
-#define UPME_SET_MAIN_PARAM_ID      0x0831F4F7      //上位机设置主板参数ID
+static unsigned int UPME_SET_MAIN_PARAM_ID = 0x0831F4F7;      //上位机设置主板参数ID
 
-#define BMS_UNIT_OUTLINE_CNT        100     //从板超时离线计数,5s
+static int BMS_UNIT_OUTLINE_CNT   =   100;     //从板超时离线计数,5s
 #define SUB_MODULE_NUM_MAX          4       //从板最大模块数
 #define EACH_MODULE_CHINNEL         12      //每个模块采集数
 #define TOTAL_MODULE_LENGTH         (SUB_MODULE_NUM_MAX*EACH_MODULE_CHINNEL)        //单板单体电压通道最大数
@@ -149,7 +156,7 @@
 #define HARD_VERSION                2
 #define SERIAL_NUMBER               3
 
-#define EEP_MOD_PASSWD              "1234"        //EEPROM修改密码
+static QString EEP_MOD_PASSWD =  "1234" ;       //EEPROM修改密码
 #define EEP_MOD_TB_POS              3
 
 #endif // CONFIG_H

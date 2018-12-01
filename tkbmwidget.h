@@ -34,6 +34,7 @@ public:
     void eeprom_launch_send(bool state);
     void per_bat_vol_limit_cacul();
     void txt_xml_anasys(void);
+    unsigned int stringid_to_intid(QString qmsg);
 
     QString anasy_alart_msg(unsigned char data[5]);
     QString main_info_msg(unsigned char data,char pos);

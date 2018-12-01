@@ -169,8 +169,41 @@ void TkbmWidget::txt_xml_anasys()
     for(i=0;i<dl.length();i++){
         msg_chg_stage_orgin[i] = dl.item(i).toElement().text();
     }
-
+#if (CONFIG_USE_FILE_CTXTXML)
+    THIS_SOFT_VERSION = doc.elementsByTagName("THIS_SOFT_VERSION").item(0).toElement().text();
+    EEP_MOD_PASSWD = doc.elementsByTagName("EEP_MOD_PASSWD").item(0).toElement().text();
+    VOLTAG_SAVE_TIME = doc.elementsByTagName("VOLTAG_SAVE_TIME").item(0).toElement().text().toInt();
+    VOLTAG_IS_SAVE = doc.elementsByTagName("VOLTAG_IS_SAVE").item(0).toElement().text().toInt();
+    IS_DATA_ARRY_CLEAR = doc.elementsByTagName("IS_DATA_ARRY_CLEAR").item(0).toElement().text().toInt();
+    BMS_UNIT_OUTLINE_CNT = doc.elementsByTagName("BMS_UNIT_OUTLINE_CNT").item(0).toElement().text().toInt();
+    msg = doc.elementsByTagName("SUB_MAIN_MSG1_ID").item(0).toElement().text();
+    SUB_MAIN_MSG1_ID = stringid_to_intid(msg);
+    msg = doc.elementsByTagName("SUB_MAIN_MSG2_ID").item(0).toElement().text();
+    SUB_MAIN_MSG2_ID = stringid_to_intid(msg);
+    msg = doc.elementsByTagName("JURYUAN_MSG_ID").item(0).toElement().text();
+    JURYUAN_MSG_ID = stringid_to_intid(msg);
+    msg = doc.elementsByTagName("CONG_BOARD_STATE_ID").item(0).toElement().text();
+    CONG_BOARD_STATE_ID = stringid_to_intid(msg);
+    msg = doc.elementsByTagName("CONG_BOARD_TEMP_ID").item(0).toElement().text();
+    CONG_BOARD_TEMP_ID = stringid_to_intid(msg);
+    msg = doc.elementsByTagName("CONG_BOARD_VOL_ID").item(0).toElement().text();
+    CONG_BOARD_VOL_ID = stringid_to_intid(msg);
+    msg = doc.elementsByTagName("UPME_SET_MAIN_PARAM_ID").item(0).toElement().text();
+    UPME_SET_MAIN_PARAM_ID = stringid_to_intid(msg);
+#endif
     file.close();
+}
+
+unsigned int TkbmWidget::stringid_to_intid(QString qmsg)
+{
+    bool ok;
+    QString msg = qmsg;
+    if(QString::compare("0x",msg.left(2)) == 0 || QString::compare("0X",msg.left(2)) == 0){
+        msg = msg.mid(2);
+    }
+    if(ok==false)
+        return 0;
+    return (unsigned int)msg.toLong(&ok,16);
 }
 /***    @breif: 启动时初始化的数据
 */
@@ -577,6 +610,17 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
 
 void TkbmWidget::update_data_timeout()
 {
+
+    if((bms_sub_info->each_board.size() > 0) && (VOLTAG_IS_SAVE == 1)){
+        QVector<struct sub_each_board> send_data;
+        for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++)
+            send_data.push_back(*iter);
+        BatteryStore *bs = new BatteryStore;
+        connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
+        emit sig_get_store_obj(send_data);
+        bs->start();
+    }
+    if(IS_DATA_ARRY_CLEAR != 1) return;
     data_struct_init();
 }
 
@@ -908,15 +952,6 @@ void TkbmWidget::data_struct_init()
         msg_bms_run_state_dsc[i].b_color = Qt::white;
         msg_bms_run_state_dsc[i].i_val = 0;
         msg_bms_run_state_dsc[i].s_val = ' ';
-    }
-    if(bms_sub_info->each_board.size() > 0){
-        QVector<struct sub_each_board> send_data;
-        for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++)
-            send_data.push_back(*iter);
-        BatteryStore *bs = new BatteryStore;
-        connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
-        emit sig_get_store_obj(send_data);
-        bs->start();
     }
 }
 

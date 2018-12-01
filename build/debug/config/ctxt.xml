@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>
-    <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>      
+    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->
+    <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>               <!-- EEPROM修改确认码-->
+    <VOLTAG_SAVE_TIME>20</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
+    <VOLTAG_IS_SAVE>1</VOLTAG_IS_SAVE>                  <!--是否对电压进行保存,1保存,0不保存-->
+    <IS_DATA_ARRY_CLEAR>0</IS_DATA_ARRY_CLEAR>          <!--是否对保存数据清零,1清,0不清-->
+    <BMS_UNIT_OUTLINE_CNT>100</BMS_UNIT_OUTLINE_CNT>    <!--从板超时计数,*50ms-->  
     
+    <SUB_MAIN_MSG1_ID>0x0841F7F4</SUB_MAIN_MSG1_ID>     <!--主办数据1--> 
+    <SUB_MAIN_MSG2_ID>0x0842F7F4</SUB_MAIN_MSG2_ID>
+    <JURYUAN_MSG_ID>0x0851F4A5</JURYUAN_MSG_ID> 
+    <CONG_BOARD_STATE_ID>0x0821F4C0</CONG_BOARD_STATE_ID>
+    <CONG_BOARD_TEMP_ID>0x0822F4C0</CONG_BOARD_TEMP_ID>  
+    <CONG_BOARD_VOL_ID>0x0823F4C0</CONG_BOARD_VOL_ID>  
+    <UPME_SET_MAIN_PARAM_ID>0x0831F4F7</UPME_SET_MAIN_PARAM_ID>                                                                                                         
     <msg_alart_level id="1">
         <elem0>无报警</elem0>
         <elem1>一级报警</elem1>
