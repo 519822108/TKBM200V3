@@ -6,6 +6,7 @@
 #include <Qt>
 #include <QVector>
 #include <list>
+#include <QDateTime>
 
 /*  breif: Excel配置数据到县市区的对应关系
  *  s_ :源文件和显示区共有的成员
@@ -52,6 +53,7 @@ struct sub_each_board{                          //从板描述
     unsigned char sn[6];                        //串号
     unsigned char state;                        //运行状态
     unsigned char htick;                        //心跳计数
+    QDateTime       data_time;                  //数据记录时间
     unsigned short disc[SUB_MODULE_NUM_MAX];            //断线信息
     char temp[SUB_TEMPRATURE_NUM_MAX];                  //温度信息
     int reserved;

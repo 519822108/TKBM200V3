@@ -22,8 +22,7 @@ static QString msg_cc2_state[2];// = {QString("未可靠连接\0"),QString("可�
 static const QString msg_global_ver[2] = {QString("27930-2111"),QString("27930-2015")};
 static QString msg_need_mode[4];// = {QString("禁止充电\0"),QString("恒压充电\0"),QString("恒流充电\0"),QString("ERROR")};
 
-static QString msg_chg_stage[CHG_STAGE_ARRAY_SIZE];
-static QString msg_chg_stage_orgin[CHG_STAGE_ARRAY_SIZE_ORG];
+static QString msg_chg_stage[8];
 static QString msg_bms_stop_chg[9];// = {QString("达到总压上限\0"),QString("达到单体上限\0"),QString("受到充电机CST"),QString("绝缘电阻过低\0"),\
                                       QString("电池过温\0"),QString("CC2信号异常\0"),QString("电流异常\0"),QString("从板离线\0"),QString(" ")};
 static QString msg_chg_stop_err[5];// = {QString("达到充电设定\0"),QString("人工中止\0"),QString("故障中止\0"),QString("BMS主动中止\0"),QString(" ")};
@@ -41,6 +40,5 @@ static QString msg_cnt_force_ctrol[3];// = {QString("00H:不控制\0"),QString("
 static QString msg_vcu_can_alarm[2];// = {QString("00H:不控制\0"),QString("A0H:屏蔽报警\0")};
 static QString msg_bms_run_state[8];// = {QString("模块A错误\0"),QString("模块B错误\0"),QString("模块C错误\0"),QString("模块D错误\0"),\
                                             QString("EEPROM错误\0"),QString("reserved"),QString("reserved"),QString("测试模式\0")};
-
-
+static QString param_ac_byte = "参数校验字节\0";
 #endif // STATIC_STRING_H

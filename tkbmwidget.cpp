@@ -31,6 +31,7 @@ struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
 extern QMutex ext_mutex;
 static QMutex mutex;
+static QDateTime mechine_first_launch_time;
 QList<VCI_CAN_OBJ> vec_buff;
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
@@ -165,9 +166,9 @@ void TkbmWidget::txt_xml_anasys()
         msg_bms_run_state[i] = dl.item(i).toElement().text();
     }
     //填充充电阶段
-    dl = doc.elementsByTagName("msg_chg_stage_orgin").item(0).childNodes();
+    dl = doc.elementsByTagName("msg_chg_stage").item(0).childNodes();
     for(i=0;i<dl.length();i++){
-        msg_chg_stage_orgin[i] = dl.item(i).toElement().text();
+        msg_chg_stage[i] = dl.item(i).toElement().text();
     }
 #if (CONFIG_USE_FILE_CTXTXML)
     THIS_SOFT_VERSION = doc.elementsByTagName("THIS_SOFT_VERSION").item(0).toElement().text();
@@ -190,6 +191,8 @@ void TkbmWidget::txt_xml_anasys()
     CONG_BOARD_VOL_ID = stringid_to_intid(msg);
     msg = doc.elementsByTagName("UPME_SET_MAIN_PARAM_ID").item(0).toElement().text();
     UPME_SET_MAIN_PARAM_ID = stringid_to_intid(msg);
+    param_ac_byte = doc.elementsByTagName("param_ac_byte").item(0).toElement().text();
+    voltag_store_file_len_max = doc.elementsByTagName("voltag_store_file_len_max").item(0).toElement().text().toLong();
 #endif
     file.close();
 }
@@ -210,16 +213,6 @@ unsigned int TkbmWidget::stringid_to_intid(QString qmsg)
 void TkbmWidget::chg_stage_data_init()
 {
     QTableWidgetItem *item;
-    for(int i=0;i<CHG_STAGE_ARRAY_SIZE;i++){
-        msg_chg_stage[i] = ' ';
-    }
-    msg_chg_stage[0] = msg_chg_stage_orgin[0];
-    msg_chg_stage[1] = msg_chg_stage_orgin[1];
-    msg_chg_stage[0x10] = msg_chg_stage_orgin[2];
-    msg_chg_stage[0x11] = msg_chg_stage_orgin[3];
-    msg_chg_stage[0x20] = msg_chg_stage_orgin[4];
-    msg_chg_stage[0x21] = msg_chg_stage_orgin[5];
-    msg_chg_stage[0x30] = msg_chg_stage_orgin[6];
     item = ui->tb_ctl_info->item(MSG_CNT_FORCE_CTL,0);
     item->setText(msg_cnt_force_ctrol[0]);
     item = ui->tb_ctl_info->item(MSG_VCUCAN_ALM_CTL,0);
@@ -230,7 +223,12 @@ void TkbmWidget::chg_stage_data_init()
     eeprom_is_send_data = false;
     eeprom_recv_data_flag = false;
     eeprom_read_btn_state = false;
+    eeprom_set_launch_setting = false;
+    mechine_first_launch_time = QDateTime::currentDateTime();
     memset(&eeprom_info,0,sizeof(struct eeprom_data_info_discription));
+
+    item = ui->tb_brief->item(0,0);
+    item->setText(QString("%1").arg(VOLTAG_SAVE_TIME*50));
 
     bms_sub_info = new struct per_battery_info_discription;
     bms_sub_info->cur_id = 0;
@@ -500,12 +498,23 @@ void TkbmWidget::comm_timeout()
                 eeprom_info.recv_finish_flag = true;
             }
             if(can_data.data[i].Data[0] == 0xD0){
-                eeprom_info.send_mark[can_data.data[i].Data[1]] = can_data.data[i].Data[2];
+                eeprom_info.send_mark[can_data.data[i].Data[1]] = 1;
+                if(can_data.data[i].Data[2] == 1){
+                    QTableWidgetItem *item = ui->tb_state->item(0,2);
+                    item->setText("修改成功\0");
+                }
             }
         }
     }
     can_data.len = 0;
     mutex.unlock();
+    if(voltag_store_cnt-- <0){
+        voltag_store_cnt = VOLTAG_SAVE_TIME;
+        for(auto iter = bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
+            iter->data_time = QDateTime::currentDateTime();
+            store_voltag_data.push_back(*iter);
+        }
+    }
     for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
         if(iter->bid == bms_sub_info->cur_id){         //标记超时的从板
             if(iter->online_count != 0)
@@ -521,12 +530,12 @@ void TkbmWidget::comm_timeout()
                 break;
             }
         }
-        if(i==EEPROM_DATA_SEND_MARK){
-            eeprom_recv_data_flag = false;
-            eeprom_launch_send(false);
-            QTableWidgetItem *item = ui->tb_state->item(0,2);
-            item->setText("发送完成\0");
-        }
+//        if(i==EEPROM_DATA_SEND_MARK){
+//            eeprom_recv_data_flag = false;
+//            eeprom_launch_send(false);
+//            QTableWidgetItem *item = ui->tb_state->item(0,2);
+//            item->setText("发送完成\0");
+//        }
     }
     per_bat_vol_limit_cacul();
 }
@@ -611,13 +620,11 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
 void TkbmWidget::update_data_timeout()
 {
 
-    if((bms_sub_info->each_board.size() > 0) && (VOLTAG_IS_SAVE == 1)){
-        QVector<struct sub_each_board> send_data;
-        for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++)
-            send_data.push_back(*iter);
+    if((store_voltag_data.size() > 0) && (VOLTAG_IS_SAVE == 1)){
         BatteryStore *bs = new BatteryStore;
         connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
-        emit sig_get_store_obj(send_data);
+        emit sig_get_store_obj(store_voltag_data);
+        store_voltag_data.clear();
         bs->start();
     }
     if(IS_DATA_ARRY_CLEAR != 1) return;
@@ -818,7 +825,7 @@ void TkbmWidget::update_msg_timeout()
             }
         }
     }
-    if(eeprom_info.recv_finish_flag == true){        //分析EEPROM数据
+    if(eeprom_info.recv_finish_flag == true){        //分析EEPROM数据        
         tb_eeprom_file_setting(eeprom_info.eeprom,EEP_TB_RECV);
     }
     if(limit_vol_info.max.isEmpty() == false){          //更新单体最高最低
@@ -851,6 +858,7 @@ void TkbmWidget::tb_eeprom_file_setting(unsigned char *data,int col)
     QTableWidgetItem *item,*item1,*item2;
     item_count = ui->tb_eep_file->rowCount();
     eep_config.pos = 0;
+    eeprom_set_launch_setting = false;
     for(i=0;i<item_count;i++){
         iparam = 0;
         for(j=0;j<eep_config.param[i].o_byte_len;j++)
@@ -874,12 +882,7 @@ void TkbmWidget::tb_eeprom_file_setting(unsigned char *data,int col)
         }
         item->setText(msg);
     }
-    item1 = ui->tb_state->item(0,0);
-    if(col == EEP_TB_RECV){
-        item1->setText(QString("EEPROM 数据\0"));
-    }else if(col == EEP_TB_FILE){
-        item1->setText(file_path);
-    }else{}
+    eeprom_set_launch_setting = true;
 }
 
 void TkbmWidget::slot_get_board_id(int bid)
@@ -1052,6 +1055,8 @@ void TkbmWidget::read_excel_data()
         cell_val = pCell->property("Value");
         val = cell_val.toString();
         eep_config.param[eep_config.len].s_name = val;
+        if(QString::compare(val,param_ac_byte) == 0)
+            epprom_set_ac_pos = eep_config.len;
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_LEN);     //获取数据长度
         cell_val = pCell->property("Value");
@@ -1076,6 +1081,7 @@ void TkbmWidget::read_excel_data()
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NOTE);     //获取参数注释
         cell_val = pCell->property("Value");
         val = cell_val.toString();
+        val += QString("\n\n比例:%1,偏移:%2").arg(eep_config.param[eep_config.len].o_rate).arg(eep_config.param[eep_config.len].o_off);
         eep_config.param[eep_config.len].s_note = val;
 
         eep_config.len++;
@@ -1104,6 +1110,7 @@ TkbmWidget::~TkbmWidget()
         delete can_bsp;
     delete bms_sub_info;
     delete ui;
+    QThread::sleep(2);
 }
 
 void TkbmWidget::on_tb_eep_file_cellClicked(int row, int column)
@@ -1396,6 +1403,8 @@ void TkbmWidget::on_pb_mian_into_t_clicked(bool checked)
 void TkbmWidget::on_pb_eep_read_clicked(bool click)
 {
     eeprom_read_btn_state = !eeprom_read_btn_state;
+    QTableWidgetItem *item1 = ui->tb_state->item(0,0);
+    item1->setText(QString("EEPROM 数据\0"));
     eeprom_launch_send(eeprom_read_btn_state);
 }
 
@@ -1511,6 +1520,8 @@ void TkbmWidget::on_pb_in_data_clicked()
 
     pWorkbook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");
+    QTableWidgetItem *item1 = ui->tb_state->item(0,0);
+    item1->setText(file_path);
     if(ok == true)
         tb_eeprom_file_setting(eeprom_info.eepcfg,EEP_TB_FILE);
 }
@@ -1518,13 +1529,8 @@ void TkbmWidget::on_pb_in_data_clicked()
 void TkbmWidget::on_pb_ensure_clicked()
 {
     QTableWidgetItem *item;
+    int i;
     QString msg;
-    int i,j,k=0;
-    int temp;
-    unsigned int utmp;
-    double dtmp;
-    bool ok;
-    int row_count = ui->tb_eep_file->rowCount();
     item = ui->tb_state->item(0,EEP_MOD_TB_POS);
     msg = item->text();
     if(QString::compare(msg,QString(EEP_MOD_PASSWD)) != 0){
@@ -1533,32 +1539,7 @@ void TkbmWidget::on_pb_ensure_clicked()
         return;
     }
     item->setText("");
-    for(i=0;i<row_count;i++){
-        item = ui->tb_eep_file->item(i,EEP_TB_FILE);
-        msg = item->text();
-        if(msg.isEmpty() || msg.isNull()){
-            QMessageBox::information(this,"ERROR",QString("不接收空参数 [row: %1]").arg(i));
-            return;
-        }
-        msg = msg.mid(EEP_TB_PREX_LENG);
-        if(eep_config.param[i].o_dis_format == 10){
-            dtmp = msg.toDouble(&ok);
-            utmp = (unsigned int)(dtmp - eep_config.param[i].o_off) / eep_config.param[i].o_rate;
-        }else{
-            temp = msg.toInt(&ok,eep_config.param[i].o_dis_format);
-            utmp = (unsigned int)(temp - eep_config.param[i].o_off) / eep_config.param[i].o_rate;
-        }
-        if(ok == false){
-            QMessageBox::information(this,"ERROR",QString("转换失败 [row: %1]").arg(i));
-            return;
-        }
-        for(j=0;j<eep_config.param[i].o_byte_len;j++){
-            eeprom_info.eepcfg_cp[k] = (utmp >> (8*j)) & 0xFF;
-            k++;
-            if(k > EEPROM_DATA_LENGTH)
-                break;
-        }
-    }
+    eeprom_after_modify();
     for(i=0;i<EEPROM_DATA_SEND_MARK;i++)
         eeprom_info.send_mark[i] = 0;
     for(i=0;i<EEPROM_DATA_SEND_MARK;i++){
@@ -1576,10 +1557,61 @@ void TkbmWidget::on_pb_ensure_clicked()
     item->setText("启动发送\0");
 }
 
+unsigned char TkbmWidget::eeprom_after_modify()
+{
+    QTableWidgetItem *item;
+    QString msg;
+    int i,j,k=0;
+    int temp;
+    unsigned int utmp;
+    double dtmp;
+    bool ok;
+    int row_count = ui->tb_eep_file->rowCount();
+
+    for(i=0;i<row_count;i++){
+        item = ui->tb_eep_file->item(i,EEP_TB_FILE);
+        msg = item->text();
+        if(msg.isEmpty() || msg.isNull()){
+            QMessageBox::information(this,"ERROR",QString("不接收空参数 [row: %1]").arg(i));
+            return 0;
+        }
+        temp = msg.lastIndexOf(' ');
+        msg = msg.mid(temp+1);
+        if(eep_config.param[i].o_dis_format == 10){
+            dtmp = msg.toDouble(&ok);
+            dtmp -= (double)eep_config.param[i].o_off;
+            temp = (int)(1.0 / eep_config.param[i].o_rate);
+            utmp = (unsigned int)(dtmp * temp);
+        }else{
+            temp = msg.toInt(&ok,eep_config.param[i].o_dis_format);
+            utmp = (unsigned int)((temp - eep_config.param[i].o_off) / eep_config.param[i].o_rate);
+        }
+        if(ok == false){
+            QMessageBox::information(this,"ERROR",QString("转换失败 [row: %1]").arg(i));
+            return 0;
+        }
+        for(j=0;j<eep_config.param[i].o_byte_len;j++){
+            eeprom_info.eepcfg_cp[k] = (utmp >> (8*j)) & 0xFF;
+            k++;
+            if(k > EEPROM_DATA_LENGTH)
+                break;
+        }
+    }
+    temp = 0;
+    for(j=0;j<EEPROM_DATA_DATLENG;j++){
+        temp += eeprom_info.eepcfg_cp[j];
+        if(eeprom_info.eepcfg_cp[j] != eeprom_info.eeprom[j])
+            std::cout<<"byte:"<<j<<"eeprom:"<<QString("%1").arg(eeprom_info.eeprom[j]).toStdString()<<"eeprom_cp:"<<QString("%1").arg(eeprom_info.eepcfg_cp[j]).toStdString()<<std::endl;
+    }
+    eeprom_info.eepcfg_cp[EEPROM_DATA_DATLENG] = (unsigned char)temp&0xff;
+    return temp;
+}
+
 void BatteryStore::slot_get_store_obj(QVector<struct sub_each_board> send_data)
 {
-    for(int i=0;i<send_data.size();i++)
-       bat_unit.push_back(send_data.at(i));
+    for(int i=0;i<send_data.size();i++){
+       bat_unit.push_back(send_data.at(i));   
+    }
 }
 /***    @breif: 线程开始处理数据保存
  *      @attention:
@@ -1604,9 +1636,10 @@ void BatteryStore::run()
         return;
     QString bid,sbid;
     QString msg;
-    QString fn = QDate::currentDate().toString("yy_MM_dd") + ".xls";
+    QString fn = mechine_first_launch_time.toString("yy_MM_dd#hh_mm_ss") + ".xls";
     QString fp = QCoreApplication::applicationDirPath() + "/store_file/";
     QString fnp = fp + fn;
+    QDateTime d_time;
     bool fe = QFile::exists(fnp);
     QDir dir(fp);
     if(dir.exists() == false)
@@ -1697,7 +1730,9 @@ void BatteryStore::run()
         num = start_row + Rows->property("Count").toInt();
         rowData.clear();
 
-        rowData.push_back(QVariant(QDateTime::currentDateTime().toString("hh:mm:ss")));
+
+        rowData.push_back(QVariant(iter->data_time.toString("hh:mm:ss")));
+
         if(iter->modu_num>0){
             for(j=0;j<iter->per_chinnal[0];j++)
                 rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j])));
@@ -1732,8 +1767,32 @@ void BatteryStore::run()
         pWorkBook->dynamicCall("SaveAs (const QString&)",QDir::toNativeSeparators(fnp));
     }else{
         pWorkBook->dynamicCall("Save");
+        QFile file(fnp);
+        file.open(QIODevice::ReadOnly);
+        if(file.size() > (voltag_store_file_len_max*MBYTE_TO_BYTE))
+            mechine_first_launch_time = QDateTime::currentDateTime();
+        file.close();
     }
     pWorkBook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");
     OleUninitialize();
+}
+
+void TkbmWidget::on_tb_eep_file_itemChanged(QTableWidgetItem *item)
+{
+    unsigned char temp;
+    QString msg;
+    QTableWidgetItem *itemo;
+    if(item->column() == EEP_TB_FILE && eeprom_set_launch_setting == true){
+        itemo = ui->tb_eep_file->item(epprom_set_ac_pos,EEP_TB_FILE);
+        temp = eeprom_after_modify();
+        msg = QString("H: %1").arg(temp,2,16,QLatin1Char('0')).toUpper();
+        itemo->setText(msg);
+    }
+}
+
+
+void TkbmWidget::on_tb_brief_itemChanged(QTableWidgetItem *item)
+{
+
 }

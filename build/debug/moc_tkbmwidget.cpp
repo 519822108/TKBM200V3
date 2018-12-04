@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TkbmWidget_t {
-    QByteArrayData data[39];
-    char stringdata0[624];
+    QByteArrayData data[43];
+    char stringdata0[698];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -68,7 +68,11 @@ QT_MOC_LITERAL(34, 529, 22), // "on_pb_eep_read_clicked"
 QT_MOC_LITERAL(35, 552, 5), // "click"
 QT_MOC_LITERAL(36, 558, 22), // "on_pb_out_data_clicked"
 QT_MOC_LITERAL(37, 581, 21), // "on_pb_in_data_clicked"
-QT_MOC_LITERAL(38, 603, 20) // "on_pb_ensure_clicked"
+QT_MOC_LITERAL(38, 603, 20), // "on_pb_ensure_clicked"
+QT_MOC_LITERAL(39, 624, 26), // "on_tb_eep_file_itemChanged"
+QT_MOC_LITERAL(40, 651, 17), // "QTableWidgetItem*"
+QT_MOC_LITERAL(41, 669, 4), // "item"
+QT_MOC_LITERAL(42, 674, 23) // "on_tb_brief_itemChanged"
 
     },
     "TkbmWidget\0sig_set_cthread_state\0\0"
@@ -88,7 +92,8 @@ QT_MOC_LITERAL(38, 603, 20) // "on_pb_ensure_clicked"
     "on_pb_mian_into_t_clicked\0checked\0"
     "on_pb_eep_read_clicked\0click\0"
     "on_pb_out_data_clicked\0on_pb_in_data_clicked\0"
-    "on_pb_ensure_clicked"
+    "on_pb_ensure_clicked\0on_tb_eep_file_itemChanged\0"
+    "QTableWidgetItem*\0item\0on_tb_brief_itemChanged"
 };
 #undef QT_MOC_LITERAL
 
@@ -98,7 +103,7 @@ static const uint qt_meta_data_TkbmWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      26,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -106,32 +111,34 @@ static const uint qt_meta_data_TkbmWidget[] = {
        4,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  134,    2, 0x06 /* Public */,
-       5,    0,  137,    2, 0x06 /* Public */,
-       6,    0,  138,    2, 0x06 /* Public */,
-       7,    1,  139,    2, 0x06 /* Public */,
+       1,    1,  144,    2, 0x06 /* Public */,
+       5,    0,  147,    2, 0x06 /* Public */,
+       6,    0,  148,    2, 0x06 /* Public */,
+       7,    1,  149,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      10,    2,  142,    2, 0x08 /* Private */,
-      13,    4,  147,    2, 0x08 /* Private */,
-      18,    0,  156,    2, 0x08 /* Private */,
-      19,    0,  157,    2, 0x08 /* Private */,
-      20,    0,  158,    2, 0x08 /* Private */,
-      21,    0,  159,    2, 0x08 /* Private */,
-      22,    1,  160,    2, 0x08 /* Private */,
-      24,    0,  163,    2, 0x08 /* Private */,
-      25,    0,  164,    2, 0x08 /* Private */,
-      26,    2,  165,    2, 0x08 /* Private */,
-      27,    0,  170,    2, 0x08 /* Private */,
-      28,    0,  171,    2, 0x08 /* Private */,
-      29,    0,  172,    2, 0x08 /* Private */,
-      30,    0,  173,    2, 0x08 /* Private */,
-      31,    0,  174,    2, 0x08 /* Private */,
-      32,    1,  175,    2, 0x08 /* Private */,
-      34,    1,  178,    2, 0x08 /* Private */,
-      36,    0,  181,    2, 0x08 /* Private */,
-      37,    0,  182,    2, 0x08 /* Private */,
-      38,    0,  183,    2, 0x08 /* Private */,
+      10,    2,  152,    2, 0x08 /* Private */,
+      13,    4,  157,    2, 0x08 /* Private */,
+      18,    0,  166,    2, 0x08 /* Private */,
+      19,    0,  167,    2, 0x08 /* Private */,
+      20,    0,  168,    2, 0x08 /* Private */,
+      21,    0,  169,    2, 0x08 /* Private */,
+      22,    1,  170,    2, 0x08 /* Private */,
+      24,    0,  173,    2, 0x08 /* Private */,
+      25,    0,  174,    2, 0x08 /* Private */,
+      26,    2,  175,    2, 0x08 /* Private */,
+      27,    0,  180,    2, 0x08 /* Private */,
+      28,    0,  181,    2, 0x08 /* Private */,
+      29,    0,  182,    2, 0x08 /* Private */,
+      30,    0,  183,    2, 0x08 /* Private */,
+      31,    0,  184,    2, 0x08 /* Private */,
+      32,    1,  185,    2, 0x08 /* Private */,
+      34,    1,  188,    2, 0x08 /* Private */,
+      36,    0,  191,    2, 0x08 /* Private */,
+      37,    0,  192,    2, 0x08 /* Private */,
+      38,    0,  193,    2, 0x08 /* Private */,
+      39,    1,  194,    2, 0x08 /* Private */,
+      42,    1,  197,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -160,6 +167,8 @@ static const uint qt_meta_data_TkbmWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 40,   41,
+    QMetaType::Void, 0x80000000 | 40,   41,
 
        0        // eod
 };
@@ -194,6 +203,8 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 21: _t->on_pb_out_data_clicked(); break;
         case 22: _t->on_pb_in_data_clicked(); break;
         case 23: _t->on_pb_ensure_clicked(); break;
+        case 24: _t->on_tb_eep_file_itemChanged((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
+        case 25: _t->on_tb_brief_itemChanged((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -255,13 +266,13 @@ int TkbmWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 24)
+        if (_id < 26)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 24;
+        _id -= 26;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 24)
+        if (_id < 26)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 24;
+        _id -= 26;
     }
     return _id;
 }

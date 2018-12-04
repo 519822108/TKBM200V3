@@ -23,6 +23,7 @@
 #define EEPROM_DATA_RECV_MARK       46         //eeprom数据报文桢数
 #define EEPROM_DATA_SEND_MARK       38          //eeprom数据发送帧数
 #define EEPROM_DATA_LENGTH          266         //EEPROM数据长度
+#define EEPROM_DATA_DATLENG         (EEPROM_DATA_LENGTH-1)
 #define EEP_XLS_COL_LENGTH          16
 #define EEPROM_DATA_EXCEL_ROW_S     2
 #define EEPROM_DATA_EXCEL_COL_S     2
@@ -59,6 +60,8 @@ static unsigned int CONG_BOARD_VOL_ID   = 0x0823F4C0;      //从板电压信息
 static unsigned int UPME_SET_MAIN_PARAM_ID = 0x0831F4F7;      //上位机设置主板参数ID
 
 static int BMS_UNIT_OUTLINE_CNT   =   100;     //从板超时离线计数,5s
+static long voltag_store_file_len_max = 10;      //电压数据保存文件最大字节数 *1Mbyte
+#define MBYTE_TO_BYTE               1048576     //1Mbyte 转字节
 #define SUB_MODULE_NUM_MAX          4       //从板最大模块数
 #define EACH_MODULE_CHINNEL         12      //每个模块采集数
 #define TOTAL_MODULE_LENGTH         (SUB_MODULE_NUM_MAX*EACH_MODULE_CHINNEL)        //单板单体电压通道最大数

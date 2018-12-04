@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QList>
 #include <QMutex>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class TkbmWidget;
@@ -35,6 +36,7 @@ public:
     void per_bat_vol_limit_cacul();
     void txt_xml_anasys(void);
     unsigned int stringid_to_intid(QString qmsg);
+    unsigned char eeprom_after_modify(void);
 
     QString anasy_alart_msg(unsigned char data[5]);
     QString main_info_msg(unsigned char data,char pos);
@@ -80,6 +82,10 @@ private slots:
 
     void on_pb_ensure_clicked();
 
+    void on_tb_eep_file_itemChanged(QTableWidgetItem *item);
+
+    void on_tb_brief_itemChanged(QTableWidgetItem *item);
+
 private:
     Ui::TkbmWidget *ui;
     LoginDialog login_dialog;
@@ -94,8 +100,12 @@ private:
     bool eeprom_is_send_data;                           //下位机是否发送EEPROM数据
     bool eeprom_recv_data_flag;                          //下位机开始接受EEPROM数据
     bool eeprom_read_btn_state;                         //eeprom读取按钮状态
+    bool eeprom_set_launch_setting;                     //EEPROM显示列表是否首次写入
+    int epprom_set_ac_pos;                              //校验字节的位置
+    int voltag_store_cnt;                               //电压保存时间计数
     QString file_path;
     VCI_CAN_OBJ eeprom_send_array[EEPROM_DATA_SEND_MARK];
+    QVector<struct sub_each_board> store_voltag_data;
 
     struct excel_param_organize_ext eep_config;
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构

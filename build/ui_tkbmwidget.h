@@ -1865,7 +1865,6 @@ public:
         QTableWidgetItem *__qtablewidgetitem467 = new QTableWidgetItem();
         tb_brief->setVerticalHeaderItem(6, __qtablewidgetitem467);
         QTableWidgetItem *__qtablewidgetitem468 = new QTableWidgetItem();
-        __qtablewidgetitem468->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         tb_brief->setItem(0, 0, __qtablewidgetitem468);
         QTableWidgetItem *__qtablewidgetitem469 = new QTableWidgetItem();
         __qtablewidgetitem469->setFlags(Qt::ItemIsDragEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
@@ -2065,7 +2064,7 @@ public:
 
         retranslateUi(TkbmWidget);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(TkbmWidget);
