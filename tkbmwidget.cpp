@@ -3,7 +3,6 @@
 #include "iostream"
 #include <string.h>
 #include <QDesktopWidget>
-#include <QAxObject>
 #include <QFile>
 #include <QMessageBox>
 #include <QTableWidget>
@@ -193,6 +192,9 @@ void TkbmWidget::txt_xml_anasys()
     UPME_SET_MAIN_PARAM_ID = stringid_to_intid(msg);
     param_ac_byte = doc.elementsByTagName("param_ac_byte").item(0).toElement().text();
     voltag_store_file_len_max = doc.elementsByTagName("voltag_store_file_len_max").item(0).toElement().text().toLong();
+    VOLTAG_SAVE_MODE = doc.elementsByTagName("VOLTAG_SAVE_MODE").item(0).toElement().text().toInt();
+    BMS_BAT_COUNT_IN_EXCEL = doc.elementsByTagName("BMS_BAT_COUNT_IN_EXCEL").item(0).toElement().text().toInt();
+    EXCEL_FILENAME_FORMAT = doc.elementsByTagName("EXCEL_FILENAME_FORMAT").item(0).toElement().text().toInt();
 #endif
     file.close();
 }
@@ -1628,15 +1630,23 @@ void BatteryStore::slot_get_store_obj(QVector<struct sub_each_board> send_data)
 void BatteryStore::run()
 {
     OleInitialize(NULL);
-    int i,j,k=0;
-    int num,colct;
-    QVector<int> id_table;
-    QVector<struct sub_each_board>::iterator iter;
+    int i;
+    int num;
+
     if(bat_unit.size() == 0)
         return;
-    QString bid,sbid;
+
     QString msg;
-    QString fn = mechine_first_launch_time.toString("yy_MM_dd#hh_mm_ss") + ".xls";
+    if(EXCEL_FILENAME_FORMAT == 0){
+        msg = QString("yy_MM_dd");
+    }else if(EXCEL_FILENAME_FORMAT == 1){
+        msg = QString("yy_MM_dd#hh");
+    }else if(EXCEL_FILENAME_FORMAT == 2){
+        msg = QString("yy_MM_dd#hh_mm");
+    }else{
+        msg = QString("yy_MM_dd#hh_mm_ss");
+    }
+    QString fn = mechine_first_launch_time.toString(msg) + ".xls";
     QString fp = QCoreApplication::applicationDirPath() + "/store_file/";
     QString fnp = fp + fn;
     QDateTime d_time;
@@ -1665,8 +1675,119 @@ void BatteryStore::run()
             pSheet->dynamicCall("Delete");
         }
         pSheet = pSheets->querySubObject("Item(int)",1);
-        pSheet->setProperty("Name",QString("NoUse"));
+        pSheet->setProperty("Name",QString(BREIF_INFO_FIGURE_NAME));
     }
+
+    if(VOLTAG_SAVE_MODE == 0){
+        save_voltag_use_id(pSheets);
+    }else{
+        save_voltag_as_one(pSheets);
+    }
+    save_breif_info(pSheets);
+
+    if(fe == false){
+        pWorkBook->dynamicCall("SaveAs (const QString&)",QDir::toNativeSeparators(fnp));
+    }else{
+        pWorkBook->dynamicCall("Save");
+        QFile file(fnp);
+        file.open(QIODevice::ReadOnly);
+        if(file.size() > (voltag_store_file_len_max*MBYTE_TO_BYTE))
+            mechine_first_launch_time = QDateTime::currentDateTime();
+        file.close();
+    }
+    pWorkBook->dynamicCall("Close()");
+    excel.dynamicCall("Quit(void)");
+    OleUninitialize();
+}
+
+void BatteryStore::save_voltag_as_one(QAxObject *pSheets)
+{
+    int num,len;
+    int i,j;
+    QString bid,sbid = QString(SAVE_AS_ONE_DATA_NAME);
+    QAxObject *pSheet;
+    QAxObject *pUsePage;
+    QList<QVariant> rowData;
+    QString msg;
+
+    num = pSheets->dynamicCall("Count").toInt();
+    for(i=1;i<=num;i++){             //查找表格中是否有以 SAVE_AS_ONE_DATA_NAME 为表单名的表单
+        pSheet = pSheets->querySubObject("Item(int)",i);
+        bid = pSheet->property("Name").toString();
+        if(QString::compare(sbid,bid) == 0)
+            break;
+    }
+    if(i > num){               //如果没有找到表单，则添加1张表单,添加到最后之前
+        pSheet = pSheets->querySubObject("Item(int)",num);
+        QAxObject *pNSheet = pSheets->querySubObject("Add(QVariant)",pSheet->asVariant());
+        pNSheet->setProperty("Name",sbid);
+        for(i=0;i<BMS_BAT_COUNT_IN_EXCEL;i++){
+            rowData.push_back(QVariant(QString("BAT %1").arg(i+1)));
+        }
+        QAxObject *pCells = pNSheet->querySubObject("Cells(int,int)",1,2);
+        QAxObject *pCelle = pNSheet->querySubObject("Cells(int,int)",1,1+BMS_BAT_COUNT_IN_EXCEL);
+        QAxObject *pRange = pNSheet->querySubObject("Range(QVariant,QVariant)",pCells->asVariant(),pCelle->asVariant());
+        QAxObject *pInterior = pRange->querySubObject("Interior");
+        pInterior->setProperty("Color",QColor(255,255,230));
+        pRange->dynamicCall("SetValue (const QVariant&)",QVariant(rowData));
+        pRange->setProperty("HorizontalAlignment",-4108);
+    }
+
+    if(i > num){
+        pSheet = pSheets->querySubObject("Item(int)",num);
+    }else{
+        pSheet = pSheets->querySubObject("item(int)",i);
+    }
+    for(auto iter=bat_unit.begin();iter!=bat_unit.end();iter++){
+        rowData.clear();
+        if(iter->chinnel_start == 0){
+            rowData.push_back(QVariant(iter->data_time.toString("hh:mm:ss")));
+        }
+        pUsePage = pSheet->querySubObject("UsedRange");
+        QAxObject *col = pUsePage->querySubObject("Columns(int)",iter->chinnel_start+1);
+        QAxObject *srow = col->querySubObject("Rows");
+        num = srow->property("Count").toInt();
+        len = 0;
+        for(i=0;i<iter->modu_num;i++)
+            len += iter->per_chinnal[i];
+        QAxObject *pCells = pSheet->querySubObject("Cells(int,int)",num+1,iter->chinnel_start+1);
+        QAxObject *pCelle = pSheet->querySubObject("Cells(int,int)",num+1,iter->chinnel_start+len+1);
+        QAxObject *pRange = pSheet->querySubObject("Range(QVariant,QVariant)",pCells->asVariant(),pCelle->asVariant());
+        if(iter->modu_num>0){
+            for(j=0;j<iter->per_chinnal[0];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j])));
+        }
+        if(iter->modu_num>1){
+            for(j=0;j<iter->per_chinnal[1];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j+EACH_MODULE_CHINNEL])));
+        }
+        if(iter->modu_num>2){
+            for(j=0;j<iter->per_chinnal[2];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j+EACH_MODULE_CHINNEL*2])));
+        }
+        if(iter->modu_num>3){
+            for(j=0;j<iter->per_chinnal[3];j++)
+                rowData.push_back(QVariant(QString("%1").arg(iter->each_volt[j+EACH_MODULE_CHINNEL*3])));
+        }
+        pRange->dynamicCall("SetValue (const QVariant&)",QVariant(rowData));
+        pRange->setProperty("HorizontalAlignment",-4108);
+    }
+}
+
+void BatteryStore::save_breif_info(QAxObject *pSheets)
+{
+
+}
+
+void BatteryStore::save_voltag_use_id(QAxObject *pSheets)
+{
+    QVector<int> id_table;
+    QVector<struct sub_each_board>::iterator iter;
+    int num,colct;
+    QString bid,sbid;
+    int i,j,k=0;
+    QAxObject *pSheet;
+    QString msg;
 
     for(iter = bat_unit.begin();iter != bat_unit.end();iter++){
         num = pSheets->dynamicCall("Count").toInt();
@@ -1682,7 +1803,7 @@ void BatteryStore::run()
             QAxObject *pNSheet = pSheets->querySubObject("Add(QVariant)",pSheet->asVariant());
             pNSheet->setProperty("Name",sbid);
         }
-        for(auto iditer = id_table.begin();iditer != id_table.end();iditer++){
+        for(auto iditer = id_table.begin();iditer != id_table.end();iditer++){      //判断是否是首次写入
             if(*iditer == iter->bid){
                 k = -1;
                 break;
@@ -1730,7 +1851,6 @@ void BatteryStore::run()
         num = start_row + Rows->property("Count").toInt();
         rowData.clear();
 
-
         rowData.push_back(QVariant(iter->data_time.toString("hh:mm:ss")));
 
         if(iter->modu_num>0){
@@ -1761,21 +1881,7 @@ void BatteryStore::run()
         rowData.clear();
         k=0;
     }
-
     id_table.clear();
-    if(fe == false){
-        pWorkBook->dynamicCall("SaveAs (const QString&)",QDir::toNativeSeparators(fnp));
-    }else{
-        pWorkBook->dynamicCall("Save");
-        QFile file(fnp);
-        file.open(QIODevice::ReadOnly);
-        if(file.size() > (voltag_store_file_len_max*MBYTE_TO_BYTE))
-            mechine_first_launch_time = QDateTime::currentDateTime();
-        file.close();
-    }
-    pWorkBook->dynamicCall("Close()");
-    excel.dynamicCall("Quit(void)");
-    OleUninitialize();
 }
 
 void TkbmWidget::on_tb_eep_file_itemChanged(QTableWidgetItem *item)
@@ -1794,5 +1900,11 @@ void TkbmWidget::on_tb_eep_file_itemChanged(QTableWidgetItem *item)
 
 void TkbmWidget::on_tb_brief_itemChanged(QTableWidgetItem *item)
 {
-
+    bool ok;
+    int val;
+    if(item->column() == 0 && item->row() == 0){
+        val = item->text().toInt(&ok);
+        if(ok == true)
+            VOLTAG_SAVE_TIME = val / 50;
+    }
 }

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->
+                                                                
     <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>               <!-- EEPROM修改确认码-->
+                                                            
     <VOLTAG_SAVE_TIME>20</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
-    <voltag_store_file_len_max>10</voltag_store_file_len_max>        <!--电压数据文件最大长度 *1Mbyte-->                                                    
+                                                            
+    <voltag_store_file_len_max>10</voltag_store_file_len_max>        <!--电压数据文件最大长度 *1Mbyte--> 
+                                                                         
+    <BMS_BAT_COUNT_IN_EXCEL>256</BMS_BAT_COUNT_IN_EXCEL>    <!--预定义EXCEl表格中电池总数-->       
+                                                                                                                                                                             
     <VOLTAG_IS_SAVE>1</VOLTAG_IS_SAVE>                  <!--是否对电压进行保存,1保存,0不保存-->
+                                                            
+    <EXCEL_FILENAME_FORMAT>1</EXCEL_FILENAME_FORMAT>   <!--EXCEL文件名时间精度,0-day,1-hours,2-minutes,3-second-->  
+                                                                                                          
+    <VOLTAG_SAVE_MODE>1</VOLTAG_SAVE_MODE>              <!--0按从板ID分页保存电压,1所有保存为一张表单-->     
+                                                                                                    
     <IS_DATA_ARRY_CLEAR>0</IS_DATA_ARRY_CLEAR>          <!--是否对保存数据清零,1清,0不清-->
+                                                            
     <BMS_UNIT_OUTLINE_CNT>100</BMS_UNIT_OUTLINE_CNT>    <!--从板超时计数,*50ms-->  
     
     <SUB_MAIN_MSG1_ID>0x0841F7F4</SUB_MAIN_MSG1_ID>     <!--主办数据1--> 
@@ -16,7 +28,7 @@
     <CONG_BOARD_VOL_ID>0x0823F4C0</CONG_BOARD_VOL_ID>  
     <UPME_SET_MAIN_PARAM_ID>0x0831F4F7</UPME_SET_MAIN_PARAM_ID>                    
     
-    <param_ac_byte>参数校验字节</param_ac_byte>       <!--EEPROM配置表中校验字节标记-->
+    <param_ac_byte>参数校验字节</param_ac_byte>       <!--EEPROM配置表中校验字节标记,按此文本查找所在行-->
                                                                                          
     <msg_alart_level id="1">
         <elem0>无报警</elem0>

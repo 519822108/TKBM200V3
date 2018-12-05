@@ -11,6 +11,7 @@
 #include <QList>
 #include <QMutex>
 #include <QTableWidgetItem>
+#include <QAxObject>
 
 namespace Ui {
 class TkbmWidget;
@@ -147,7 +148,9 @@ class BatteryStore : public QThread
     Q_OBJECT
 
 public:
-
+    void save_voltag_use_id(QAxObject *pSheets);
+    void save_voltag_as_one(QAxObject *pSheets);
+    void save_breif_info(QAxObject *pSheets);
 
 public slots:
     void slot_get_store_obj(QVector<struct sub_each_board> send_data);

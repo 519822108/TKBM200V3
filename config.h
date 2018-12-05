@@ -35,12 +35,16 @@
 
 static int VOLTAG_SAVE_TIME   =     20;          //电压数据保存时间间隔    *50ms
 static int VOLTAG_IS_SAVE     =     1;           //是否存储电压数据
+static int VOLTAG_SAVE_MODE   =     0;           //电压保存模式
 static int IS_DATA_ARRY_CLEAR =     0;           //是否执行数据保存数组清空,不清空则屏幕不闪烁但数据会残留
 
 #define CAN_RECV_BUFF_LEN_MAX   512         //CAN buff 长度
 #define LIST_WIDGET_MSG_LEN_MAX 256        //辅助列表框报文显示最大行数
 
 static QString THIS_SOFT_VERSION = "TB-BM200 V3.0";
+
+#define BREIF_INFO_FIGURE_NAME      "MInfo"
+#define SAVE_AS_ONE_DATA_NAME       "Value"
 
 #define CHG_STAGE_ARRAY_SIZE        50
 #define CHG_STAGE_ARRAY_SIZE_ORG    7
@@ -61,6 +65,8 @@ static unsigned int UPME_SET_MAIN_PARAM_ID = 0x0831F4F7;      //上位机设置�
 
 static int BMS_UNIT_OUTLINE_CNT   =   100;     //从板超时离线计数,5s
 static long voltag_store_file_len_max = 10;      //电压数据保存文件最大字节数 *1Mbyte
+static int BMS_BAT_COUNT_IN_EXCEL = 256;        //预定义EXCEl表格中电池总数
+static int EXCEL_FILENAME_FORMAT = 3;           //保存ECXCEL文件名时间精度,0-day,1-hours,2-mimutes,3-second
 #define MBYTE_TO_BYTE               1048576     //1Mbyte 转字节
 #define SUB_MODULE_NUM_MAX          4       //从板最大模块数
 #define EACH_MODULE_CHINNEL         12      //每个模块采集数
