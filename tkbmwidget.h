@@ -46,7 +46,7 @@ signals:
     void sig_set_cthread_state(CtlCan *pCan);
     void sig_process_exit(void);
     void sig_sub_unit_outline(void);
-    void sig_get_store_obj(QVector<struct sub_each_board> send_data);
+    void sig_get_store_obj(QVector<struct sub_each_board> *send_data,QVector<struct breif_info_for_bms> *breif_info);
 
 private slots:
     void on_tb_eep_file_cellClicked(int row, int column);
@@ -107,6 +107,7 @@ private:
     QString file_path;
     VCI_CAN_OBJ eeprom_send_array[EEPROM_DATA_SEND_MARK];
     QVector<struct sub_each_board> store_voltag_data;
+    QVector<struct breif_info_for_bms> breif_info;                  //概述信息
 
     struct excel_param_organize_ext eep_config;
     struct msg_discripte msg_summary[MSG_SUMMARY_LIST_LENGTH];          //概述表格信息结构
@@ -153,13 +154,14 @@ public:
     void save_breif_info(QAxObject *pSheets);
 
 public slots:
-    void slot_get_store_obj(QVector<struct sub_each_board> send_data);
+    void slot_get_store_obj(QVector<struct sub_each_board> *send_data,QVector<struct breif_info_for_bms> *breif_info);
 
 protected:
     void run();
 
 private:
     QVector<struct sub_each_board> bat_unit;
+    QVector<struct breif_info_for_bms> bms_breif_info;
 };
 
 #endif // TKBMWIDGET_H

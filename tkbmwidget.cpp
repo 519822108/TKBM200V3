@@ -54,10 +54,10 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
 
     timer_100 = new QTimer(this);
     connect(timer_100,&QTimer::timeout,this,&TkbmWidget::update_msg_timeout);
-    timer_100->start(100);
+    timer_100->start(DISPLAY_UPDATE_TIME);
     timer_5s = new QTimer(this);
     connect(timer_5s,&QTimer::timeout,this,&TkbmWidget::update_data_timeout);
-    timer_5s->start(10000);
+    timer_5s->start(STORE_FILE_SAVE_TI);
 
     connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
@@ -89,86 +89,113 @@ void TkbmWidget::txt_xml_anasys()
 
     QDomElement root = doc.documentElement();
     QDomNodeList dl;
+    QDomNodeList dt;
     //填充报警等级
+    STRING_ARRAY_INIT(msg_alart_level);
     dl = doc.elementsByTagName("msg_alart_level").item(0).childNodes();
     for (i=0;i<dl.length();i++) {
         msg_alart_level[i] = dl.item(i).toElement().text();
     }
+    //填充报警列表
+    dl = doc.elementsByTagName("msg_alart_list").item(0).childNodes();
+    line = dl.size();
+    for(i=0;i<line;i++){
+        STRING_ARRAY_INIT(msg_alart_list[i]);
+        dt = dl.item(i).childNodes();
+        for(j=0;j<dt.size();j++)
+            msg_alart_list[i][j] = dt.item(j).toElement().text();
+    }
     //填充充电状态
+    STRING_ARRAY_INIT(msg_chg_state);
     dl = doc.elementsByTagName("msg_chg_state").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_chg_state[i] = dl.item(i).toElement().text();
     }
     //填充连接器状态
+    STRING_ARRAY_INIT(msg_connector_state);
     dl = doc.elementsByTagName("msg_connector_state").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_connector_state[i] = dl.item(i).toElement().text();
     }
     //填充CC2连接状态
+    STRING_ARRAY_INIT(msg_cc2_state);
     dl = doc.elementsByTagName("msg_cc2_state").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_cc2_state[i] = dl.item(i).toElement().text();
     }
     //填充充电需求
+    STRING_ARRAY_INIT(msg_need_mode);
     dl = doc.elementsByTagName("msg_need_mode").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_need_mode[i] = dl.item(i).toElement().text();
     }
     //填充BMS停止充电原因
+    STRING_ARRAY_INIT(msg_bms_stop_chg);
     dl = doc.elementsByTagName("msg_bms_stop_chg").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_bms_stop_chg[i] = dl.item(i).toElement().text();
     }
     //填充充电机故障
+    STRING_ARRAY_INIT(msg_chg_stop_err);
     dl = doc.elementsByTagName("msg_chg_stop_err").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_chg_stop_err[i] = dl.item(i).toElement().text();
     }
     //填充充电停止原因
+    STRING_ARRAY_INIT(msg_chg_stop_fat);
     dl = doc.elementsByTagName("msg_chg_stop_fat").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_chg_stop_fat[i] = dl.item(i).toElement().text();
     }
     //填充状态
+    STRING_ARRAY_INIT(msg_state_enable);
     dl = doc.elementsByTagName("msg_state_enable").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_state_enable[i] = dl.item(i).toElement().text();
     }
     //填充交流充电状态
+    STRING_ARRAY_INIT(msg_ac_chg_state_a);
     dl = doc.elementsByTagName("msg_ac_chg_state_a").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_ac_chg_state_a[i] = dl.item(i).toElement().text();
     }
     //填充交流充电机输出状态
+    STRING_ARRAY_INIT(msg_ac_chger_out_state);
     dl = doc.elementsByTagName("msg_ac_chger_out_state").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_ac_chger_out_state[i] = dl.item(i).toElement().text();
     }
     //填充
+    STRING_ARRAY_INIT(msg_over_chg_acc_flag);
     dl = doc.elementsByTagName("msg_over_chg_acc_flag").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_over_chg_acc_flag[i] = dl.item(i).toElement().text();
     }
     //填充解除器强制控制
+    STRING_ARRAY_INIT(msg_cnt_force_ctrol);
     dl = doc.elementsByTagName("msg_cnt_force_ctrol").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_cnt_force_ctrol[i] = dl.item(i).toElement().text();
     }
     //填充整车控制器报警控制
+    STRING_ARRAY_INIT(msg_vcu_can_alarm);
     dl = doc.elementsByTagName("msg_vcu_can_alarm").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_vcu_can_alarm[i] = dl.item(i).toElement().text();
     }
     //填充BMS运行状态
+    STRING_ARRAY_INIT(msg_bms_run_state);
     dl = doc.elementsByTagName("msg_bms_run_state").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_bms_run_state[i] = dl.item(i).toElement().text();
     }
     //填充充电阶段
+    STRING_ARRAY_INIT(msg_chg_stage);
     dl = doc.elementsByTagName("msg_chg_stage").item(0).childNodes();
     for(i=0;i<dl.length();i++){
         msg_chg_stage[i] = dl.item(i).toElement().text();
     }
+
 #if (CONFIG_USE_FILE_CTXTXML)
     THIS_SOFT_VERSION = doc.elementsByTagName("THIS_SOFT_VERSION").item(0).toElement().text();
     EEP_MOD_PASSWD = doc.elementsByTagName("EEP_MOD_PASSWD").item(0).toElement().text();
@@ -195,6 +222,9 @@ void TkbmWidget::txt_xml_anasys()
     VOLTAG_SAVE_MODE = doc.elementsByTagName("VOLTAG_SAVE_MODE").item(0).toElement().text().toInt();
     BMS_BAT_COUNT_IN_EXCEL = doc.elementsByTagName("BMS_BAT_COUNT_IN_EXCEL").item(0).toElement().text().toInt();
     EXCEL_FILENAME_FORMAT = doc.elementsByTagName("EXCEL_FILENAME_FORMAT").item(0).toElement().text().toInt();
+    DISPLAY_UPDATE_TIME = doc.elementsByTagName("DISPLAY_UPDATE_TIME").item(0).toElement().text().toInt();
+    COMM_PROCESS_TIME = doc.elementsByTagName("COMM_PROCESS_TIME").item(0).toElement().text().toInt();
+    STORE_FILE_SAVE_TI = doc.elementsByTagName("STORE_FILE_SAVE_TI").item(0).toElement().text().toInt();
 #endif
     file.close();
 }
@@ -241,6 +271,7 @@ void TkbmWidget::comm_timeout()
 {
     int i,j,k;
     QString msg;
+    int rowCount;
 
     mutex.lock();
     for(i=0;i<can_data.len;i++){                        //报文分析
@@ -296,7 +327,7 @@ void TkbmWidget::comm_timeout()
                 msg_chg_summary[MSG_CHG_SUMMARY_MODE_NEED].s_val = msg_need_mode[can_data.data[i].Data[5]&0x03];
                 break;
             case 7:
-                msg_chg_summary[MSG_CHG_SUMMARY_CHG_STAGE].s_val = msg_chg_stage[can_data.data[i].Data[1]];
+                msg_chg_summary[MSG_CHG_SUMMARY_CHG_STAGE].s_val = msg_chg_stage[can_data.data[i].Data[1]&0x07];
                 msg_chg_summary[MSG_CHG_SUMMARY_IIME_NEED].s_val = QString("%1").arg(can_data.data[i].Data[2]+can_data.data[i].Data[3]*256);
                 msg_chg_summary[MSG_CHG_SUMMARY_OUT_POW].s_val = QString("%1").arg((can_data.data[i].Data[4]+can_data.data[i].Data[5]*256)*0.1);
                 msg_chg_summary[MSG_CHG_SUMMARY_CHG_TIM].s_val = QString("%1").arg(can_data.data[i].Data[6]+can_data.data[i].Data[7]*256);
@@ -337,19 +368,19 @@ void TkbmWidget::comm_timeout()
                 msg_chg_err_disc[MSG_CHG_ERROR_CHG_ERR].s_val = msg;
 
                 msg = QString("");
-                for(j=0;j<7;j++){
+                for(j=0;j<6;j++){
                     if((can_data.data[i].Data[4] >> j) & 0x01)
                         msg += QString("%1:").arg(j) + msg_bms_rcv_err[j] + "  ";
                 }
-                if(j==7)    msg = ' ';
+                if(j==6)    msg = ' ';
                 msg_chg_err_disc[MSG_CHG_ERROR_BMS_COM].s_val = msg;
 
                 msg = QString("");
-                for(j=0;j<8;j++){
+                for(j=0;j<7;j++){
                     if((can_data.data[i].Data[5] >> j) & 0x01)
                         msg += QString("%1:").arg(j) + msg_chg_rcv_err[j] + "  ";
                 }
-                if(j==8)    msg = ' ';
+                if(j==7)    msg = ' ';
                 msg_chg_err_disc[MSG_CHG_ERROR_CHG_RCV].s_val = msg;
                 break;
             case 11:
@@ -510,12 +541,23 @@ void TkbmWidget::comm_timeout()
     }
     can_data.len = 0;
     mutex.unlock();
-    if(voltag_store_cnt-- <0){
+    if(voltag_store_cnt-- <0){                          //数据保存周期到达
         voltag_store_cnt = VOLTAG_SAVE_TIME;
         for(auto iter = bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
             iter->data_time = QDateTime::currentDateTime();
             store_voltag_data.push_back(*iter);
         }
+        rowCount = ui->tb_breif->rowCount();
+        struct breif_info_for_bms lable;
+        lable.time = QDateTime::currentDateTime();
+        for(i=0;i<rowCount;i++){
+            QTableWidgetItem *item;
+            item = ui->tb_breif->verticalHeaderItem(i);
+            lable.tital.push_back(item->text());
+            item = ui->tb_breif->item(i,0);
+            lable.value.push_back(item->text());
+        }
+        breif_info.push_back(lable);
     }
     for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
         if(iter->bid == bms_sub_info->cur_id){         //标记超时的从板
@@ -625,8 +667,9 @@ void TkbmWidget::update_data_timeout()
     if((store_voltag_data.size() > 0) && (VOLTAG_IS_SAVE == 1)){
         BatteryStore *bs = new BatteryStore;
         connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
-        emit sig_get_store_obj(store_voltag_data);
+        emit sig_get_store_obj(&store_voltag_data,&breif_info);
         store_voltag_data.clear();
+        breif_info.clear();
         bs->start();
     }
     if(IS_DATA_ARRY_CLEAR != 1) return;
@@ -642,7 +685,7 @@ QString TkbmWidget::anasy_alart_msg(unsigned char data[5])
         for(j=0;j<4;j++){
             val = data[i]>>(2*j) & 0x03;
             if(val){
-                temp += msg_alart_list[i][j] + msg_alart_level[val] + '\n';
+                temp += msg_alart_list[i][j] + '\t' + msg_alart_level[val] + '\n';
             }
         }
     }
@@ -910,7 +953,7 @@ void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
 
         timer10 = new QTimer(this);
         connect(timer10,&QTimer::timeout,this,&TkbmWidget::comm_timeout);
-        timer10->start(50);
+        timer10->start(COMM_PROCESS_TIME);
     }
 }
 
@@ -1609,11 +1652,13 @@ unsigned char TkbmWidget::eeprom_after_modify()
     return temp;
 }
 
-void BatteryStore::slot_get_store_obj(QVector<struct sub_each_board> send_data)
+void BatteryStore::slot_get_store_obj(QVector<struct sub_each_board> *send_data,QVector<struct breif_info_for_bms> *breif_info)
 {
-    for(int i=0;i<send_data.size();i++){
-       bat_unit.push_back(send_data.at(i));   
+    for(int i=0;i<send_data->size();i++){
+       bat_unit.push_back(send_data->at(i));
     }
+    for(int i=0;i<breif_info->size();i++)
+        bms_breif_info.push_back(breif_info->at(i));
 }
 /***    @breif: 线程开始处理数据保存
  *      @attention:
@@ -1744,14 +1789,22 @@ void BatteryStore::save_voltag_as_one(QAxObject *pSheets)
             rowData.push_back(QVariant(iter->data_time.toString("hh:mm:ss")));
         }
         pUsePage = pSheet->querySubObject("UsedRange");
-        QAxObject *col = pUsePage->querySubObject("Columns(int)",iter->chinnel_start+1);
+        QAxObject *col = pUsePage->querySubObject("Columns(int)",iter->chinnel_start+3);
         QAxObject *srow = col->querySubObject("Rows");
         num = srow->property("Count").toInt();
         len = 0;
         for(i=0;i<iter->modu_num;i++)
             len += iter->per_chinnal[i];
-        QAxObject *pCells = pSheet->querySubObject("Cells(int,int)",num+1,iter->chinnel_start+1);
-        QAxObject *pCelle = pSheet->querySubObject("Cells(int,int)",num+1,iter->chinnel_start+len+1);
+        QAxObject *pCells;
+        QAxObject *pCelle;
+        if(iter->chinnel_start == 0){
+            pCells = pSheet->querySubObject("Cells(int,int)",num+1,iter->chinnel_start+1);
+            pCelle = pSheet->querySubObject("Cells(int,int)",num+1,iter->chinnel_start+len+1);
+        }else{
+            pCells = pSheet->querySubObject("Cells(int,int)",num,iter->chinnel_start+2);
+            pCelle = pSheet->querySubObject("Cells(int,int)",num,iter->chinnel_start+len+1);
+        }
+
         QAxObject *pRange = pSheet->querySubObject("Range(QVariant,QVariant)",pCells->asVariant(),pCelle->asVariant());
         if(iter->modu_num>0){
             for(j=0;j<iter->per_chinnal[0];j++)
@@ -1776,7 +1829,52 @@ void BatteryStore::save_voltag_as_one(QAxObject *pSheets)
 
 void BatteryStore::save_breif_info(QAxObject *pSheets)
 {
-
+    int rowCount,num;
+    int i;
+    QString msg;
+    QAxObject *pSheet;
+    QList<QVariant> lData;
+    num = pSheets->dynamicCall("Count").toInt();
+    for(i=1;i<=num;i++){
+        pSheet = pSheets->querySubObject("Item(int)",i);
+        msg = pSheet->property("Name").toString();
+        if(QString::compare(msg,QString(BREIF_INFO_FIGURE_NAME)) == 0){
+            QAxObject *pRow = pSheet->querySubObject("UsedRange")->querySubObject("Rows");
+            QAxObject *pCells;
+            QAxObject *pCelle;
+            QAxObject *pRange;
+            rowCount = pRow->property("Count").toInt();
+            if(rowCount < 2){
+                QVector<QString> value = bms_breif_info.begin()->tital;
+                for(auto siter = value.begin();siter != value.end();siter++){
+                    lData.push_back(QVariant(*siter));
+                }
+                pCells = pSheet->querySubObject("Cells(int,int)",1,2);
+                pCelle = pSheet->querySubObject("Cells(int,int)",1,value.size()+1);
+                pRange = pSheet->querySubObject("Range(const QVariant&,const QVariant&)",pCells->asVariant(),pCelle->asVariant());
+                QAxObject *pInterior = pRange->querySubObject("Interior");
+                pInterior->setProperty("Color",QColor(255,255,230));
+                pRange->dynamicCall("SetValue (const QVariant&)",QVariant(lData));
+                pRange->setProperty("HorizontalAlignment",-4108);
+                pRange->setProperty("ColumnWidth",18);
+            }
+            rowCount = pRow->property("Count").toInt();
+            for(auto iter = bms_breif_info.begin();iter != bms_breif_info.end();iter++){
+                lData.clear();
+                lData.push_back((iter->time.toString("hh:mm:ss")));
+                rowCount = pRow->property("Count").toInt();
+                for(auto siter=iter->value.begin();siter!=iter->value.end();siter++){
+                    lData.push_back(QVariant(*siter));
+                }
+                pCells = pSheet->querySubObject("Cells(int,int)",rowCount+1,1);
+                pCelle = pSheet->querySubObject("Cells(int,int)",rowCount+1,iter->value.size()+1);
+                pRange = pSheet->querySubObject("Range(const QVariant&,const QVariant&)",pCells->asVariant(),pCelle->asVariant());
+                pRange->dynamicCall("SetValue (const QVariant&)",QVariant(lData));
+                pRange->setProperty("HorizontalAlignment",-4108);
+            }
+          break;
+        }
+    }
 }
 
 void BatteryStore::save_voltag_use_id(QAxObject *pSheets)
@@ -1896,7 +1994,6 @@ void TkbmWidget::on_tb_eep_file_itemChanged(QTableWidgetItem *item)
         itemo->setText(msg);
     }
 }
-
 
 void TkbmWidget::on_tb_brief_itemChanged(QTableWidgetItem *item)
 {

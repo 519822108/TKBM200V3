@@ -4,7 +4,7 @@
                                                                 
     <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>               <!-- EEPROM修改确认码-->
                                                             
-    <VOLTAG_SAVE_TIME>20</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
+    <VOLTAG_SAVE_TIME>100</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
                                                             
     <voltag_store_file_len_max>10</voltag_store_file_len_max>        <!--电压数据文件最大长度 *1Mbyte--> 
                                                                          
@@ -12,13 +12,19 @@
                                                                                                                                                                              
     <VOLTAG_IS_SAVE>1</VOLTAG_IS_SAVE>                  <!--是否对电压进行保存,1保存,0不保存-->
                                                             
-    <EXCEL_FILENAME_FORMAT>1</EXCEL_FILENAME_FORMAT>   <!--EXCEL文件名时间精度,0-day,1-hours,2-minutes,3-second-->  
+    <EXCEL_FILENAME_FORMAT>3</EXCEL_FILENAME_FORMAT>   <!--EXCEL文件名时间精度,0-day,1-hours,2-minutes,3-second-->  
                                                                                                           
     <VOLTAG_SAVE_MODE>1</VOLTAG_SAVE_MODE>              <!--0按从板ID分页保存电压,1所有保存为一张表单-->     
                                                                                                     
-    <IS_DATA_ARRY_CLEAR>0</IS_DATA_ARRY_CLEAR>          <!--是否对保存数据清零,1清,0不清-->
+    <IS_DATA_ARRY_CLEAR>0</IS_DATA_ARRY_CLEAR>          <!--是否对缓存数据清零,1清,0不清-->
                                                             
     <BMS_UNIT_OUTLINE_CNT>100</BMS_UNIT_OUTLINE_CNT>    <!--从板超时计数,*50ms-->  
+                                                            
+    <DISPLAY_UPDATE_TIME>100</DISPLAY_UPDATE_TIME>       <!--数据刷新到屏幕的时间间隔,ms-->
+                                                            
+    <COMM_PROCESS_TIME>50</COMM_PROCESS_TIME>            <!--通信消息处理的时间间隔,ms-->
+                                                             
+    <STORE_FILE_SAVE_TI>10000</STORE_FILE_SAVE_TI>      <!--数据实际写入到EXCEL的实际时间,和刷新数据缓存的时间间隔,ms.不应小于10s-->                                                                                                                                                   
     
     <SUB_MAIN_MSG1_ID>0x0841F7F4</SUB_MAIN_MSG1_ID>     <!--主办数据1--> 
     <SUB_MAIN_MSG2_ID>0x0842F7F4</SUB_MAIN_MSG2_ID>
@@ -29,13 +35,46 @@
     <UPME_SET_MAIN_PARAM_ID>0x0831F4F7</UPME_SET_MAIN_PARAM_ID>                    
     
     <param_ac_byte>参数校验字节</param_ac_byte>       <!--EEPROM配置表中校验字节标记,按此文本查找所在行-->
-                                                                                         
+     
+    <msg_alart_list id="0">
+        <alart1>
+            <elem0>绝缘过低</elem0>
+            <elem1>内CAN故障</elem1>
+            <elem2>从板故障</elem2>
+            <elem3>EEP故障</elem3>
+        </alart1>
+        <alart2>
+            <elem0>单体过压</elem0>
+            <elem1>单体欠压</elem1>
+            <elem2>总压过高</elem2>
+            <elem3>总压过低</elem3>
+        </alart2>
+        <alart3>
+            <elem0>电池过温</elem0>
+            <elem1>电池低温</elem1>
+            <elem2>温差过大</elem2>
+            <elem3>压差过大</elem3>
+        </alart3>
+        <alart4>
+            <elem0>SOC过低</elem0>
+            <elem1>HALL离线</elem1>
+            <elem2>SOC跳变</elem2>
+            <elem3>时钟离线</elem3>
+        </alart4>
+        <alart5>
+            <elem0>充电过流</elem0>
+            <elem1>放电过流</elem1>
+            <elem2>采集线断裂</elem2>
+            <elem3>SOH过低</elem3>
+        </alart5>  
+    </msg_alart_list>                                                                                                                               
     <msg_alart_level id="1">
         <elem0>无报警</elem0>
         <elem1>一级报警</elem1>
         <elem2>二级报警</elem2>
         <elem3>三级报警</elem3>
     </msg_alart_level>
+
     <msg_connector_state id="2">
         <elem0>自检中</elem0>
         <elem1>接触器吸合</elem1>
@@ -147,7 +186,5 @@
         <elem4>充电阶段1</elem4>
         <elem5>充电阶段2</elem5>
         <elem6>充电结束</elem6>
-    </msg_chg_stage>
-   
-    
+    </msg_chg_stage>       
 </root>

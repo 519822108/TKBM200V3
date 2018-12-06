@@ -325,11 +325,19 @@ release\moc_tkbmwidget.cpp: D:\Qt\5.7\msvc2013\include\QtWidgets\QWidget \
 		D:\Qt\5.7\msvc2013\include\QtCore\QString \
 		D:\Qt\5.7\msvc2013\include\QtCore\Qt \
 		D:\Qt\5.7\msvc2013\include\QtCore\QVector \
+		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
+		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
 		..\ctlcan.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
 		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidgetItem \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\QAxObject \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxobject.h \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxbase.h \
 		..\tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\bin\moc.exe
 	D:\Qt\5.7\msvc2013\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -ID:/Qt/5.7/msvc2013/mkspecs/win32-msvc2013 -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor -I"C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Include" -IE:/TESTFILE_VS/QT_PROJECT/TM-BM200_monitor/build -ID:/Qt/5.7/msvc2013/include -ID:/Qt/5.7/msvc2013/include/ActiveQt -ID:/Qt/5.7/msvc2013/include/QtWidgets -ID:/Qt/5.7/msvc2013/include/QtGui -ID:/Qt/5.7/msvc2013/include/QtANGLE -ID:/Qt/5.7/msvc2013/include/QtXml -ID:/Qt/5.7/msvc2013/include/QtCore -I. ..\tkbmwidget.h -o release\moc_tkbmwidget.cpp
@@ -756,11 +764,19 @@ release\main.obj: ..\main.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QString \
 		D:\Qt\5.7\msvc2013\include\QtCore\Qt \
 		D:\Qt\5.7\msvc2013\include\QtCore\QVector \
+		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
+		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
 		..\ctlcan.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
 		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidgetItem \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\QAxObject \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxobject.h \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxbase.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QApplication \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qapplication.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\qcoreapplication.h \
@@ -911,11 +927,19 @@ release\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QString \
 		D:\Qt\5.7\msvc2013\include\QtCore\Qt \
 		D:\Qt\5.7\msvc2013\include\QtCore\QVector \
+		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
+		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
 		..\ctlcan.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QThread \
 		D:\Qt\5.7\msvc2013\include\QtCore\qthread.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
 		D:\Qt\5.7\msvc2013\include\QtCore\QMutex \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidgetItem \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
+		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\QAxObject \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxobject.h \
+		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxbase.h \
 		ui_tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QVariant \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QAction \
@@ -946,23 +970,15 @@ release\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qradiobutton.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QTabWidget \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidget \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtablewidget.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\qtableview.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QTextBrowser \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextbrowser.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qtextedit.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\qtextdocument.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDesktopWidget \
-		D:\Qt\5.7\msvc2013\include\ActiveQt\QAxObject \
-		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxobject.h \
-		D:\Qt\5.7\msvc2013\include\ActiveQt\qaxbase.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QFile \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QMessageBox \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qmessagebox.h \
-		D:\Qt\5.7\msvc2013\include\QtWidgets\QTableWidgetItem \
 		../static_string.h \
-		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
-		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
 		D:\Qt\5.7\msvc2013\include\QtGui\QIntValidator \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QFileDialog \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\qfiledialog.h \
@@ -1059,7 +1075,10 @@ release\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QChar \
 		D:\Qt\5.7\msvc2013\include\QtXml\QDomDocument \
 		D:\Qt\5.7\msvc2013\include\QtXml\qdom.h \
-		D:\Qt\5.7\msvc2013\include\QtXml\qtxmlglobal.h
+		D:\Qt\5.7\msvc2013\include\QtXml\qtxmlglobal.h \
+		D:\Qt\5.7\msvc2013\include\QtXml\QDomElement \
+		D:\Qt\5.7\msvc2013\include\QtXml\QDomAttr \
+		D:\Qt\5.7\msvc2013\include\QtXml\QDomNodeList
 
 release\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
 		D:\Qt\5.7\msvc2013\include\QtWidgets\QDialog \
@@ -1385,6 +1404,8 @@ release\monitordialog.obj: ..\monitordialog.cpp ../monitordialog.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QString \
 		D:\Qt\5.7\msvc2013\include\QtCore\Qt \
 		D:\Qt\5.7\msvc2013\include\QtCore\QVector \
+		D:\Qt\5.7\msvc2013\include\QtCore\QDateTime \
+		D:\Qt\5.7\msvc2013\include\QtCore\qdatetime.h \
 		D:\Qt\5.7\msvc2013\include\QtCore\QList \
 		D:\Qt\5.7\msvc2013\include\QtCore\QMutex
 

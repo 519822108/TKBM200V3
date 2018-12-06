@@ -8,7 +8,7 @@
 #include <list>
 #include <QDateTime>
 
-/*  breif: Excel配置数据到县市区的对应关系
+/*  breif: Excel配置数据到显示区的对应关系
  *  s_ :源文件和显示区共有的成员
  *  o_ :源文件独有的成员
  *  d_ :显示区独有的成员
@@ -85,5 +85,17 @@ struct each_bat_info_discription{
     QVector<struct array_vol_pos> max;
     QVector<struct array_vol_pos> min;
 };
+
+struct breif_info_for_bms{
+    QDateTime time;
+    QVector<QString>    value;
+    QVector<QString>    tital;
+};
+
+#define STRING_ARRAY_INIT(array)  do{\
+    for(uint s=0;s<ARRAYSIZE(array);s++)     { \
+        array[s] = "";     \
+    }           \
+}while(0)
 
 #endif // DATA_ORGANIZE_H

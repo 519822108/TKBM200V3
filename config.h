@@ -38,6 +38,10 @@ static int VOLTAG_IS_SAVE     =     1;           //是否存储电压数据
 static int VOLTAG_SAVE_MODE   =     0;           //电压保存模式
 static int IS_DATA_ARRY_CLEAR =     0;           //是否执行数据保存数组清空,不清空则屏幕不闪烁但数据会残留
 
+static int DISPLAY_UPDATE_TIME  =   100;        //信息刷新到屏幕的时间间隔
+static int COMM_PROCESS_TIME    =   50;         //通信处理时间间隔
+static int STORE_FILE_SAVE_TI   =   10000;      //数据保存到EXCEL的时间间隔
+
 #define CAN_RECV_BUFF_LEN_MAX   512         //CAN buff 长度
 #define LIST_WIDGET_MSG_LEN_MAX 256        //辅助列表框报文显示最大行数
 
