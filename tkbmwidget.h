@@ -97,6 +97,8 @@ private:
     QTimer *timer_5s;
     int cnt_ctrl_clk;
     int vcu_alarm;
+    int msg_alart_list_line;                    //二维数组msg_alart_list的行长度
+    int msg_alart_list_col;                     //二维数组msg_alart_list的列长度
     bool main_is_test_mode;
     bool eeprom_is_send_data;                           //下位机是否发送EEPROM数据
     bool eeprom_recv_data_flag;                          //下位机开始接受EEPROM数据

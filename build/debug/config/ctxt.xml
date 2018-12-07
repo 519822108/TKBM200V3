@@ -2,6 +2,9 @@
 <root>
     <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->
                                                                 
+    <IS_MUST_NEED_CFG>1</IS_MUST_NEED_CFG>              <!--EXCEL配置文件是否是必须的在程序启动时，1缺少配置文件
+                                                                将无法启动程序.EXCEL不具通用性-->                                               
+                                                                
     <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>               <!-- EEPROM修改确认码-->
                                                             
     <VOLTAG_SAVE_TIME>100</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->

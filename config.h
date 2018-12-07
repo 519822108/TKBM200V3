@@ -37,6 +37,7 @@ static int VOLTAG_SAVE_TIME   =     20;          //电压数据保存时间间�
 static int VOLTAG_IS_SAVE     =     1;           //是否存储电压数据
 static int VOLTAG_SAVE_MODE   =     0;           //电压保存模式
 static int IS_DATA_ARRY_CLEAR =     0;           //是否执行数据保存数组清空,不清空则屏幕不闪烁但数据会残留
+static int IS_MUST_NEED_CFG  =     1;           //EXCEL配置文件是否是必须的在程序启动时，1缺少配置文件将无法启动程序
 
 static int DISPLAY_UPDATE_TIME  =   100;        //信息刷新到屏幕的时间间隔
 static int COMM_PROCESS_TIME    =   50;         //通信处理时间间隔
