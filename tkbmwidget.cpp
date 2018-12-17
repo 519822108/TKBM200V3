@@ -513,8 +513,11 @@ void TkbmWidget::comm_timeout()
         if(CONG_BOARD_TEMP_ID == (can_data.data[i].ID & 0xfffffff0)){   //处理从板温度信息
             for(auto iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
                 if(iter->bid == can_data.data[i].Data[0]){
-                    for(j=0;j<CONG_BOARD_EACH_TEMP;j++)
-                        iter->temp[can_data.data[i].Data[1]*CONG_BOARD_EACH_TEMP+j] = can_data.data[i].Data[j+2]-40;
+                    for(j=0;j<CONG_BOARD_EACH_TEMP;j++){
+                        k = can_data.data[i].Data[1]*CONG_BOARD_EACH_TEMP+j;
+                        if(k<SUB_TEMPRATURE_NUM_MAX)
+                            iter->temp[k] = can_data.data[i].Data[j+2]-40;
+                    }
                     break;
                 }
             }
@@ -524,7 +527,8 @@ void TkbmWidget::comm_timeout()
                 if(iter->bid == can_data.data[i].Data[0]){              
                     for(j=0;j<CONG_BOARD_EACH_VOL;j++){
                         k = can_data.data[i].Data[1]*CONG_BOARD_EACH_VOL+j;
-                        iter->each_volt[k] = can_data.data[i].Data[2+j*2] + can_data.data[i].Data[3+j*2]*256;
+                        if(k<TOTAL_MODULE_LENGTH)           //电池数溢出控制
+                            iter->each_volt[k] = can_data.data[i].Data[2+j*2] + can_data.data[i].Data[3+j*2]*256;
                     }
                     break;
                 }
@@ -550,6 +554,13 @@ void TkbmWidget::comm_timeout()
                 if(can_data.data[i].Data[2] == 1){
                     QTableWidgetItem *item = ui->tb_state->item(0,2);
                     item->setText("修改成功\0");
+                    eeprom_recv_data_flag = false;
+                    QTimer *timer_temp = new QTimer(this);
+                    connect(timer_temp,&QTimer::timeout,this,[=](){
+                        eeprom_launch_send(true);
+                        timer_temp->stop();
+                    });
+                    timer_temp->start(5000);
                 }
             }
         }
@@ -674,7 +685,7 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
         }
         break;
     case 0xD2:
-        bd->modu_num = Data[5];
+        bd->modu_num = Data[3];
         bd->htick = Data[6];
         bd->state = Data[7];
         break;
@@ -1563,7 +1574,7 @@ void TkbmWidget::on_pb_out_data_clicked()
     QAxObject *Sheets = workbook->querySubObject("Sheets");
     QAxObject *sheet = Sheets->querySubObject("Item (int)",1);
     QAxObject *pCell;
-
+#if 0
     for(i=0;i<EEP_XLS_COL_LENGTH;i++){          //设置列表头
         pCell = sheet->querySubObject("Cells(int,int)",1,EEPROM_DATA_EXCEL_COL_S+i);
         pCell->setProperty("HorizontalAlignment",-4108);
@@ -1571,24 +1582,22 @@ void TkbmWidget::on_pb_out_data_clicked()
         QAxObject *pborder = pCell->querySubObject("Borders");
         pborder->setProperty("Color",QColor(255,150,45));
     }
+#endif
     do{
-        pCell = sheet->querySubObject("Cells(int,int)",EEPROM_DATA_EXCEL_ROW_S+j,1);        //设置行表头
+        if(j >= EEPROM_DATA_LENGTH)
+            break;
+        pCell = sheet->querySubObject("Cells(int,int)",j+1,1);        //设置行表头
         pCell->setProperty("HorizontalAlignment",-4108);
-        pCell->setProperty("Value",QString("%1-%2").arg(k,3,16,QLatin1Char('0')).arg(k+0xF,3,16,QLatin1Char('0')).toUpper());
+        pCell->setProperty("Value",QString("%1").arg(j));
         QAxObject *pborder = pCell->querySubObject("Borders");
         pborder->setProperty("Color",QColor(255,150,45));
 
-        for(i=0;i<EEP_XLS_COL_LENGTH;i++){
-            pCell = sheet->querySubObject("Cells(int,int)",EEPROM_DATA_EXCEL_ROW_S+j,EEPROM_DATA_EXCEL_COL_S+i);
-            pCell->setProperty("HorizontalAlignment",-4108);
-            pCell->setProperty("Value",QString("%1").arg(eeprom_info.eeprom[k],2,16,QLatin1Char('0')).toUpper());
-            k++;
-            if(k > EEPROM_DATA_LENGTH)
-                goto out;
-        }
+        pCell = sheet->querySubObject("Cells(int,int)",j+1,EEPROM_DATA_EXCEL_COL_S);
+        pCell->setProperty("HorizontalAlignment",-4108);
+        pCell->setProperty("Value",QString("%1").arg(eeprom_info.eeprom[j],2,16,QLatin1Char('0')).toUpper());
+
         j++;
     }while(true);
-    out:
 
     workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(fn));
     workbook->dynamicCall("Close()");
@@ -1617,23 +1626,21 @@ void TkbmWidget::on_pb_in_data_clicked()
     QVariant cell_val;
 
     do{
-        for(i=0;i<EEP_XLS_COL_LENGTH;i++){
-            pCell = Sheet->querySubObject("Cells(int,int)",EEPROM_DATA_EXCEL_ROW_S+j,EEPROM_DATA_EXCEL_COL_S+i);
-            cell_val = pCell->property("Value");
-            msg = cell_val.toString();
-            if(msg.isEmpty() || msg.isNull())
-                goto out;
-            eeprom_info.eepcfg[k] = (unsigned char)msg.toUInt(&ok,16);
-            if(ok == false){
-                QMessageBox::information(this,"ERROR",QString("[转换失败]\nR:%1-C:%2").arg(EEPROM_DATA_EXCEL_ROW_S+j).arg(EEPROM_DATA_EXCEL_COL_S+i));
-            }
-            if(k > EEPROM_DATA_LENGTH)
-                goto out;
-            k++;
+        if(j >= EEPROM_DATA_LENGTH)
+            break;
+        pCell = Sheet->querySubObject("Cells(int,int)",1+j,EEPROM_DATA_EXCEL_COL_S);
+        cell_val = pCell->property("Value");
+        msg = cell_val.toString();
+        if(msg.isEmpty() || msg.isNull()){
+            QMessageBox::information(this,"ERROR","遇到空行,跳过\0");
+            continue;
+        }
+        eeprom_info.eepcfg[j] = (unsigned char)msg.toUInt(&ok,16);
+        if(ok == false){
+            QMessageBox::information(this,"ERROR",QString("[转换失败]\nR:%1-C:%2").arg(1+j).arg(EEPROM_DATA_EXCEL_COL_S));
         }
         j++;
     }while(true);
-    out:
 
     pWorkbook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");

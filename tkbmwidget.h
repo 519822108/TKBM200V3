@@ -95,6 +95,7 @@ private:
     QTimer *timer10;
     QTimer *timer_100;
     QTimer *timer_5s;
+
     int cnt_ctrl_clk;
     int vcu_alarm;
     int msg_alart_list_line;                    //二维数组msg_alart_list的行长度
