@@ -72,6 +72,10 @@ static int BMS_UNIT_OUTLINE_CNT   =   100;     //从板超时离线计数,5s
 static long voltag_store_file_len_max = 10;      //电压数据保存文件最大字节数 *1Mbyte
 static int BMS_BAT_COUNT_IN_EXCEL = 256;        //预定义EXCEl表格中电池总数
 static int EXCEL_FILENAME_FORMAT = 3;           //保存ECXCEL文件名时间精度,0-day,1-hours,2-mimutes,3-second
+static int EXCEL_OR_WPS_AS_FILE  = 1;            //1-使用 MicroSoft Excel,否则使用 WPS 表格
+#define EXCEL_USED_NAME     QString("Excel.Application")
+#define WPS_USED_NAME       QString("Ket.Application")
+
 #define MBYTE_TO_BYTE               1048576     //1Mbyte 转字节
 #define SUB_MODULE_NUM_MAX          4       //从板最大模块数
 #define EACH_MODULE_CHINNEL         12      //每个模块采集数

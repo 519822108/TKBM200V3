@@ -3211,7 +3211,7 @@
      </item>
      <item row="0" column="1">
       <property name="text">
-       <string>123\\n456</string>
+       <string> </string>
       </property>
       <property name="flags">
        <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>

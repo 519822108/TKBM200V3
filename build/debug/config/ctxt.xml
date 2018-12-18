@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->
+    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->                                                            
                                                                 
     <IS_MUST_NEED_CFG>1</IS_MUST_NEED_CFG>              <!--EXCEL配置文件是否是必须的在程序启动时，1缺少配置文件
                                                                 将无法启动程序.EXCEL不具通用性-->                                               
@@ -9,7 +9,7 @@
                                                                                                                                                                                                                                         
     <VOLTAG_IS_SAVE>1</VOLTAG_IS_SAVE>                  <!--是否对电压进行保存,1保存,0不保存-->
                                                             
-        <VOLTAG_SAVE_TIME>100</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
+        <VOLTAG_SAVE_TIME>20</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
                                                             
         <voltag_store_file_len_max>10</voltag_store_file_len_max>        <!--电压数据文件最大长度 *1Mbyte--> 
                                                                          

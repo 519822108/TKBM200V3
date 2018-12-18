@@ -26,12 +26,15 @@
 #include <QDomAttr>
 #include <QDomNodeList>
 
+//# pragma execution_character_set("utf-8")
+
 struct recv_data can_data;
 static VCI_CAN_OBJ recv_buff[128];
 extern QMutex ext_mutex;
 static QMutex mutex;
 static QDateTime mechine_first_launch_time;
 QList<VCI_CAN_OBJ> vec_buff;
+static QString excel_or_wps = EXCEL_USED_NAME;
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
     QWidget(parent),
@@ -1142,18 +1145,31 @@ void TkbmWidget::read_excel_data()
         this->~TkbmWidget();
     }
 
-    QAxObject excel("Excel.Application");
-    excel.setProperty("Visible",false);
-    QAxObject *pWorkbooks = excel.querySubObject("WorkBooks");
+    QAxObject *excel;
+    excel_or_wps = EXCEL_USED_NAME;
+    excel = new QAxObject(excel_or_wps);
+    if(excel->isNull() == true){
+        excel_or_wps = WPS_USED_NAME;
+        excel = new QAxObject(excel_or_wps);
+        if(excel->isNull() == true){
+            QMessageBox::information(this,"error",QString("无法启用 MicroSoft Excel 或者 WPS"));
+            excel->dynamicCall("Quit(void)");
+            delete excel;
+            this->~TkbmWidget();
+        }
+    }
+
+    excel->setProperty("Visible",false);
+    QAxObject *pWorkbooks = excel->querySubObject("WorkBooks");
     pWorkbooks->dynamicCall("Open (Const QString&)",config_file.fileName());
-    QAxObject *pWorkBook = excel.querySubObject("ActiveWorkBook");
+    QAxObject *pWorkBook = excel->querySubObject("ActiveWorkBook");
     QAxObject *pSheet = pWorkBook->querySubObject("Sheets(int)",1);
     QAxObject *pCell;
     QVariant cell_val;
     QString val;
     do{
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NUM);     //获取参数编号
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         if(val.isEmpty() == true || val.isNull() == true){
             break;
@@ -1161,34 +1177,34 @@ void TkbmWidget::read_excel_data()
         eep_config.param[eep_config.len].s_num = val.toInt();       //获取数据编号
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NAME);     //获取参数名
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         eep_config.param[eep_config.len].s_name = val;          //获取参数名
         if(QString::compare(val,param_ac_byte) == 0)
             epprom_set_ac_pos = eep_config.len;                 //如果得到交验行，获取行号
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_LEN);     //获取数据长度
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         eep_config.param[eep_config.len].o_byte_len = val.toInt();      //获取参数字节长度
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_FORMAT);     //获取显示格式
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         eep_config.param[eep_config.len].o_dis_format = val.toInt();    //获取参数显示格式
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_RATE);     //获取比例
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         eep_config.param[eep_config.len].o_rate = val.toDouble();       //获取参数放大系数
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_OFF);     //获取偏移
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         eep_config.param[eep_config.len].o_off = val.toInt();           //获取参数偏移
 
         pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NOTE);     //获取参数注释
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         val = cell_val.toString();
         val += QString("\n\n比例:%1,偏移:%2").arg(eep_config.param[eep_config.len].o_rate).arg(eep_config.param[eep_config.len].o_off);
         eep_config.param[eep_config.len].s_note = val;          //获取参数注释
@@ -1196,7 +1212,8 @@ void TkbmWidget::read_excel_data()
         eep_config.len++;               //参数总数计数器加1
     }while(true);
     pWorkBook->dynamicCall("Close(Boolen)",false);
-    excel.dynamicCall("Quit(void)");
+    excel->dynamicCall("Quit(void)");
+    delete excel;
 }
 /**    @breif: 把EEPROM配置参数显示到屏幕
 */
@@ -1566,7 +1583,7 @@ void TkbmWidget::on_pb_out_data_clicked()
         QMessageBox::information(this,"ERROR","[保存失败] 无效的数据\0");
         return;
     }
-    QAxObject excel("Excel.Application");
+    QAxObject excel(excel_or_wps);
     excel.setProperty("Visible",false);
     QAxObject *pWorkbooks = excel.querySubObject("WorkBooks");
     pWorkbooks->dynamicCall("Add");
@@ -1616,7 +1633,7 @@ void TkbmWidget::on_pb_in_data_clicked()
     if(fp.isEmpty() || fp.isNull())
         return;
     file_path = QFileInfo(fp).fileName();
-    QAxObject excel("Excel.Application");
+    QAxObject excel(excel_or_wps);
     excel.setProperty("Visible",false);
     QAxObject *pWorkBooks = excel.querySubObject("WorkBooks");
     pWorkBooks->dynamicCall("Open (const QString&)",QDir::toNativeSeparators(fp));
@@ -1629,7 +1646,7 @@ void TkbmWidget::on_pb_in_data_clicked()
         if(j >= EEPROM_DATA_LENGTH)
             break;
         pCell = Sheet->querySubObject("Cells(int,int)",1+j,EEPROM_DATA_EXCEL_COL_S);
-        cell_val = pCell->property("Value");
+        cell_val = pCell->property("Value2");
         msg = cell_val.toString();
         if(msg.isEmpty() || msg.isNull()){
             QMessageBox::information(this,"ERROR","遇到空行,跳过\0");
@@ -1783,7 +1800,7 @@ void BatteryStore::run()
     if(dir.exists() == false)
         dir.mkdir(fp);
 
-    QAxObject excel("Excel.Application");
+    QAxObject excel(excel_or_wps);
     excel.setProperty("Visible",false);
     excel.setProperty("DisplayAlerts",false);
     QAxObject *pWorkbooks = excel.querySubObject("WorkBooks");
