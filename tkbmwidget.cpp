@@ -25,6 +25,8 @@
 #include <QDomElement>
 #include <QDomAttr>
 #include <QDomNodeList>
+#include <QDebug>
+#include <QTime>
 
 //# pragma execution_character_set("utf-8")
 
@@ -35,6 +37,7 @@ static QMutex mutex;
 static QDateTime mechine_first_launch_time;
 QList<VCI_CAN_OBJ> vec_buff;
 static QString excel_or_wps = EXCEL_USED_NAME;
+static int epprom_set_ac_pos;                              //校验字节的位置
 
 TkbmWidget::TkbmWidget(QWidget *parent) :
     QWidget(parent),
@@ -44,16 +47,17 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     QDesktopWidget *thisDesk = QApplication::desktop();
     QRect rect = thisDesk->availableGeometry();
     can_bsp = NULL;
-    can_data.len = 0;
+    can_data.len = 0; 
+
     this->move((rect.width()-this->width())/2,(rect.height()-this->height())/2-20);
     this->ui_init();
 
     this->txt_xml_anasys();
     this->chg_stage_data_init();
+    login_dialog.show();
+
     this->data_struct_init();
     this->set_eep_config();
-
-    login_dialog.show();
 
     timer_100 = new QTimer(this);
     connect(timer_100,&QTimer::timeout,this,&TkbmWidget::update_msg_timeout);   //事件连接,定时器超时刷新显示
@@ -61,6 +65,9 @@ TkbmWidget::TkbmWidget(QWidget *parent) :
     timer_5s = new QTimer(this);
     connect(timer_5s,&QTimer::timeout,this,&TkbmWidget::update_data_timeout);   //定时器超时保存电压数据到EXCEL，和刷新数据缓存
     timer_5s->start(STORE_FILE_SAVE_TI);
+
+    bat_store = new BatteryStore;
+    connect(this,&TkbmWidget::sig_get_store_obj,bat_store,&BatteryStore::slot_get_store_obj);
 
     connect(&login_dialog,&LoginDialog::sig_send_can_param,this,&TkbmWidget::sig_get_can_param);
     connect(&login_dialog,&LoginDialog::sig_send_window_close,this,&TkbmWidget::close);
@@ -200,7 +207,12 @@ void TkbmWidget::txt_xml_anasys()
     for(i=0;i<dl.length();i++){
         msg_chg_stage[i] = dl.item(i).toElement().text();
     }
-
+    //填充最高最低
+    STRING_ARRAY_INIT(msg_unit_limit_param);
+    dl = doc.elementsByTagName("msg_unit_limit_param").item(0).childNodes();
+    for(i=0;i<dl.length();i++){
+        msg_unit_limit_param[i] = dl.item(i).toElement().text();
+    }
 #if (CONFIG_USE_FILE_CTXTXML)
     THIS_SOFT_VERSION = doc.elementsByTagName("THIS_SOFT_VERSION").item(0).toElement().text();
     EEP_MOD_PASSWD = doc.elementsByTagName("EEP_MOD_PASSWD").item(0).toElement().text();
@@ -276,6 +288,7 @@ void TkbmWidget::chg_stage_data_init()
     bms_sub_info = new struct per_battery_info_discription;
     bms_sub_info->cur_id = 0;
     bms_sub_info->unit_num = 0;
+    bms_sub_info->online_count = 50;
 }
 /**    @breif: 定时器超时处理函数，定时处理通信数据
 */
@@ -288,6 +301,7 @@ void TkbmWidget::comm_timeout()
     mutex.lock();
     for(i=0;i<can_data.len;i++){                        //报文分析,一次处理接收缓存中的全部报文
         if(can_data.data[i].ID == SUB_MAIN_MSG2_ID){                //处理主板数据2
+            bms_sub_info->online_count = BMS_UNIT_OUTLINE_CNT;         //主板在线状态
             switch (can_data.data[i].Data[0]) {
             case 0:
                 msg = main_info_msg(can_data.data[i].Data[1],1);
@@ -307,14 +321,17 @@ void TkbmWidget::comm_timeout()
                 msg_summary[MSG_SUMMARY_LIST_HERTICK].s_val = QString("%1").arg(can_data.data[i].Data[7]);
                 break;
             case 2:
-                msg_summary[MSG_SUMMARY_LIST_MTPV].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.001);
+                unit_limit_mast.max = can_data.data[i].Data[1]+can_data.data[i].Data[2]*256;
+                msg_summary[MSG_SUMMARY_LIST_MTPV].s_val = QString("%1").arg(unit_limit_mast.max*0.001);
                 msg_summary[MSG_SUMMARY_LIST_MVPS].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*1);
                 msg_summary[MSG_SUMMARY_LIST_MTTP].s_val = QString("%1").arg(can_data.data[i].Data[5]-40);
                 break;
             case 3:
-                msg_summary[MSG_SUMMARY_LIST_MLPV].s_val = QString("%1").arg((can_data.data[i].Data[1]+can_data.data[i].Data[2]*256)*0.001);
+                unit_limit_mast.min = can_data.data[i].Data[1]+can_data.data[i].Data[2]*256;
+                msg_summary[MSG_SUMMARY_LIST_MLPV].s_val = QString("%1").arg(unit_limit_mast.min*0.001);
                 msg_summary[MSG_SUMMARY_LIST_MLPS].s_val = QString("%1").arg((can_data.data[i].Data[3]+can_data.data[i].Data[4]*256)*1);
                 msg_summary[MSG_SUMMARY_LIST_MLTP].s_val = QString("%1").arg(can_data.data[i].Data[5]-40);
+                msg_summary[MSG_SUMMARY_LIST_DICVOL].s_val = QString("%1").arg(unit_limit_mast.max-unit_limit_mast.min);
                 break;
             case 4:
                 msg = anasy_alart_msg(can_data.data[i].Data+1);
@@ -426,7 +443,7 @@ void TkbmWidget::comm_timeout()
                 break;
             case 16:break;
             case 17:                //从板配置信息,计算从板第一通道在系统中的位置
-                bms_sub_info->unit_num = can_data.data[1].Data[7];
+                bms_sub_info->unit_num = can_data.data[i].Data[7];
                 k=0;
                 for(auto iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
                     if(can_data.data[i].Data[1] == iter->bid){
@@ -474,10 +491,16 @@ void TkbmWidget::comm_timeout()
         }
         if(CONG_BOARD_STATE_ID == (can_data.data[i].ID & 0xfffffff0)){  //处理从板状态信息
             QVector<struct sub_each_board>::iterator iter;
-            for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
+            for(auto iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
                 if(iter->bid == can_data.data[i].Data[0]){          //如果存在该id,则按id修改内容
                     iter->online_count = BMS_UNIT_OUTLINE_CNT;                    
-                    sub_state_msg_ana(iter,can_data.data[i].Data);                    
+                    sub_state_msg_ana(iter,can_data.data[i].Data);
+                    if(iter != bms_sub_info->each_board.begin()){
+                        int temp = 0;
+                        for(j=0;j<(iter-1)->modu_num;j++)
+                            temp += (iter-1)->per_chinnal[j];
+                        iter->chinnel_start = (iter-1)->chinnel_start + temp;
+                    }
                     j = -1;
                 }
             }
@@ -510,7 +533,8 @@ void TkbmWidget::comm_timeout()
                         iter->chinnel_start = (iter-1)->chinnel_start + temp;
                     }
                 }
-                bms_sub_info->unit_num++;           //插入新从板后增加计数
+                if(bms_sub_info->online_count == 0)
+                    bms_sub_info->unit_num++;           //插入新从板后增加计数
             }            
         }    
         if(CONG_BOARD_TEMP_ID == (can_data.data[i].ID & 0xfffffff0)){   //处理从板温度信息
@@ -573,6 +597,7 @@ void TkbmWidget::comm_timeout()
     if(voltag_store_cnt-- <0){                          //数据保存周期到达,数据写入到缓存
         voltag_store_cnt = VOLTAG_SAVE_TIME;
         //保存全部电压
+        save_data_mutex.lock();
         for(auto iter = bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
             iter->data_time = QDateTime::currentDateTime();
             store_voltag_data.push_back(*iter);
@@ -588,12 +613,43 @@ void TkbmWidget::comm_timeout()
             item = ui->tb_breif->item(i,0);
             lable.value.push_back(item->text());
         }
+        //保存单体最高
+        for(i=0;i<CONG_BOARD_LIMIT_VOL_LEN;i++){
+            lable.tital.push_back(QString("%2 %1").arg(i+1).arg(msg_unit_limit_param[0]));
+            lable.tital.push_back(QString("%2 %1").arg(i+1).arg(msg_unit_limit_param[1]));
+            if(i<limit_vol_info.max.size()){
+                lable.value.push_back(QString("%1").arg(limit_vol_info.max.at(i).voltag));
+                lable.value.push_back(QString("%1").arg(limit_vol_info.max.at(i).pos));
+            }else{
+                lable.value.push_back(QString(""));
+                lable.value.push_back(QString(""));
+            }
+        }
+        //保存单体最低
+        for(i=0;i<CONG_BOARD_LIMIT_VOL_LEN;i++){
+            lable.tital.push_back(QString("%2 %1").arg(i+1).arg(msg_unit_limit_param[2]));
+            lable.tital.push_back(QString("%2 %1").arg(i+1).arg(msg_unit_limit_param[3]));
+            if(i<limit_vol_info.min.size()){
+                lable.value.push_back(QString("%1").arg(limit_vol_info.min.at(i).voltag));
+                lable.value.push_back(QString("%1").arg(limit_vol_info.min.at(i).pos));
+            }else{
+                lable.value.push_back(QString(""));
+                lable.value.push_back(QString(""));
+            }
+        }
         breif_info.push_back(lable);
+        save_data_mutex.unlock();
     }
+
+    bms_sub_info->online_count = (bms_sub_info->online_count <= 0)?(0):(bms_sub_info->online_count-1);       //主板在线计数
+
     for(auto iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
         if(iter->bid == bms_sub_info->cur_id){         //标记通信超时的从板，通过从板状态报文
             if(iter->online_count != 0)
                 iter->online_count--;
+            if(iter->online_count == 0){
+                memset(iter->each_volt,0,ARRAYSIZE(iter->each_volt)*sizeof(int));
+            }
         }
     }
     if(eeprom_recv_data_flag == true){          //EEPROM配置报文发送状态显示
@@ -624,6 +680,8 @@ void TkbmWidget::per_bat_vol_limit_cacul()
     std::vector<struct array_vol_pos> temp;
     //收集全部电压和位置信息
     for(auto iter=bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
+        if((main_is_test_mode == false) && (iter->bid > bms_sub_info->unit_num-1))
+            break;
         if(iter->modu_num > 0){
             for(i=0;i<iter->per_chinnal[0];i++){
                 vol_pos.voltag = iter->each_volt[i];
@@ -684,11 +742,12 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
         break;
     case 0xD1:
         for(j=0;j<6;j++){
-            bd->sn[j] = Data[j+2];
+            bd->sn[j] = Data[j+2];            
         }
         break;
     case 0xD2:
-        bd->modu_num = Data[3];
+        if(bms_sub_info->online_count == 0)
+            bd->modu_num = Data[5];
         bd->htick = Data[6];
         bd->state = Data[7];
         break;
@@ -701,16 +760,18 @@ void TkbmWidget::sub_state_msg_ana(struct sub_each_board *bd,unsigned char Data[
 }
 /**    @breif: EXCEL写入时间达到，发送信号到EXCEL写入子线程。同时刷新残留的数据缓存
 */
+static int run_time=0;
 void TkbmWidget::update_data_timeout()
 {
     //发送信号给子线程保存数据到磁盘
-    if((store_voltag_data.size() > 0) && (VOLTAG_IS_SAVE == 1)){
-        BatteryStore *bs = new BatteryStore;
-        connect(this,&TkbmWidget::sig_get_store_obj,bs,&BatteryStore::slot_get_store_obj);
+    if((store_voltag_data.size() > 0) && (VOLTAG_IS_SAVE == 1)){    
+        save_data_mutex.lock();
         emit sig_get_store_obj(&store_voltag_data,&breif_info);
+        bat_store->start();
+        QThread::sleep(1);
         store_voltag_data.clear();
         breif_info.clear();
-        bs->start();
+        save_data_mutex.unlock();
     }
     if(IS_DATA_ARRY_CLEAR != 1) return;
     data_struct_init();         //刷新残留的数据缓存
@@ -1128,34 +1189,50 @@ void TkbmWidget::ui_init(void)
 
 void TkbmWidget::set_eep_config(void)
 {
-    this->read_excel_data();
-    this->set_eeprom_table();
+    read_cfg = new ReadExcelCfg;
+    connect(this,&TkbmWidget::sig_send_eep_config,read_cfg,&ReadExcelCfg::get_eep_config);
+    connect(read_cfg,&ReadExcelCfg::send_progress_status,this,[=](int status){
+        switch (status) {
+        case 0:set_eeprom_table();break;
+        case 1:
+            QMessageBox::information(this,"error",QString("缺少配置文件:\n[%1]\n程序关闭").arg(file_path));
+            this->~TkbmWidget();
+        case 2:
+            QMessageBox::information(this,"error",QString("无法启用 MicroSoft Excel 或者 WPS"));
+            this->~TkbmWidget();
+        default:
+            break;
+        }
+    });
+    emit sig_send_eep_config(&eep_config);
+    read_cfg->start();
 }
 /**    @breif: 读取EXCEL数据配置 EEPROM参数
 */
-void TkbmWidget::read_excel_data()
+void ReadExcelCfg::read_excel_data()
 {
     QString file_path = QApplication::applicationDirPath() + FILE_PATH_CONFIG;
     QFile config_file(file_path);
-    eep_config.len = 0;
+    eep_config->len = 0;
     if(IS_MUST_NEED_CFG != 1)
         return;
     if(config_file.exists() == false){
-        QMessageBox::information(this,"error",QString("缺少配置文件:\n[%1]\n程序关闭").arg(file_path));        
-        this->~TkbmWidget();
+        send_progress_status(1);
+        return;
     }
 
+    OleInitialize(NULL);
     QAxObject *excel;
     excel_or_wps = EXCEL_USED_NAME;
     excel = new QAxObject(excel_or_wps);
     if(excel->isNull() == true){
         excel_or_wps = WPS_USED_NAME;
         excel = new QAxObject(excel_or_wps);
-        if(excel->isNull() == true){
-            QMessageBox::information(this,"error",QString("无法启用 MicroSoft Excel 或者 WPS"));
+        if(excel->isNull() == true){           
             excel->dynamicCall("Quit(void)");
             delete excel;
-            this->~TkbmWidget();
+            emit send_progress_status(2);
+            return;
         }
     }
 
@@ -1168,52 +1245,64 @@ void TkbmWidget::read_excel_data()
     QVariant cell_val;
     QString val;
     do{
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NUM);     //获取参数编号
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_NUM);     //获取参数编号
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
         if(val.isEmpty() == true || val.isNull() == true){
             break;
         }
-        eep_config.param[eep_config.len].s_num = val.toInt();       //获取数据编号
+        eep_config->param[eep_config->len].s_num = val.toInt();       //获取数据编号
 
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NAME);     //获取参数名
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_NAME);     //获取参数名
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
-        eep_config.param[eep_config.len].s_name = val;          //获取参数名
+        eep_config->param[eep_config->len].s_name = val;          //获取参数名
         if(QString::compare(val,param_ac_byte) == 0)
-            epprom_set_ac_pos = eep_config.len;                 //如果得到交验行，获取行号
+            epprom_set_ac_pos = eep_config->len;                 //如果得到交验行，获取行号
 
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_LEN);     //获取数据长度
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_LEN);     //获取数据长度
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
-        eep_config.param[eep_config.len].o_byte_len = val.toInt();      //获取参数字节长度
+        eep_config->param[eep_config->len].o_byte_len = val.toInt();      //获取参数字节长度
 
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_FORMAT);     //获取显示格式
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_FORMAT);     //获取显示格式
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
-        eep_config.param[eep_config.len].o_dis_format = val.toInt();    //获取参数显示格式
+        eep_config->param[eep_config->len].o_dis_format = val.toInt();    //获取参数显示格式
 
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_RATE);     //获取比例
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_RATE);     //获取比例
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
-        eep_config.param[eep_config.len].o_rate = val.toDouble();       //获取参数放大系数
+        eep_config->param[eep_config->len].o_rate = val.toDouble();       //获取参数放大系数
 
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_OFF);     //获取偏移
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_OFF);     //获取偏移
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
-        eep_config.param[eep_config.len].o_off = val.toInt();           //获取参数偏移
+        eep_config->param[eep_config->len].o_off = val.toInt();           //获取参数偏移
 
-        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config.len,CONFIG_COL_PARAM_NOTE);     //获取参数注释
+        pCell = pSheet->querySubObject("Cells(int,int)",FILE_CONFIG_ROW_START+eep_config->len,CONFIG_COL_PARAM_NOTE);     //获取参数注释
         cell_val = pCell->property("Value2");
         val = cell_val.toString();
-        val += QString("\n\n比例:%1,偏移:%2").arg(eep_config.param[eep_config.len].o_rate).arg(eep_config.param[eep_config.len].o_off);
-        eep_config.param[eep_config.len].s_note = val;          //获取参数注释
+        val += QString("\n\n比例:%1,偏移:%2").arg(eep_config->param[eep_config->len].o_rate).arg(eep_config->param[eep_config->len].o_off);
+        eep_config->param[eep_config->len].s_note = val;          //获取参数注释
 
-        eep_config.len++;               //参数总数计数器加1
+        eep_config->len++;               //参数总数计数器加1
     }while(true);
     pWorkBook->dynamicCall("Close(Boolen)",false);
     excel->dynamicCall("Quit(void)");
     delete excel;
+    emit send_progress_status(0);
+    OleUninitialize();
+}
+
+void ReadExcelCfg::get_eep_config(struct excel_param_organize_ext *eepConfig)
+{
+    eep_config = eepConfig;
+}
+
+void ReadExcelCfg::run()
+{
+    read_excel_data();
 }
 /**    @breif: 把EEPROM配置参数显示到屏幕
 */
@@ -1236,6 +1325,8 @@ TkbmWidget::~TkbmWidget()
     if(can_bsp != NULL)
         delete can_bsp;
     delete bms_sub_info;
+    delete read_cfg;
+    delete bat_store;
     delete ui;
     QThread::sleep(2);
     exit(1);
@@ -1460,6 +1551,9 @@ void TkbmWidget::on_le_id_in_editingFinished()
         QMessageBox::information(this,"ERROR","无效的从板 ID");
         return;
     }
+    if((main_is_test_mode == false) && (bid > bms_sub_info->unit_num-1)){           //运行模式将限制可视板ID最大值
+        bid = bms_sub_info->each_board.begin()->bid;
+    }
     //从从板列表中查找是否有输入的从板ID
     for(iter=bms_sub_info->each_board.begin();iter!=bms_sub_info->each_board.end();iter++){
         if(bid == iter->bid && iter->online_count != 0){
@@ -1470,12 +1564,12 @@ void TkbmWidget::on_le_id_in_editingFinished()
     if(j != -1){        //如果没有查找到输入的从板ID
         for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
             if(iter->online_count != 0){        //尽检索在线的从板
-                bms_sub_info->cur_id =iter->bid;    //第一个在线的从板ID设为当前ID
-                ui->le_id_in->setText(QString("%1").arg(bms_sub_info->cur_id));
+                bms_sub_info->cur_id =iter->bid;    //第一个在线的从板ID设为当前ID                
                 break;
             }
         }
     }
+    ui->le_id_in->setText(QString("%1").arg(bms_sub_info->cur_id));
 }
 /**    @breif: 切换下一个从板ID
 */
@@ -1488,15 +1582,14 @@ void TkbmWidget::on_pb_after_clicked()
         QMessageBox::information(this,"ERROR","无效的从板 ID");
         return;
     }
-    if((main_is_test_mode == false) && (bid > bms_sub_info->unit_num-1)){           //运行模式将限制可视板ID最大值
-        bid = bms_sub_info->unit_num-1;
-    }
+
     for(iter = bms_sub_info->each_board.begin();iter != bms_sub_info->each_board.end();iter++){
         if(bid <= iter->bid){
             bid = (iter+1)->bid;
             break;
         }
     }
+
     ui->le_id_in->setText(QString("%1").arg(bid));
     emit ui->le_id_in->editingFinished();
 }
@@ -1843,6 +1936,8 @@ void BatteryStore::run()
     pWorkBook->dynamicCall("Close()");
     excel.dynamicCall("Quit(void)");
     OleUninitialize();
+    bat_unit.clear();
+    bms_breif_info.clear();
 }
 /**    @breif: 所有电压保存为一张表格
  *      @param:
@@ -1936,7 +2031,7 @@ void BatteryStore::save_voltag_as_one(QAxObject *pSheets)
 void BatteryStore::save_breif_info(QAxObject *pSheets)
 {
     int rowCount,num;
-    int i;
+    int i,j=0;
     QString msg;
     QAxObject *pSheet;
     QList<QVariant> lData;
@@ -1967,16 +2062,16 @@ void BatteryStore::save_breif_info(QAxObject *pSheets)
             rowCount = pRow->property("Count").toInt();
             for(auto iter = bms_breif_info.begin();iter != bms_breif_info.end();iter++){
                 lData.clear();
-                lData.push_back((iter->time.toString("hh:mm:ss")));
-                rowCount = pRow->property("Count").toInt();
+                lData.push_back((iter->time.toString("hh:mm:ss")));                
                 for(auto siter=iter->value.begin();siter!=iter->value.end();siter++){
                     lData.push_back(QVariant(*siter));
-                }
-                pCells = pSheet->querySubObject("Cells(int,int)",rowCount+1,1);
-                pCelle = pSheet->querySubObject("Cells(int,int)",rowCount+1,iter->value.size()+1);
+                }                
+                pCells = pSheet->querySubObject("Cells(int,int)",rowCount+j+1,1);
+                pCelle = pSheet->querySubObject("Cells(int,int)",rowCount+j+1,iter->value.size()+1);
                 pRange = pSheet->querySubObject("Range(const QVariant&,const QVariant&)",pCells->asVariant(),pCelle->asVariant());
                 pRange->dynamicCall("SetValue (const QVariant&)",QVariant(lData));
                 pRange->setProperty("HorizontalAlignment",-4108);
+                j++;
             }
           break;
         }

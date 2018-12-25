@@ -104,7 +104,7 @@ static int EXCEL_OR_WPS_AS_FILE  = 1;            //1-使用 MicroSoft Excel,否�
 #define MSG_SUMMARY_LIST_MLPS       16      //最低单体位置
 #define MSG_SUMMARY_LIST_MTTP       17      //最高温度
 #define MSG_SUMMARY_LIST_MLTP       18      //最低温度
-#define MSG_SUMMARY_LIST_RSV1       19      //保留
+#define MSG_SUMMARY_LIST_DICVOL     19      //最大压差
 #define MSG_SUMMARY_LIST_CNST       20      //接触器状态
 
 #define MSG_CHG_SUMMARY_LENGTH      32      //充电信息概述表最大长度

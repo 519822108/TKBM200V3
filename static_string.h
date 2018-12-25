@@ -41,4 +41,5 @@ static QString msg_vcu_can_alarm[2];// = {QString("00H:不控制\0"),QString("A0
 static QString msg_bms_run_state[8];// = {QString("模块A错误\0"),QString("模块B错误\0"),QString("模块C错误\0"),QString("模块D错误\0"),\
                                             QString("EEPROM错误\0"),QString("reserved"),QString("reserved"),QString("测试模式\0")};
 static QString param_ac_byte = "参数校验字节\0";
+static QString msg_unit_limit_param[4];
 #endif // STATIC_STRING_H

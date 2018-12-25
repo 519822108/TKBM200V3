@@ -43,6 +43,11 @@ struct msg_discripte{           //信息描述结构
     enum Qt::GlobalColor    f_color;          //信息前景色
 };
 
+struct unit_limit_msg{              //单体最高最低值
+    int max;
+    int min;
+};
+
 struct sub_each_board{                          //从板描述
     int bid;                                    //板ID
     int chinnel_start;                          //当前板第一电压通道在系统中的起始位置
@@ -64,6 +69,7 @@ struct sub_each_board{                          //从板描述
 struct per_battery_info_discription{                    //BMS描述
     int cur_id;                                         //选中的从板ID
     int unit_num;                                       //BMS从板总数
+    int online_count;
     QVector<struct sub_each_board> each_board;
 };
 

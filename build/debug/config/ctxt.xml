@@ -189,5 +189,11 @@
         <elem4>充电阶段1</elem4>
         <elem5>充电阶段2</elem5>
         <elem6>充电结束</elem6>
-    </msg_chg_stage>       
+    </msg_chg_stage>   
+    <msg_unit_limit_param>
+    <elem0>单体最高</elem0>
+    <elem1>最高位置</elem1>
+    <elem2>单体最低</elem2>
+    <elem3>最低位置</elem3> 
+    </msg_unit_limit_param>    
 </root>

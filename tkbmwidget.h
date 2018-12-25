@@ -16,10 +16,14 @@
 namespace Ui {
 class TkbmWidget;
 }
+class ReadExcelCfg;
+class BatteryStore;
 
 class TkbmWidget : public QWidget
 {
     Q_OBJECT
+
+private:
 
 public:
     explicit TkbmWidget(QWidget *parent = nullptr);
@@ -47,6 +51,7 @@ signals:
     void sig_process_exit(void);
     void sig_sub_unit_outline(void);
     void sig_get_store_obj(QVector<struct sub_each_board> *send_data,QVector<struct breif_info_for_bms> *breif_info);
+    void sig_send_eep_config(struct excel_param_organize_ext *eepConfig);
 
 private slots:
     void on_tb_eep_file_cellClicked(int row, int column);
@@ -95,6 +100,8 @@ private:
     QTimer *timer10;
     QTimer *timer_100;
     QTimer *timer_5s;
+    ReadExcelCfg *read_cfg;
+    BatteryStore *bat_store;
 
     int cnt_ctrl_clk;
     int vcu_alarm;
@@ -105,7 +112,8 @@ private:
     bool eeprom_recv_data_flag;                          //下位机开始接受EEPROM数据
     bool eeprom_read_btn_state;                         //eeprom读取按钮状态
     bool eeprom_set_launch_setting;                     //EEPROM显示列表是否首次写入
-    int epprom_set_ac_pos;                              //校验字节的位置
+    QMutex save_data_mutex;
+
     int voltag_store_cnt;                               //电压保存时间计数
     QString file_path;
     VCI_CAN_OBJ eeprom_send_array[EEPROM_DATA_SEND_MARK];
@@ -123,6 +131,7 @@ private:
     struct per_battery_info_discription *bms_sub_info;                       //BMS描述
     struct eeprom_data_info_discription eeprom_info;                    //EEPROM 信息描述
     struct each_bat_info_discription limit_vol_info;                    //最高最低电压记录
+    struct unit_limit_msg   unit_limit_mast;
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -165,6 +174,25 @@ protected:
 private:
     QVector<struct sub_each_board> bat_unit;
     QVector<struct breif_info_for_bms> bms_breif_info;
+};
+
+class ReadExcelCfg : public QThread
+{
+    Q_OBJECT
+
+public:
+    void read_excel_data();
+
+signals:
+    void send_progress_status(int status);
+
+public slots:
+    void get_eep_config(struct excel_param_organize_ext *eepConfig);
+
+protected:
+    void run();
+private:
+    struct excel_param_organize_ext *eep_config;
 };
 
 #endif // TKBMWIDGET_H

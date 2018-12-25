@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->
+    <THIS_SOFT_VERSION>TB-BM200 V3.0</THIS_SOFT_VERSION>    <!-- 本软件版本-->                                                            
                                                                 
     <IS_MUST_NEED_CFG>1</IS_MUST_NEED_CFG>              <!--EXCEL配置文件是否是必须的在程序启动时，1缺少配置文件
                                                                 将无法启动程序.EXCEL不具通用性-->                                               
                                                                 
     <EEP_MOD_PASSWD>1234</EEP_MOD_PASSWD>               <!-- EEPROM修改确认码-->
-                                                            
-    <VOLTAG_SAVE_TIME>100</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
-                                                            
-    <voltag_store_file_len_max>10</voltag_store_file_len_max>        <!--电压数据文件最大长度 *1Mbyte--> 
-                                                                         
-    <BMS_BAT_COUNT_IN_EXCEL>256</BMS_BAT_COUNT_IN_EXCEL>    <!--预定义EXCEl表格中电池总数-->       
-                                                                                                                                                                             
+                                                                                                                                                                                                                                        
     <VOLTAG_IS_SAVE>1</VOLTAG_IS_SAVE>                  <!--是否对电压进行保存,1保存,0不保存-->
                                                             
-    <EXCEL_FILENAME_FORMAT>3</EXCEL_FILENAME_FORMAT>   <!--EXCEL文件名时间精度,0-day,1-hours,2-minutes,3-second-->  
+        <VOLTAG_SAVE_TIME>20</VOLTAG_SAVE_TIME>             <!--电压数据保存时间间隔 *50ms-->
+                                                            
+        <voltag_store_file_len_max>10</voltag_store_file_len_max>        <!--电压数据文件最大长度 *1Mbyte--> 
+                                                                         
+        <BMS_BAT_COUNT_IN_EXCEL>256</BMS_BAT_COUNT_IN_EXCEL>    <!--预定义EXCEl表格中电池总数-->  
+                                                            
+        <EXCEL_FILENAME_FORMAT>3</EXCEL_FILENAME_FORMAT>   <!--EXCEL文件名时间精度,0-day,1-hours,2-minutes,3-second-->  
                                                                                                           
-    <VOLTAG_SAVE_MODE>1</VOLTAG_SAVE_MODE>              <!--0按从板ID分页保存电压,1所有保存为一张表单-->     
+        <VOLTAG_SAVE_MODE>1</VOLTAG_SAVE_MODE>              <!--0按从板ID分页保存电压,1所有保存为一张表单-->     
                                                                                                     
     <IS_DATA_ARRY_CLEAR>0</IS_DATA_ARRY_CLEAR>          <!--是否对缓存数据清零,1清,0不清-->
                                                             
@@ -177,7 +177,7 @@
         <elem2>模块C错误</elem2>
         <elem3>模块D错误</elem3>
         <elem4>EEPROM错误</elem4>
-        <elem5>reserved</elem5>
+        <elem5>有水</elem5>
         <elem6>reserved</elem6>
         <elem7>测试模式</elem7>
     </msg_bms_run_state>
@@ -189,5 +189,11 @@
         <elem4>充电阶段1</elem4>
         <elem5>充电阶段2</elem5>
         <elem6>充电结束</elem6>
-    </msg_chg_stage>       
+    </msg_chg_stage>   
+    <msg_unit_limit_param>
+    <elem0>单体最高</elem0>
+    <elem1>最高位置</elem1>
+    <elem2>单体最低</elem2>
+    <elem3>最低位置</elem3> 
+    </msg_unit_limit_param>    
 </root>
