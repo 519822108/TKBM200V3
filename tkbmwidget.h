@@ -61,6 +61,7 @@ private slots:
     void update_msg_timeout(void);          //定时器超时更新UI
     void update_data_timeout(void);         //定时器超时刷新数据
     void slot_get_board_id(int bid);
+    void slot_get_can_error_code(VCI_ERR_INFO errCode);
 
     void on_pb_sync_clicked();
 
@@ -147,6 +148,9 @@ public:
 
 public slots:
     void slot_get_state(CtlCan *pCan);
+
+signals:
+    void sig_send_can_error_code(VCI_ERR_INFO errCode);
 
 protected:
     bool state;

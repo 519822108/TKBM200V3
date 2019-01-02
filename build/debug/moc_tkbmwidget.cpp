@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TkbmWidget_t {
-    QByteArrayData data[48];
-    char stringdata0[795];
+    QByteArrayData data[51];
+    char stringdata0[840];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -59,25 +59,28 @@ QT_MOC_LITERAL(25, 343, 18), // "update_msg_timeout"
 QT_MOC_LITERAL(26, 362, 19), // "update_data_timeout"
 QT_MOC_LITERAL(27, 382, 17), // "slot_get_board_id"
 QT_MOC_LITERAL(28, 400, 3), // "bid"
-QT_MOC_LITERAL(29, 404, 18), // "on_pb_sync_clicked"
-QT_MOC_LITERAL(30, 423, 20), // "on_pb_modify_clicked"
-QT_MOC_LITERAL(31, 444, 32), // "on_tb_ctl_info_cellDoubleClicked"
-QT_MOC_LITERAL(32, 477, 21), // "on_pb_ctl_tch_clicked"
-QT_MOC_LITERAL(33, 499, 23), // "on_pb_ctl_alarm_clicked"
-QT_MOC_LITERAL(34, 523, 27), // "on_le_id_in_editingFinished"
-QT_MOC_LITERAL(35, 551, 19), // "on_pb_after_clicked"
-QT_MOC_LITERAL(36, 571, 20), // "on_pb_before_clicked"
-QT_MOC_LITERAL(37, 592, 25), // "on_pb_mian_into_t_clicked"
-QT_MOC_LITERAL(38, 618, 7), // "checked"
-QT_MOC_LITERAL(39, 626, 22), // "on_pb_eep_read_clicked"
-QT_MOC_LITERAL(40, 649, 5), // "click"
-QT_MOC_LITERAL(41, 655, 22), // "on_pb_out_data_clicked"
-QT_MOC_LITERAL(42, 678, 21), // "on_pb_in_data_clicked"
-QT_MOC_LITERAL(43, 700, 20), // "on_pb_ensure_clicked"
-QT_MOC_LITERAL(44, 721, 26), // "on_tb_eep_file_itemChanged"
-QT_MOC_LITERAL(45, 748, 17), // "QTableWidgetItem*"
-QT_MOC_LITERAL(46, 766, 4), // "item"
-QT_MOC_LITERAL(47, 771, 23) // "on_tb_brief_itemChanged"
+QT_MOC_LITERAL(29, 404, 23), // "slot_get_can_error_code"
+QT_MOC_LITERAL(30, 428, 12), // "VCI_ERR_INFO"
+QT_MOC_LITERAL(31, 441, 7), // "errCode"
+QT_MOC_LITERAL(32, 449, 18), // "on_pb_sync_clicked"
+QT_MOC_LITERAL(33, 468, 20), // "on_pb_modify_clicked"
+QT_MOC_LITERAL(34, 489, 32), // "on_tb_ctl_info_cellDoubleClicked"
+QT_MOC_LITERAL(35, 522, 21), // "on_pb_ctl_tch_clicked"
+QT_MOC_LITERAL(36, 544, 23), // "on_pb_ctl_alarm_clicked"
+QT_MOC_LITERAL(37, 568, 27), // "on_le_id_in_editingFinished"
+QT_MOC_LITERAL(38, 596, 19), // "on_pb_after_clicked"
+QT_MOC_LITERAL(39, 616, 20), // "on_pb_before_clicked"
+QT_MOC_LITERAL(40, 637, 25), // "on_pb_mian_into_t_clicked"
+QT_MOC_LITERAL(41, 663, 7), // "checked"
+QT_MOC_LITERAL(42, 671, 22), // "on_pb_eep_read_clicked"
+QT_MOC_LITERAL(43, 694, 5), // "click"
+QT_MOC_LITERAL(44, 700, 22), // "on_pb_out_data_clicked"
+QT_MOC_LITERAL(45, 723, 21), // "on_pb_in_data_clicked"
+QT_MOC_LITERAL(46, 745, 20), // "on_pb_ensure_clicked"
+QT_MOC_LITERAL(47, 766, 26), // "on_tb_eep_file_itemChanged"
+QT_MOC_LITERAL(48, 793, 17), // "QTableWidgetItem*"
+QT_MOC_LITERAL(49, 811, 4), // "item"
+QT_MOC_LITERAL(50, 816, 23) // "on_tb_brief_itemChanged"
 
     },
     "TkbmWidget\0sig_set_cthread_state\0\0"
@@ -90,7 +93,8 @@ QT_MOC_LITERAL(47, 771, 23) // "on_tb_brief_itemChanged"
     "row\0column\0sig_get_can_param\0dev\0num\0"
     "rate\0port\0comm_timeout\0on_rb_exp_dis_clicked\0"
     "update_msg_timeout\0update_data_timeout\0"
-    "slot_get_board_id\0bid\0on_pb_sync_clicked\0"
+    "slot_get_board_id\0bid\0slot_get_can_error_code\0"
+    "VCI_ERR_INFO\0errCode\0on_pb_sync_clicked\0"
     "on_pb_modify_clicked\0"
     "on_tb_ctl_info_cellDoubleClicked\0"
     "on_pb_ctl_tch_clicked\0on_pb_ctl_alarm_clicked\0"
@@ -110,7 +114,7 @@ static const uint qt_meta_data_TkbmWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      27,   14, // methods
+      28,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -118,35 +122,36 @@ static const uint qt_meta_data_TkbmWidget[] = {
        5,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  149,    2, 0x06 /* Public */,
-       5,    0,  152,    2, 0x06 /* Public */,
-       6,    0,  153,    2, 0x06 /* Public */,
-       7,    2,  154,    2, 0x06 /* Public */,
-      12,    1,  159,    2, 0x06 /* Public */,
+       1,    1,  154,    2, 0x06 /* Public */,
+       5,    0,  157,    2, 0x06 /* Public */,
+       6,    0,  158,    2, 0x06 /* Public */,
+       7,    2,  159,    2, 0x06 /* Public */,
+      12,    1,  164,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      15,    2,  162,    2, 0x08 /* Private */,
-      18,    4,  167,    2, 0x08 /* Private */,
-      23,    0,  176,    2, 0x08 /* Private */,
-      24,    0,  177,    2, 0x08 /* Private */,
-      25,    0,  178,    2, 0x08 /* Private */,
-      26,    0,  179,    2, 0x08 /* Private */,
-      27,    1,  180,    2, 0x08 /* Private */,
-      29,    0,  183,    2, 0x08 /* Private */,
-      30,    0,  184,    2, 0x08 /* Private */,
-      31,    2,  185,    2, 0x08 /* Private */,
-      32,    0,  190,    2, 0x08 /* Private */,
-      33,    0,  191,    2, 0x08 /* Private */,
-      34,    0,  192,    2, 0x08 /* Private */,
-      35,    0,  193,    2, 0x08 /* Private */,
-      36,    0,  194,    2, 0x08 /* Private */,
-      37,    1,  195,    2, 0x08 /* Private */,
-      39,    1,  198,    2, 0x08 /* Private */,
-      41,    0,  201,    2, 0x08 /* Private */,
-      42,    0,  202,    2, 0x08 /* Private */,
-      43,    0,  203,    2, 0x08 /* Private */,
-      44,    1,  204,    2, 0x08 /* Private */,
-      47,    1,  207,    2, 0x08 /* Private */,
+      15,    2,  167,    2, 0x08 /* Private */,
+      18,    4,  172,    2, 0x08 /* Private */,
+      23,    0,  181,    2, 0x08 /* Private */,
+      24,    0,  182,    2, 0x08 /* Private */,
+      25,    0,  183,    2, 0x08 /* Private */,
+      26,    0,  184,    2, 0x08 /* Private */,
+      27,    1,  185,    2, 0x08 /* Private */,
+      29,    1,  188,    2, 0x08 /* Private */,
+      32,    0,  191,    2, 0x08 /* Private */,
+      33,    0,  192,    2, 0x08 /* Private */,
+      34,    2,  193,    2, 0x08 /* Private */,
+      35,    0,  198,    2, 0x08 /* Private */,
+      36,    0,  199,    2, 0x08 /* Private */,
+      37,    0,  200,    2, 0x08 /* Private */,
+      38,    0,  201,    2, 0x08 /* Private */,
+      39,    0,  202,    2, 0x08 /* Private */,
+      40,    1,  203,    2, 0x08 /* Private */,
+      42,    1,  206,    2, 0x08 /* Private */,
+      44,    0,  209,    2, 0x08 /* Private */,
+      45,    0,  210,    2, 0x08 /* Private */,
+      46,    0,  211,    2, 0x08 /* Private */,
+      47,    1,  212,    2, 0x08 /* Private */,
+      50,    1,  215,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -163,6 +168,7 @@ static const uint qt_meta_data_TkbmWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,   28,
+    QMetaType::Void, 0x80000000 | 30,   31,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int, QMetaType::Int,   16,   17,
@@ -171,13 +177,13 @@ static const uint qt_meta_data_TkbmWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   38,
-    QMetaType::Void, QMetaType::Bool,   40,
+    QMetaType::Void, QMetaType::Bool,   41,
+    QMetaType::Void, QMetaType::Bool,   43,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 45,   46,
-    QMetaType::Void, 0x80000000 | 45,   46,
+    QMetaType::Void, 0x80000000 | 48,   49,
+    QMetaType::Void, 0x80000000 | 48,   49,
 
        0        // eod
 };
@@ -200,21 +206,22 @@ void TkbmWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 9: _t->update_msg_timeout(); break;
         case 10: _t->update_data_timeout(); break;
         case 11: _t->slot_get_board_id((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 12: _t->on_pb_sync_clicked(); break;
-        case 13: _t->on_pb_modify_clicked(); break;
-        case 14: _t->on_tb_ctl_info_cellDoubleClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 15: _t->on_pb_ctl_tch_clicked(); break;
-        case 16: _t->on_pb_ctl_alarm_clicked(); break;
-        case 17: _t->on_le_id_in_editingFinished(); break;
-        case 18: _t->on_pb_after_clicked(); break;
-        case 19: _t->on_pb_before_clicked(); break;
-        case 20: _t->on_pb_mian_into_t_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 21: _t->on_pb_eep_read_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 22: _t->on_pb_out_data_clicked(); break;
-        case 23: _t->on_pb_in_data_clicked(); break;
-        case 24: _t->on_pb_ensure_clicked(); break;
-        case 25: _t->on_tb_eep_file_itemChanged((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
-        case 26: _t->on_tb_brief_itemChanged((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
+        case 12: _t->slot_get_can_error_code((*reinterpret_cast< VCI_ERR_INFO(*)>(_a[1]))); break;
+        case 13: _t->on_pb_sync_clicked(); break;
+        case 14: _t->on_pb_modify_clicked(); break;
+        case 15: _t->on_tb_ctl_info_cellDoubleClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 16: _t->on_pb_ctl_tch_clicked(); break;
+        case 17: _t->on_pb_ctl_alarm_clicked(); break;
+        case 18: _t->on_le_id_in_editingFinished(); break;
+        case 19: _t->on_pb_after_clicked(); break;
+        case 20: _t->on_pb_before_clicked(); break;
+        case 21: _t->on_pb_mian_into_t_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 22: _t->on_pb_eep_read_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 23: _t->on_pb_out_data_clicked(); break;
+        case 24: _t->on_pb_in_data_clicked(); break;
+        case 25: _t->on_pb_ensure_clicked(); break;
+        case 26: _t->on_tb_eep_file_itemChanged((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
+        case 27: _t->on_tb_brief_itemChanged((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -283,13 +290,13 @@ int TkbmWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 27)
+        if (_id < 28)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 27;
+        _id -= 28;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 27)
+        if (_id < 28)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 27;
+        _id -= 28;
     }
     return _id;
 }
@@ -327,8 +334,8 @@ void TkbmWidget::sig_send_eep_config(excel_param_organize_ext * _t1)
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 struct qt_meta_stringdata_RecvCan_t {
-    QByteArrayData data[5];
-    char stringdata0[37];
+    QByteArrayData data[8];
+    char stringdata0[82];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -338,13 +345,18 @@ struct qt_meta_stringdata_RecvCan_t {
 static const qt_meta_stringdata_RecvCan_t qt_meta_stringdata_RecvCan = {
     {
 QT_MOC_LITERAL(0, 0, 7), // "RecvCan"
-QT_MOC_LITERAL(1, 8, 14), // "slot_get_state"
-QT_MOC_LITERAL(2, 23, 0), // ""
-QT_MOC_LITERAL(3, 24, 7), // "CtlCan*"
-QT_MOC_LITERAL(4, 32, 4) // "pCan"
+QT_MOC_LITERAL(1, 8, 23), // "sig_send_can_error_code"
+QT_MOC_LITERAL(2, 32, 0), // ""
+QT_MOC_LITERAL(3, 33, 12), // "VCI_ERR_INFO"
+QT_MOC_LITERAL(4, 46, 7), // "errCode"
+QT_MOC_LITERAL(5, 54, 14), // "slot_get_state"
+QT_MOC_LITERAL(6, 69, 7), // "CtlCan*"
+QT_MOC_LITERAL(7, 77, 4) // "pCan"
 
     },
-    "RecvCan\0slot_get_state\0\0CtlCan*\0pCan"
+    "RecvCan\0sig_send_can_error_code\0\0"
+    "VCI_ERR_INFO\0errCode\0slot_get_state\0"
+    "CtlCan*\0pCan"
 };
 #undef QT_MOC_LITERAL
 
@@ -354,18 +366,24 @@ static const uint qt_meta_data_RecvCan[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       1,       // signalCount
+
+ // signals: name, argc, parameters, tag, flags
+       1,    1,   24,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   19,    2, 0x0a /* Public */,
+       5,    1,   27,    2, 0x0a /* Public */,
+
+ // signals: parameters
+    QMetaType::Void, 0x80000000 | 3,    4,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 3,    4,
+    QMetaType::Void, 0x80000000 | 6,    7,
 
        0        // eod
 };
@@ -376,8 +394,19 @@ void RecvCan::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         RecvCan *_t = static_cast<RecvCan *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->slot_get_state((*reinterpret_cast< CtlCan*(*)>(_a[1]))); break;
+        case 0: _t->sig_send_can_error_code((*reinterpret_cast< VCI_ERR_INFO(*)>(_a[1]))); break;
+        case 1: _t->slot_get_state((*reinterpret_cast< CtlCan*(*)>(_a[1]))); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        void **func = reinterpret_cast<void **>(_a[1]);
+        {
+            typedef void (RecvCan::*_t)(VCI_ERR_INFO );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&RecvCan::sig_send_can_error_code)) {
+                *result = 0;
+                return;
+            }
         }
     }
 }
@@ -407,15 +436,22 @@ int RecvCan::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 2)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
+}
+
+// SIGNAL 0
+void RecvCan::sig_send_can_error_code(VCI_ERR_INFO _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 struct qt_meta_stringdata_BatteryStore_t {
     QByteArrayData data[7];

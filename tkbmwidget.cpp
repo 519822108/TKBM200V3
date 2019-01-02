@@ -1073,12 +1073,22 @@ void TkbmWidget::sig_get_can_param(int dev,int num,int rate,int port)
         RecvCan *tRecv = new RecvCan;           //创建子线程，接收CAN数据
         tRecv->start();
         connect(this,&TkbmWidget::sig_set_cthread_state,tRecv,&RecvCan::slot_get_state);
+        connect(tRecv,&RecvCan::sig_send_can_error_code,this,&TkbmWidget::slot_get_can_error_code);
         emit sig_set_cthread_state(can_bsp);    //发送信号，CAN接收缓存
 
         timer10 = new QTimer(this);
         connect(timer10,&QTimer::timeout,this,&TkbmWidget::comm_timeout);
         timer10->start(COMM_PROCESS_TIME);      //启动定时器，定时处理CAN数据
     }
+}
+/**     @brief: 接收CAN错误代码，如果CAN发生错误
+ *      @param:
+ *          errCode:    错误代码
+*/
+void TkbmWidget::slot_get_can_error_code(VCI_ERR_INFO errCode)
+{
+    QString temp = QString("CAN Device Error: 0x%1").arg(errCode.ErrCode,0,16);
+    ui->teb_msg->append(temp);
 }
 /**    @breif: 重新初始化数据，清空数据缓存
 */
@@ -1381,6 +1391,7 @@ void RecvCan::run()
 {
     int i=0;
     int read_len;
+    VCI_ERR_INFO errCode;
     while(this->state){
        if(can_bps){
             if(can_data.len > CAN_RECV_BUFF_LEN_MAX){       //如果数据长度大于接收缓存长度，重置为零
@@ -1395,6 +1406,10 @@ void RecvCan::run()
             }
 
             read_len = can_bps->can_rec_read(recv_buff,read_len);   //接收CAN数据
+            if(read_len == 0xFFFFFFFF){
+                can_bps->read_error_info(&errCode);
+                emit sig_send_can_error_code(errCode);
+            }
             mutex.lock();
             memcpy(&can_data.data[can_data.len],recv_buff,sizeof (VCI_CAN_OBJ)*read_len);   //复制数据
             can_data.len += read_len;

@@ -1079,6 +1079,7 @@ debug\tkbmwidget.obj: ..\tkbmwidget.cpp ../tkbmwidget.h \
 		D:\Qt\5.7\msvc2013\include\QtXml\QDomElement \
 		D:\Qt\5.7\msvc2013\include\QtXml\QDomAttr \
 		D:\Qt\5.7\msvc2013\include\QtXml\QDomNodeList \
+		D:\Qt\5.7\msvc2013\include\QtCore\QDebug \
 		D:\Qt\5.7\msvc2013\include\QtCore\QTime
 
 debug\logindialog.obj: ..\logindialog.cpp ../logindialog.h \
